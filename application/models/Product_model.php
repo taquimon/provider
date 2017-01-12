@@ -63,6 +63,15 @@ class Product_model extends CI_Model
 
         return $Product;
     }
+    public function getProductosByIds($productIds) {
+        $query = $this->db->select('idProducto, codigoExterno,descripcion, cantidad, precioUnitario')
+            ->where_in('idProducto', $productIds)
+            ->get('producto');
+        
+        $result = $query->result();
+
+        return $result;
+    }
 
     public function insert($data)
     {

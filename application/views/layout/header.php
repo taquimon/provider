@@ -10,7 +10,7 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="<?=base_url().'home'?>"><img alt="Charisma Logo" src="<?=base_url().'img/logo20.png'?>" class="hidden-xs"/>
-                <span>Logo</span></a>
+                <span>DISCAL</span></a>
 
             <!-- user dropdown starts -->
             <div class="btn-group pull-right">

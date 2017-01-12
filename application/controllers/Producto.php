@@ -72,4 +72,17 @@ class Producto extends MY_Controller {
         $productos = $this->productModel->getProductos();
         echo json_encode($productos);
     }
+    public function ajaxGetProductosByIds() {
+
+        if(isset($this->request['products'])){
+            $arrayProductIds = $this->request['products'];
+        }else{
+            $arrayProductIds = null;
+        }
+        
+        $productos = $this->productModel->getProductosByIds($arrayProductIds);
+        
+        echo json_encode($productos);    
+    }
 }
+

@@ -14,15 +14,10 @@ class Order_model extends CI_Model
     {
         parent::__construct();
         $this->__exposedFields = array(
-            'codigoOrdero',
-            'descripcion',
-            'cantidad',
-            'unidadVenta',
-            'numeroUnidades',
-            'precioUnitario',
-            'valorBruto',
-            'descuento',
-            'valorTotal'            
+            'numPedido',
+            'idCliente',
+            'idUser',
+            'fecha'                   
         );
     }
 
@@ -31,15 +26,11 @@ class Order_model extends CI_Model
      *
      * @return array
      */
-    public function getOrderList($fecha = null, $cantidad = null)
+    public function getOrderList()
     {
 
         $this->db->select('*')
-        ->from('pedido p');
-        //->where('YEAR(fechaIngreso)',$fechaIngreso);
-        // if($cantidad != null){
-        //     $this->db->where('cantidad',$cantidad);
-        // }
+        ->from('pedido p');        
         $query = $this->db->get();
 
         $result = $query->result();
@@ -61,15 +52,40 @@ class Order_model extends CI_Model
 
         return $Order;
     }
+    public function getDetailById($idOrder)
+    {
+        $query = $this->db->query('SELECT d.cantidad, d.precio, d.IdProducto, d.descuento, d.idPedido, p.idProducto, p.codigoExterno, p.descripcion, p.unidadVenta FROM detalle d, producto p WHERE d.idProducto = p.idProducto and d.idPedido='.$idOrder);
+            // ->where('idPedido', $idOrder)
+            // ->where('d.idProducto', 'p.idProducto')
+
+            // ->get('detalle d, producto p');
+
+        $result = $query->result();
+        
+        /*if (!$result) {
+            throw new Exception("No se encontro el detalle del pedido [$idOrder].");
+        }*/
+
+        return $result;
+    }
 
     public function insert($data)
     {
-
-        $data ['fecha'] = date('Y-m-d H:i:s');
+        
         $result = $this->db->insert('pedido', $data);
+        
+        $insert_id = $this->db->insert_id();
+        return $insert_id;
 
-        return $result;
-
+    }
+    public function insertDetalle($data)
+    {
+        
+        $result = $this->db->insert_batch('detalle', $data);
+        
+        $insert_id = $this->db->insert_id();
+        
+        return $insert_id;
     }
 
     /**
