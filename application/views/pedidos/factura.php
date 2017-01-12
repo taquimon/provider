@@ -135,7 +135,10 @@ ul.action-links {
             </div>
             <div class="row">
                 <div class="col-md-4">                        
-                    Cochabamba, $fecha                    
+                    Cochabamba, <?php 
+                    $date = new DateTime($this->data->pedido->fecha);
+                        echo $date->format('d-m-Y');                    
+                    ?> 
                 </div>
             </div>            
         
@@ -184,10 +187,10 @@ ul.action-links {
                                     echo '</td>';
                                     echo '<td style="width:10%;text-align:center;">';
                                     foreach ($det as $d) {
-                                        echo $d->unidadVenta.'<br>';
+                                        echo 'UN<br>';
                                     }
                                     echo '</td>';
-                                    echo '<td style="width:10%;text-align:center;">';
+                                    echo '<td style="width:10%;text-align:left;">';
                                     foreach ($det as $d) {
                                         echo $d->descripcion.'<br>';
                                     }
