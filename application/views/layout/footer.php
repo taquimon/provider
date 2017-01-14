@@ -1,4 +1,4 @@
-<style>
+<!--<style>
 #footer {
     position:absolute;
     bottom:0;
@@ -13,4 +13,4 @@
         <p class="col-md-12 col-sm-12 col-xs-12 copyright">&copy; <a href="http://et.it" target="_blank">E.T</a> 2012 - 2017</p>        
     </footer>
 </div>
-</div>
+</div>-->

@@ -34,8 +34,8 @@ class Pedido extends MY_Controller {
         foreach($orders as $order) {
             $id = $order->numPedido;
             $link = "pedido/factura/".$id;
-            $order->options = '<a href="#" onclick="editPedido('.$id.')" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-edit glyphicon-white"></i></a>&nbsp;'.
-            '<a href="'.$link.'" class="btn btn-warning btn-sm"><i class="glyphicon glyphicon-list-alt glyphicon-white"></i></a>';
+            $order->options = '<a href="#" onclick="editPedido('.$id.')" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-edit glyphicon-white"></i> Editar</a>&nbsp;'.
+            '<a href="'.$link.'" class="btn btn-warning btn-sm"><i class="glyphicon glyphicon-list-alt glyphicon-white"></i> Factura</a>';
         }
 
         $data['data'] = $orders;

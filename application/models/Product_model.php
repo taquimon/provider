@@ -86,7 +86,7 @@ class Product_model extends CI_Model
     /**
      * This method insert new data into club
      */
-    public function updateProduct($idProduct, $data)
+    public function updateProducto($idProduct, $data)
     {
 
         $this->db->where('idProducto', $idProduct);

@@ -32,7 +32,8 @@ class Producto extends MY_Controller {
         $data['data'] = $products;
         foreach($products as $product) {
             $id = $product->idProducto;
-            $product->options = '<a href="editProdyuct('.$id.')" class="btn btn-primary"><i class="glyphicon glyphicon-edit glyphicon-white"></i></a>';
+            $product->options = '<a href="#" onclick="editProduct('.$id.')" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-edit glyphicon-white"></i> Editar</a>&nbsp;';
+            
             
         }
                 
@@ -53,14 +54,11 @@ class Producto extends MY_Controller {
             $data['unidadVenta']     = $this->request['unidadVenta'];
             $data['numeroUnidades']  = $this->request['numeroUnidades'];
             $data['precioUnitario']  = $this->request['precioUnitario'];
-            // $data['valorBruto']      = $this->request['valorBruto'];
-            // $data['descuento']       = $this->request['descuento'];
-            // $data['valorTotal']      = $this->request['valorTotal'];
             
             $productData = $this->productModel->insert($data);
 
             if ($productData) {
-                $result->message = html_message("Se agrego correctamente el producto","success");
+                $result->message = "Se agrego correctamente el producto";
             }
 
         } catch (Exception $e) {
@@ -83,6 +81,39 @@ class Producto extends MY_Controller {
         $productos = $this->productModel->getProductosByIds($arrayProductIds);
         
         echo json_encode($productos);    
+    }
+    public function ajaxGetProductById() {
+        if(isset($this->request['idProduct'])){
+            $idProduct = $this->request['idProduct'];    
+        }                
+        $producto = $this->productModel->getProductById($idProduct);        
+        
+        echo json_encode($producto);
+    }
+
+    public function jsonGuardarProducto()
+    {
+        $result = new stdClass();
+        try{            
+            $data['codigoExterno']  = $this->request['codigoExterno'];
+            $data['descripcion']    = $this->request['descripcion'];
+            $data['cantidad']       = $this->request['cantidad'];
+            $data['unidadVenta']    = $this->request['unidadVenta'];
+            $data['numeroUnidades'] = $this->request['numeroUnidades'];
+            $data['precioUnitario'] = $this->request['precioUnitario'];            
+            
+            $idProducto = $this->request['idProducto'];
+            
+            $productData = $this->productModel->updateProducto($idProducto, $data);
+
+            if ($productData) {
+                $result->message = "Se actualizo correctamente los datos del producto";
+            }
+
+        } catch (Exception $e) {
+            $result->message = "No se pudo actualizar los datos ".$e->getMessage();
+        }
+        echo json_encode($result);
     }
 }
 
