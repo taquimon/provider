@@ -71,7 +71,7 @@
                 }
 
                 $('#tipoCliente').html(options);
-                $('#tipoCliente').trigger('chosen:updated');
+                $('#tipoCliente').selectpicker('refresh');
             },
             error: function() {
                 alert(options);
@@ -206,7 +206,7 @@
                             <label for="Tipo Cliente">Tipo Cliente</label>
                             <div class="control-group cold-md-6">
                                 <div class="controls">
-                                    <select id="tipoCliente" class="chosen-select">
+                                    <select id="tipoCliente" class="selectpicker" data-live-search="true" data-style="btn-primary">
                                     </select>
                                 </div>
                             </div>

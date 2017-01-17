@@ -12,31 +12,31 @@
  * @author phantom
  */
 class Producto extends MY_Controller {
-    
+
    public function __construct() {
        parent::__construct();
-        
-       $this->load->model('product_model', 'productModel');       
+
+       $this->load->model('product_model', 'productModel');
 
    }
    public function index() {
-        $products = $this->productModel->getProductList();        
-        $this->data = $products;        
-        $this->middle = 'product/productList'; 
+        $products = $this->productModel->getProductList();
+        $this->data = $products;
+        $this->middle = 'product/productList';
         $this->layout();
    }
 
-   public function ajaxListProduct(){        
+   public function ajaxListProduct(){
 
-        $products = $this->productModel->getProductList();             
+        $products = $this->productModel->getProductList();
         $data['data'] = $products;
         foreach($products as $product) {
             $id = $product->idProducto;
             $product->options = '<a href="#" onclick="editProduct('.$id.')" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-edit glyphicon-white"></i> Editar</a>&nbsp;';
-            
-            
+
+
         }
-                
+
         echo json_encode($data);
     }
     public function newProduct() {
@@ -54,7 +54,7 @@ class Producto extends MY_Controller {
             $data['unidadVenta']     = $this->request['unidadVenta'];
             $data['numeroUnidades']  = $this->request['numeroUnidades'];
             $data['precioUnitario']  = $this->request['precioUnitario'];
-            
+
             $productData = $this->productModel->insert($data);
 
             if ($productData) {
@@ -77,33 +77,33 @@ class Producto extends MY_Controller {
         }else{
             $arrayProductIds = null;
         }
-        
+
         $productos = $this->productModel->getProductosByIds($arrayProductIds);
-        
-        echo json_encode($productos);    
+
+        echo json_encode($productos);
     }
     public function ajaxGetProductById() {
         if(isset($this->request['idProduct'])){
-            $idProduct = $this->request['idProduct'];    
-        }                
-        $producto = $this->productModel->getProductById($idProduct);        
-        
+            $idProduct = $this->request['idProduct'];
+        }
+        $producto = $this->productModel->getProductById($idProduct);
+
         echo json_encode($producto);
     }
 
     public function jsonGuardarProducto()
     {
         $result = new stdClass();
-        try{            
+        try{
             $data['codigoExterno']  = $this->request['codigoExterno'];
             $data['descripcion']    = $this->request['descripcion'];
             $data['cantidad']       = $this->request['cantidad'];
             $data['unidadVenta']    = $this->request['unidadVenta'];
             $data['numeroUnidades'] = $this->request['numeroUnidades'];
-            $data['precioUnitario'] = $this->request['precioUnitario'];            
-            
+            $data['precioUnitario'] = $this->request['precioUnitario'];
+
             $idProducto = $this->request['idProducto'];
-            
+
             $productData = $this->productModel->updateProducto($idProducto, $data);
 
             if ($productData) {

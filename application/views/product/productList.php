@@ -9,7 +9,7 @@ min-height: 35px; /* or whatever height you need to make them all consistent */
     function editProduct(idProduct) {
         var dataProduct = {
             idProduct: idProduct
-        };        
+        };
         $.ajax({
             url: "<?=site_url('producto/ajaxGetProductById')?>",
             dataType: "json",
@@ -17,12 +17,13 @@ min-height: 35px; /* or whatever height you need to make them all consistent */
             type: 'GET',
             success: function(json) {
                 var $content = $('<table></table>');
-                $content.append('<tr><td>Codigo Externo</td><td><input type="text" class="form-control" placeholder="codigoExterno" id="codigoExterno" value="'+json.codigoExterno+'"></td></tr>');        
-                $content.append('<tr><td>Descripcion</td><td style="width:70%";><input type="text" class="form-control" placeholder="descripcion" id="descripcion" value="'+json.descripcion+'"></td></tr>');        
-                $content.append('<tr><td>Cantidad</td><td><input type="text" class="form-control" placeholder="codigoExterno" id="cantidad" value="'+json.cantidad+'"></td></tr>');        
-                $content.append('<tr><td>Unidad de Venta</td><td><input type="text" class="form-control" placeholder="codigoExterno" id="unidadVenta" value="'+json.unidadVenta+'"></td></tr>');        
-                $content.append('<tr><td>Numero de Unidades</td><td><input type="text" class="form-control" placeholder="codigoExterno" id="numeroUnidades" value="'+json.numeroUnidades+'"></td></tr>');        
-                $content.append('<tr><td>Precio Unitario</td><td><input type="text" class="form-control" placeholder="codigoExterno" id="precioUnitario" value="'+json.precioUnitario+'"></td></tr>');                        
+                $content.append('<tr><td>Codigo Externo</td><td><input type="text" class="form-control" placeholder="codigoExterno" id="codigoExterno" value="'+json.codigoExterno+'"></td></tr>');
+                $content.append('<tr><td>Descripcion</td><td style="width:70%";><input type="text" class="form-control" placeholder="descripcion" id="descripcion" value="'+json.descripcion+'"></td></tr>');
+                $content.append('<tr><td>Cantidad</td><td><input type="text" class="form-control" placeholder="codigoExterno" id="cantidad" value="'+json.cantidad+'"></td></tr>');
+                $content.append('<tr><td>Unidad de Venta</td><td><input type="text" class="form-control" placeholder="codigoExterno" id="unidadVenta" value="'+json.unidadVenta+'"></td></tr>');
+                $content.append('<tr><td>Numero de Unidades</td><td><input type="text" class="form-control" placeholder="codigoExterno" id="numeroUnidades" value="'+json.numeroUnidades+'"></td></tr>');
+                $content.append('<tr><td>Precio Unitario</td><td><input type="text" class="form-control" placeholder="codigoExterno" id="precioUnitario" value="'+json.precioUnitario+'"></td></tr>');
+
                 BootstrapDialog.show({
                     title: 'Editar Producto',
                     message: $content,

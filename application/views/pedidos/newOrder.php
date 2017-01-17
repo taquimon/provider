@@ -7,12 +7,12 @@
 
         fillClientes();
         fillProductos();
-
         detailTable = $("#detalleTable").DataTable({
             destroy: true,
             info: false,
             paging: false,
             searching: false,
+			ordering: false
         });
 
     });
@@ -115,27 +115,29 @@
 
     function addProducts() {
         var dataProduct = {
-            products: $("#productos").val(),
+            idProduct: $("#productos").val(),
         };
         $.ajax({
-            url: "<?=site_url('producto/ajaxGetProductosByIds')?>",
+            url: "<?=site_url('producto/ajaxGetProductById')?>",
             data: dataProduct,
             dataType: "json",
             type: 'POST',
             success: function(json) {
-                detailTable.clear();
-                for (var x = 0; x < json.length; x++) {
-                    detailTable.row.add([
-                        json[x].idProducto,
-                        json[x].codigoExterno,
-                        json[x].descripcion,
-                        '<div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-usd"></i></span><input type="text" class="form-control" value="' +
-                        json[x].cantidad + '" name="cantidad' + json[x].idProducto + '"></div>',
-                        '<div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-usd"></i></span><input type="text" class="form-control" value="' +
-                        json[x].precioUnitario + '" name="precioUnitario' + json[x].idProducto + '"></div>',
-                        '<div class="input-group"><span class="input-group-addon">%</span><input type="text" class="form-control" name="descuento' + json[x].idProducto + '"></div>'
-                    ]).draw(false);
-                }
+                //detailTable.clear();
+				detailTable.row.add([
+					json.idProducto,
+					json.codigoExterno,
+					json.descripcion,
+					'<div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-usd"></i></span><input type="text" class="form-control" value="' +
+					json.cantidad + '" name="cantidad' + json.idProducto + '"></div>',
+					'<div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-usd"></i></span><input type="text" class="form-control" value="' +
+					json.precioUnitario + '" name="precioUnitario' + json.idProducto + '"></div>',
+					'<a onclick="removeProduct()" class="btn btn-primary"><i class="glyphicon glyphicon-minus"></i></a>'
+				]).draw()
+				.nodes()
+    			.to$()
+    			.addClass( 'new' );
+			fillProductos();
             },
             error: function() {}
         });
@@ -166,12 +168,13 @@
                 <div class="box-content">
                     <div class="row">
                         <div class="col-md-4">
-                            <label for="Numero Pedido">Numero Pedido</label>
+							<label for="cliente">Cliente</label>
                             <div class="input-group col-md-4">
                                 <span class="input-group-addon">
-                            <i class="glyphicon glyphicon-barcode blue"></i>
+                            <i class="glyphicon glyphicon-user blue"></i>
                             </span>
-                                <input type="text" class="form-control" placeholder="Numero Pedido" id="numPedido" disabled>
+                                <select id="clientes" class="selectpicker" data-live-search="true" data-style="btn-primary">
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -189,25 +192,17 @@
                     <!-- row 2-->
                     <div class="row">
                         <div class="col-md-4">
-                            <label for="cliente">Cliente</label>
-                            <div class="input-group col-md-4">
-                                <span class="input-group-addon">
-                            <i class="glyphicon glyphicon-user blue"></i>
-                            </span>
-                                <select id="clientes" class="selectpicker" data-live-search="true" data-style="btn-primary">                                   
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
                             <label for="direccion">Producto(s)</label>
                             <div class="input-group col-md-6">
                                 <span class="input-group-addon">
                             <i class="glyphicon glyphicon-shopping-cart blue"></i>
                             </span>
-                                <select id="productos" class="selectpicker" data-live-search="true" data-style="btn-primary" multiple>   
+                                <select id="productos" onchange="addProducts()" class="selectpicker" data-live-search="true" data-style="btn-primary" title="Elija un producto...">
                                 </select>
-                                <a onclick="addProducts()" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i></a>
+<!--                                <a onclick="addProducts()" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i></a> //-->
                             </div>
+                        </div>
+						<div class="col-md-4">
                         </div>
                     </div>
                 </div>
@@ -226,7 +221,7 @@
                                 <th>DESCRIPCION</th>
                                 <th>CANTIDAD</th>
                                 <th>PRECIO UNITARIO</th>
-                                <th>DESCUENTO</th>
+								<th>OPCIONES</th>
                             </tr>
                         </thead>
                         <tbody>

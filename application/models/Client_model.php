@@ -76,7 +76,7 @@ class Client_model extends CI_Model
     /**
      * This method insert new data into club
      */
-    public function updateClient($idClient, $data)
+    public function updateCliente($idClient, $data)
     {
 
         $this->db->where('idCliente', $idClient);
