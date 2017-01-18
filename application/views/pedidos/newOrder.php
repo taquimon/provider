@@ -1,6 +1,6 @@
 <script type="text/javascript" charset="utf-8">
     var detailTable;
-    $(function() {
+    $(function() {        
         $('#datetimepicker1').datetimepicker({
             format: 'YYYY-MM-DD HH:mm:ss'
         });
@@ -13,8 +13,14 @@
             paging: false,
             searching: false,
 			ordering: false
+        });             
+        totalsTable = $("#totalsTable").DataTable({
+            destroy: true,
+            info: false,
+            paging: false,
+            searching: false,
+			ordering: false
         });
-
     });
 
     function addNewOrderData() {
@@ -115,32 +121,58 @@
 
     function addProducts() {
         var dataProduct = {
-            idProduct: $("#productos").val(),
+            products: $("#productos").val(),
         };
         $.ajax({
-            url: "<?=site_url('producto/ajaxGetProductById')?>",
+            url: "<?=site_url('producto/ajaxGetProductosByIds')?>",
             data: dataProduct,
             dataType: "json",
             type: 'POST',
-            success: function(json) {
-                //detailTable.clear();
+            success: function(json) {                
+                detailTable.clear();
+                var totalBruto = 0;
+                var valorTotal = 0;
+                for (x=0; x< json.length; x++) {
+                    total = json[x].cantidad * json[x].precioUnitario;
+                    totalBruto +=  total;
 				detailTable.row.add([
-					json.idProducto,
-					json.codigoExterno,
-					json.descripcion,
-					'<div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-usd"></i></span><input type="text" class="form-control" value="' +
-					json.cantidad + '" name="cantidad' + json.idProducto + '"></div>',
-					'<div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-usd"></i></span><input type="text" class="form-control" value="' +
-					json.precioUnitario + '" name="precioUnitario' + json.idProducto + '"></div>',
-					'<a onclick="removeProduct()" class="btn btn-primary"><i class="glyphicon glyphicon-minus"></i></a>'
-				]).draw()
-				.nodes()
-    			.to$()
-    			.addClass( 'new' );
-			fillProductos();
-            },
+                    json[x].idProducto,
+                    json[x].codigoExterno,
+                    json[x].descripcion,
+					'<div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-usd"></i></span><input type="number" class="form-control" value="' +
+                    json[x].cantidad + '" name="cantidad' + json[x].idProducto + '" id="cantidad' + json[x].idProducto + '"></div>',
+					'<div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-usd"></i></span><input type="number" class="form-control" value="' +
+                    json[x].precioUnitario + '" name="precioUnitario' + json[x].idProducto + '" onChange="calcularTotalIndividual('+json[x].idProducto +')" '+
+                    ' id= "precioUnitario' + json[x].idProducto + '"></div>',
+                    '<input type="number" class="form-control" placeholder="totalBruto" id="total' + json[x].idProducto+'" disabled value="' + total + '">'
+				]).draw();                
+                }
+                $('#totalBruto').val(totalBruto);
+                descuento = $('#descuento').val();
+                valorTotal = totalBruto - descuento;
+                $('#valorTotal').val(valorTotal);
+                //fillProductos();
+			},
             error: function() {}
         });
+    }
+    function removeProduct() {
+        // detailTable = $("#detalleTable").dataTable();
+        // var aPos = detailTable.fnGetPosition( $(this) );
+        // //aPosTwo = aPos.toString();
+        // alert(aPos);
+        detailTable = $("#detalleTable").DataTable();        
+        detailTable.row($(this).closest("tr").get(0)).remove().draw();       
+    }
+    function calcularTotal() {
+        totalBruto = $('#totalBruto').val();
+        descuento = $('#descuento').val();
+        valorTotal = totalBruto - descuento;
+        $('#valorTotal').val(valorTotal);
+    }
+    function calcularTotalIndividual(id) {
+        total = $('#cantidad'+id).val() * $('#precioUnitario'+id).val();                
+        $('#total'+id).val(total);
     }
 </script>
 
@@ -181,7 +213,7 @@
                             <label for="fecha">Fecha</label>
                             <div class="form-group">
                                 <div class="input-group date" id="datetimepicker1">
-                                    <input type="text" class="form-control" />
+                                    <input type="text" class="form-control"/>
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
@@ -197,9 +229,9 @@
                                 <span class="input-group-addon">
                             <i class="glyphicon glyphicon-shopping-cart blue"></i>
                             </span>
-                                <select id="productos" onchange="addProducts()" class="selectpicker" data-live-search="true" data-style="btn-primary" title="Elija un producto...">
+                                <select id="productos" onchange="addProducts()" class="selectpicker" data-live-search="true" data-style="btn-primary" title="Elija un producto..." data-selected-text-format="count > 3" multiple data-width="200px">
                                 </select>
-<!--                                <a onclick="addProducts()" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i></a> //-->
+                                <!--<a onclick="addProducts()" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i></a> -->
                             </div>
                         </div>
 						<div class="col-md-4">
@@ -220,8 +252,8 @@
                                 <th>CODIGO</th>
                                 <th>DESCRIPCION</th>
                                 <th>CANTIDAD</th>
-                                <th>PRECIO UNITARIO</th>
-								<th>OPCIONES</th>
+                                <th>PRECIO UNITARIO</th>								
+                                <th>TOTAL</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -230,6 +262,35 @@
                     <hr>
                 </div>
             </div>
+            <div class="row">
+                        <div class="col-md-4">
+                            <label for="totalBruto">Total Bruto</label>
+                            <div class="input-group col-md-6">
+                                <span class="input-group-addon">
+                            <i class="glyphicon glyphicon-barcode blue"></i>
+                            </span>
+                                <input type="number" class="form-control" placeholder="totalBruto" id="totalBruto" disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="descuento">Descuento</label>
+                            <div class="input-group col-md-9">
+                                <span class="input-group-addon">
+                            <i class="glyphicon glyphicon-usd blue"></i>
+                            </span>
+                                <input type="number" class="form-control" placeholder="descuento" id="descuento" value = "0" onchange="calcularTotal()">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="apellidos">Valor Total</label>
+                            <div class="input-group col-md-6">
+                                <span class="input-group-addon">
+                            <i class="glyphicon glyphicon-usd blue"></i>
+                            </span>
+                                <input type="number" class="form-control" placeholder="Valor Total" id="valorTotal" disabled>
+                            </div>
+                        </div>
+                    </div>
             <!-- row 2-->
             <div class="row">
                 <div class="col-md-12">

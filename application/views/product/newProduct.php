@@ -128,37 +128,7 @@
                             <input type="number" class="form-control" placeholder="Precio Unitario" id="precioUnitario">
                         </div>
                     </div>
-                </div>
-                <!-- row 3-->
-                <div class="row">
-                    <div class="col-md-4">
-                        <label for="codigoExterno">Valor Bruto</label>
-                        <div class="input-group col-md-6">                            
-                            <span class="input-group-addon">
-                            <i class="glyphicon glyphicon-usd blue"></i>
-                            </span>
-                            <input type="number" class="form-control" placeholder="Valor Bruto" id="valorBruto" disabled>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <label for="numero">Descuento</label>
-                        <div class="input-group col-md-6">                            
-                            <span class="input-group-addon">
-                            <i class="glyphicon glyphicon-minus blue"></i>
-                            </span>
-                            <input type="number" class="form-control" placeholder="Descuento" id="descuento">
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <label for="precio unitario">Valor Total</label>
-                        <div class="input-group col-md-6">                                                                                    
-                            <span class="input-group-addon">
-                            <i class="glyphicon glyphicon-usd blue"></i>
-                            </span>
-                            <input type="number" class="form-control" placeholder="Valor Total" id="valorTotal" disabled>                
-                        </div>
-                    </div>
-                </div>
+                </div>               
                 <!-- row 4-->                                
                 <div class="row">
                     <div class="col-md-12">
