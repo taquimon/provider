@@ -29,9 +29,7 @@ class Order_model extends CI_Model
     public function getOrderList()
     {
 
-        $this->db->select('*')
-        ->from('pedido p');        
-        $query = $this->db->get();
+        $query = $this->db->query('SELECT p.numPedido, p.fecha, c.razonSocial, u.username from pedido p, clientes c, user u WHERE c.idCliente = p.idCliente and p.idUser=u.idUser');
 
         $result = $query->result();
 
@@ -97,6 +95,17 @@ class Order_model extends CI_Model
         $this->db->where('idPedido', $idOrder);
         $data ['fechaActualizacion'] = date('Y-m-d H:i:s');
         $result = $this->db->update('pedido', $data);
+
+
+        return $result;
+
+    }    
+    public function updateDetalle($idOrder, $data)
+    {
+
+        $this->db->where('idPedido', $idOrder);
+        $data ['fechaActualizacion'] = date('Y-m-d H:i:s');
+        $result = $this->db->update('detalle', $data);
 
 
         return $result;

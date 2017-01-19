@@ -13,7 +13,8 @@
             },
             "columns": [
                 { "data": "numPedido", sDefaultContent: ""}, 
-                { "data": "idCliente", sDefaultContent: ""},
+                { "data": "razonSocial", sDefaultContent: ""},
+                { "data": "username", sDefaultContent: ""},
                 { "data": "fecha", sDefaultContent: ""},                 
                 { "data": "detalles", sDefaultContent: ""},                 
                 { "data": "options", sDefaultContent: ""}, 
@@ -53,6 +54,7 @@
                         <tr>
                             <th>numPedido</th>
                             <th>Cliente</th>
+                            <th>Usuario</th>
                             <th>Fecha</th>
                             <th>Detalles</th>                            
                             <th>Opciones</th>

@@ -46,6 +46,10 @@ class Pedido extends MY_Controller {
         $this->middle = 'pedidos/newOrder'; 
         $this->layout();   
     }
+    public function reportes() {
+        $this->middle = 'pedidos/reportes'; 
+        $this->layout();   
+    }
 
     public function jsonGuardarNuevo()
     {

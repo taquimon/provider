@@ -50,6 +50,8 @@
                         <li><a href="<?=base_url().'pedido'?>">Listar Pedidos</a></li>
                         <li class="divider"></li>
                         <li><a href="<?=base_url().'pedido/newOrder'?>">Nuevo Pedido</a></li>                        
+                        <li class="divider"></li>
+                        <li><a href="<?=base_url().'pedido/reportes'?>">Reportes</a></li>
                     </ul>
                 </li>
                 <li>
