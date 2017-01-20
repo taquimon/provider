@@ -104,6 +104,20 @@ class Pedido extends MY_Controller {
         $this->middle = 'pedidos/factura';
         $this->layout();
     }
+    public function printReport($fecha, $opcion) {        
+        $pedidoArray = new stdClass();
+        $pedidoInfo = $this->orderModel->getOrderById($id);
+        $detalleInfo = $this->orderModel->getDetailById($id);
+        $idCliente = $pedidoInfo->idCliente;
+        $clienteInfo = $this->clientModel->getClientById($idCliente);
+        $pedidoArray->pedido = $this->getTotals($pedidoInfo, $detalleInfo);
+        $pedidoArray->detalle = $detalleInfo;
+        $pedidoArray->cliente = $clienteInfo;
+        
+        $this->data = $pedidoArray;
+        $this->middle = 'pedidos/printReport';
+        $this->layout();
+    }
     public function getTotals($pedido, $detalle){
         
         $totalPedido = 0.0;
