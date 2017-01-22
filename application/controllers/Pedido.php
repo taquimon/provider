@@ -18,6 +18,7 @@ class Pedido extends MY_Controller {
         
        $this->load->model('order_model', 'orderModel');       
        $this->load->model('client_model', 'clientModel');
+       $this->load->model('product_model', 'productModel');
 
    }
    public function index() {
@@ -41,6 +42,15 @@ class Pedido extends MY_Controller {
         $data['data'] = $orders;
                 
         echo json_encode($data);
+    }
+    public function ajaxGetPedidoById() {
+        if(isset($this->request['idPedido'])){
+            $idPedido = $this->request['idPedido'];
+        }
+        $pedido = $this->orderModel->getOrderById($idPedido);
+        $pedido->detalle = $this->orderModel->getDetailById($idPedido);
+
+        echo json_encode($pedido);
     }
     public function newOrder() {
         $this->middle = 'pedidos/newOrder'; 
@@ -104,20 +114,49 @@ class Pedido extends MY_Controller {
         $this->middle = 'pedidos/factura';
         $this->layout();
     }
-    public function printReport($fecha, $opcion) {        
-        $pedidoArray = new stdClass();
-        $pedidoInfo = $this->orderModel->getOrderById($id);
-        $detalleInfo = $this->orderModel->getDetailById($id);
-        $idCliente = $pedidoInfo->idCliente;
-        $clienteInfo = $this->clientModel->getClientById($idCliente);
-        $pedidoArray->pedido = $this->getTotals($pedidoInfo, $detalleInfo);
-        $pedidoArray->detalle = $detalleInfo;
-        $pedidoArray->cliente = $clienteInfo;
+    public function printReport() {        
+        if(isset($this->request['fechaReporte'])) {
+           $fecha = $this->request['fechaReporte'];
+           $opcion = $this->request['opcion'];
+        }
+        switch($opcion) {
+            case "pedido": $totalInfo = $this->orderModel->getPedidosByDate($fecha);
+                           foreach($totalInfo as $pedido) {
+                               $detalleInfo = $this->orderModel->getDetailById($pedido->numPedido);
+                               $pedido = $this->getTotals($pedido, $detalleInfo); 
+                           } 
+                           
+                        break;                        
+            case "producto": $totalInfo = $this->orderModel->getTotalProductsByDate($fecha);
+                             $totalInfo = $this->sumProducts($totalInfo);
+                             //print_r($totalInfo);
+                        break;
+        }
+        $reporteArray = new stdClass();                
+        $reporteArray->tipo = $opcion;
         
-        $this->data = $pedidoArray;
+        $reporteArray->lista = $totalInfo;
+        $reporteArray->fecha = $fecha;
+        
+        //print_r($reporteArray);
+        $this->data = $reporteArray;
         $this->middle = 'pedidos/printReport';
         $this->layout();
     }
+    function sumProducts($products) {        
+        $res  = array();
+        foreach($products as $vals){
+            if(array_key_exists($vals->idProducto,$res)){
+                $res[$vals->idProducto]->cantidad    += $vals->cantidad;                
+            }
+            else{
+                $res[$vals->idProducto]  = $vals;
+            }
+        }
+       
+        return $res;
+    }
+
     public function getTotals($pedido, $detalle){
         
         $totalPedido = 0.0;

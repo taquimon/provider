@@ -1,4 +1,96 @@
 <script type="text/javascript" charset="utf-8">
+function editPedido(idPedido) {
+        var dataPedido = {
+            idPedido: idPedido
+        };
+        $.ajax({
+            url: "<?=site_url('pedido/ajaxGetPedidoById')?>",
+            dataType: "json",
+            data: dataPedido,
+            type: 'GET',
+            success: function(json) {
+                var $content = $('<table></table>');
+                $content.append('<tr><td>Fecha</td><td colspan="2"><input type="text" class="form-control" placeholder="codigoExterno" id="codigoExterno" value="'+json.fecha+'"></td></tr>');
+                $content.append('<tr><td colspan="3"><b>Detalle del Pedido</b></td><td style="width:70%;"></td></tr>');
+                $content.append('<tr><td style="width:60%">Descripcion</td><td style="width:20%">Cantidad</td><td style="width:20%">Precio</td></tr>');
+                if(json.detalle.length > 0) {
+                    
+                    for(x=0; x< json.detalle.length; x++) {
+                        $content.append('<tr><td>'+json.detalle[x].descripcion +
+                        '</td><td><input type="number" class="form-control" placeholder="codigoExterno" id="cantidad" value="' + 
+                        json.detalle[x].cantidad+'"></td><td><input type="number" class="form-control" placeholder="codigoExterno" id="precio" value="' + 
+                        json.detalle[x].precio+'"></td></tr>');
+                    }
+                    
+                }                            
+
+                BootstrapDialog.show({
+                    title: 'Editar Pedido',
+                    message: $content,
+                    buttons: [{
+                        icon: 'glyphicon glyphicon-check',
+                        label: 'Aceptar',
+                        title: 'Aceptar',
+                        autospin: true,
+                        cssClass: 'btn-primary',
+                        action: function(dialogRef){
+                            detailTable = $("#detalleTable").DataTable();
+                            var dataDetail = detailTable.$("input").serializeArray();
+
+                            var dataPedido = {
+                                numPedido: $("#numPedido").val(),
+                                idCliente: $("#clientes").val(),
+                                productos: $("#productos").val(),
+                                idUser: '1',
+                                fecha: $("#datetimepicker1").data('date'),
+                                detalle: JSON.stringify(dataDetail),
+                            };
+                            
+                            $.ajax({
+                                url: "<?=site_url('producto/jsonGuardarPedido')?>",
+                                dataType: "json",
+                                data: dataPedido,
+                                type: 'POST',   
+                                success: function(json) {
+                                    var n = noty({
+                                        type: "success",
+                                        layout: "top",
+                                        text: json.message,
+                                        animation: {
+                                            open: {
+                                                height: 'toggle'
+                                            },
+                                            close: {
+                                                height: 'toggle'
+                                            },
+                                            easing: 'swing',
+                                            speed: 500 // opening & closing animation speed
+                                        }
+                                    });
+                                    var urln = "<?= site_url('pedido/ajaxListPedido')?>";
+                                    $("#pedidos_table").DataTable().ajax.url(urln);
+                                    $("#pedidos_table").DataTable().ajax.reload();                                    
+                                    setTimeout(function(){
+                                        dialogRef.close();
+                                    }, 5000);
+                                }
+                            });
+                        }
+                    }, {
+                        icon: 'glyphicon glyphicon-ban-circle',
+                        label: 'Cancelar',
+                        title: 'Cancelar',
+                        cssClass: 'btn-warning',
+                        action: function(dialogItself){
+                            dialogItself.close();
+                        }
+                    }]
+                });                
+            },
+            error: function() {                
+            }
+        });       
+    }
     $(document).ready(function() {
         // $('#product_table').DataTable( {
         //     paging: false

@@ -30,7 +30,21 @@ class Order_model extends CI_Model
     {
 
         $query = $this->db->query('SELECT p.numPedido, p.fecha, c.razonSocial, u.username from pedido p, clientes c, user u WHERE c.idCliente = p.idCliente and p.idUser=u.idUser');
+        $result = $query->result();
 
+        return $result;
+    }
+
+    public function getPedidosByDate($fecha) {
+        
+        $query = $this->db->query("SELECT p.numPedido, c.razonSocial, c.idCliente, c.zona, p.fecha FROM pedido p, clientes c where p.idCliente=c.idCliente and (fecha between'".$fecha." 00:00:00' and '".$fecha." 23:59:59') order by c.zona ;");
+        $result = $query->result();
+
+        return $result;
+    }
+    public function getTotalProductsByDate($fecha) {
+        $query = $this->db->query("select d.cantidad, pr.idProducto, pr.codigoExterno, pr.descripcion from detalle d, producto pr WHERE d.idProducto = pr.idProducto and d.idPedido in (
+SELECT p.numPedido FROM pedido p where  (fecha between'".$fecha." 00:00:00' and '".$fecha." 23:59:59')) order by pr.idProducto ;");
         $result = $query->result();
 
         return $result;

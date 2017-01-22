@@ -6,6 +6,7 @@
         });
     });
 </script>
+<?php echo form_open('pedido/printReport');?>
 <div class="row">
     <div class="box col-md-12">
         <div class="box-inner">
@@ -20,8 +21,8 @@
                     <div class="col-md-2">
                         <label for="fecha">Seleccione Fecha:</label>
                         <div class="form-group">
-                            <div class="input-group date" id="fechaReporte">
-                                <input type="text" class="form-control" />
+                            <div class="input-group date" id="fechaReporte" >
+                                <input type="text" class="form-control" name="fechaReporte"/>
                                 <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                 </span>
@@ -34,12 +35,12 @@
                             <span class="input-group-addon">
                             <i class="glyphicon glyphicon-user blue"></i>
                             </span>
-                            <select id="clientes" class="selectpicker" data-live-search="true" data-style="btn-primary">
-                                <option>Total Pedidos</option>
-                                <option>Total Productos</option>
+                            <select id="opciones" class="selectpicker" data-live-search="true" data-style="btn-primary" name="opcion">
+                                <option value="pedido">Total Pedidos</option>
+                                <option value="producto">Total Productos</option>
                             </select>
-                            <a onclick="buscarReporte()" title="Buscar" data-toggle="tooltip" class="btn btn-primary">
-                                <i class="glyphicon glyphicon-ok-sign"></i> Buscar</a>
+                            <button title="Buscar" type="submit" data-toggle="tooltip" class="btn btn-primary">
+                                <i class="glyphicon glyphicon-ok-sign"></i> Buscar</button>
                         </div>
                     </div>
                 </div>
@@ -47,3 +48,4 @@
         </div>
     </div>
 </div>
+<?php echo form_close();?>
