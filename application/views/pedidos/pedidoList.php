@@ -44,7 +44,7 @@ function editPedido(idPedido) {
                                 idUser: '1',
                                 fecha: $("#datetimepicker1").data('date'),
                                 detalle: JSON.stringify(dataDetail),
-                            };
+                            }
                             
                             $.ajax({
                                 url: "<?=site_url('producto/jsonGuardarPedido')?>",
@@ -67,9 +67,9 @@ function editPedido(idPedido) {
                                             speed: 500 // opening & closing animation speed
                                         }
                                     });                                    
-                                    var urln = "<?= site_url('producto/ajaxListProduct')?>";
-                                    $("#product_table").DataTable().ajax.url(urln);
-                                    $("#product_table").DataTable().ajax.reload();                                    
+                                    var urln = "<?= site_url('pedido/ajaxListPedido')?>";
+                                    $("#pedido_table").DataTable().ajax.url(urln);
+                                    $("#pedido_table").DataTable().ajax.reload();                                    
                                     setTimeout(function(){
                                         dialogRef.close();
                                     }, 5000);
