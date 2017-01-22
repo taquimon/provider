@@ -66,10 +66,10 @@ function editPedido(idPedido) {
                                             easing: 'swing',
                                             speed: 500 // opening & closing animation speed
                                         }
-                                    });
-                                    var urln = "<?= site_url('pedido/ajaxListPedido')?>";
-                                    $("#pedidos_table").DataTable().ajax.url(urln);
-                                    $("#pedidos_table").DataTable().ajax.reload();                                    
+                                    });                                    
+                                    var urln = "<?= site_url('producto/ajaxListProduct')?>";
+                                    $("#product_table").DataTable().ajax.url(urln);
+                                    $("#product_table").DataTable().ajax.reload();                                    
                                     setTimeout(function(){
                                         dialogRef.close();
                                     }, 5000);
@@ -85,7 +85,7 @@ function editPedido(idPedido) {
                             dialogItself.close();
                         }
                     }]
-                });                
+                });            
             },
             error: function() {                
             }
@@ -109,8 +109,7 @@ function editPedido(idPedido) {
                 { "data": "username", sDefaultContent: ""},
                 { "data": "fecha", sDefaultContent: ""},                 
                 { "data": "detalles", sDefaultContent: ""},                 
-                { "data": "options", sDefaultContent: ""}, 
-               
+                { "data": "options", sDefaultContent: ""},                
             ],
             paging: true,
         });
