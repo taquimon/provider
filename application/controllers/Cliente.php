@@ -101,6 +101,7 @@ class Cliente extends MY_Controller {
             $data['telefono'] = $this->request['telefono'];
 			$data['celular'] = $this->request['celular'];
 			$data['zona'] = $this->request['zona'];
+            $data['razonSocial'] = $this->request['razonSocial'];
 			$data['observaciones'] = $this->request['observaciones'];
 			$data['tipoCliente'] = $this->request['tipoCliente'];
 

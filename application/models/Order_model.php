@@ -125,4 +125,9 @@ SELECT p.numPedido FROM pedido p where  (fecha between'".$fecha." 00:00:00' and 
         return $result;
 
     }    
+    public function deleteOrder($idPedido) {
+
+        $this->db->delete('detalle', array('idPedido' => $idPedido));
+        $this->db->delete('pedido', array('numPedido' => $idPedido));
+    }
 }

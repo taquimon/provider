@@ -33,16 +33,17 @@
             type: 'GET',
             success: function(json) {
                 var $content = $('<table></table>');
-                $content.append('<tr><td>Codigo Cliente:</td><td><input type="text" class="form-control" placeholder="codigoExterno" id="codigoCliente" value="'+json.codigoCliente+'"></td></tr>');
+                $content.append('<tr><td>Codigo Cliente:</td><td><input type="text" class="form-control" placeholder="codigocliente" id="codigoCliente" value="'+json.codigoCliente+'"></td></tr>');
                 $content.append('<tr><td>Nombre(s):</td><td style="width:70%";><input type="text" class="form-control" placeholder="nombres" id="nombres" value="'+json.nombres+'"></td></tr>');
-                $content.append('<tr><td>Apellidos:</td><td><input type="text" class="form-control" placeholder="codigoExterno" id="apellidos" value="'+json.apellidos+'"></td></tr>');
-                $content.append('<tr><td>Dirrecion:</td><td><input type="text" class="form-control" placeholder="codigoExterno" id="direccion" value="'+json.direccion+'"></td></tr>');
-                $content.append('<tr><td>Email:</td><td><input type="text" class="form-control" placeholder="codigoExterno" id="email" value="'+json.email+'"></td></tr>');
-                $content.append('<tr><td>Telefono:</td><td><input type="text" class="form-control" placeholder="codigoExterno" id="telefono" value="'+json.telefono+'"></td></tr>');
-				$content.append('<tr><td>Celular:</td><td><input type="text" class="form-control" placeholder="codigoExterno" id="celular" value="'+json.celular+'"></td></tr>');
-				$content.append('<tr><td>Zona:</td><td><input type="text" class="form-control" placeholder="codigoExterno" id="zona" value="'+json.zona+'"></td></tr>');
- 				$content.append('<tr><td>Observaciones:</td><td><input type="text" class="form-control" placeholder="codigoExterno" id="observaciones" value="'+json.observaciones+'"></td></tr>');
-				$content.append('<tr><td>Tipo Cliente:</td><td><select id="tipoCliente"></select></td></tr>');
+                $content.append('<tr><td>Apellidos:</td><td><input type="text" class="form-control" placeholder="apellidos" id="apellidos" value="'+json.apellidos+'"></td></tr>');
+                $content.append('<tr><td>Direccion:</td><td><input type="text" class="form-control" placeholder="direccion" id="direccion" value="'+json.direccion+'"></td></tr>');
+                $content.append('<tr><td>Email:</td><td><input type="text" class="form-control" placeholder="Emal" id="email" value="'+json.email+'"></td></tr>');
+                $content.append('<tr><td>Telefono:</td><td><input type="text" class="form-control" placeholder="Telefono" id="telefono" value="'+json.telefono+'"></td></tr>');
+				$content.append('<tr><td>Celular:</td><td><input type="text" class="form-control" placeholder="Celular" id="celular" value="'+json.celular+'"></td></tr>');
+				$content.append('<tr><td>Zona:</td><td><input type="text" class="form-control" placeholder="Zona" id="zona" value="'+json.zona+'"></td></tr>');
+                $content.append('<tr><td>Razon Social:</td><td><input type="text" class="form-control" placeholder="Razon Social" id="razonSocial" value="'+json.razonSocial+'"></td></tr>');
+ 				$content.append('<tr><td>Observaciones:</td><td><input type="text" class="form-control" placeholder="Observaciones" id="observaciones" value="'+json.observaciones+'"></td></tr>');
+				$content.append('<tr><td>Tipo Cliente:</td><td><select id="tipoCliente" data-style="btn-primary"></select></td></tr>');
 				var idTipoCliente = json.tipoCliente;
 
                 BootstrapDialog.show({
@@ -68,6 +69,7 @@
                                 telefono: $('#telefono').val(),
  								celular: $('#celular').val(),
  								zona: $('#zona').val(),
+                                razonSocial: $('#razonSocial').val(),
  								observaciones: $('#observaciones').val(),
  								tipoCliente: $('#tipoCliente').val(),
                             }
@@ -97,7 +99,7 @@
                                     $("#client_table").DataTable().ajax.reload();
                                     setTimeout(function(){
                                         dialogRef.close();
-                                    }, 5000);
+                                    }, 3000);
                                 }
                             });
                         }

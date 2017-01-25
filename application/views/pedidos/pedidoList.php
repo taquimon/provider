@@ -47,7 +47,7 @@ function editPedido(idPedido) {
                             }
                             
                             $.ajax({
-                                url: "<?=site_url('producto/jsonGuardarPedido')?>",
+                                url: "<?=site_url('pedido/jsonGuardarPedido')?>",
                                 dataType: "json",
                                 data: dataPedido,
                                 type: 'POST',   
@@ -67,7 +67,7 @@ function editPedido(idPedido) {
                                             speed: 500 // opening & closing animation speed
                                         }
                                     });                                    
-                                    var urln = "<?= site_url('pedido/ajaxListPedido')?>";
+                                    var urln = "<?= site_url('pedido/ajaxListOrder')?>";
                                     $("#pedido_table").DataTable().ajax.url(urln);
                                     $("#pedido_table").DataTable().ajax.reload();                                    
                                     setTimeout(function(){
@@ -91,6 +91,65 @@ function editPedido(idPedido) {
             }
         });       
     }
+    /*Delete Pedido*/
+    function deletePedido(idPedido) {
+        var $content = $('<div></div>');
+        $content.append('Desea Eliminar el Pedido?');
+
+        BootstrapDialog.show({
+            title: 'Eliminar Pedido',
+            message: $content,
+            buttons: [{
+                icon: 'glyphicon glyphicon-check',
+                label: 'Si',
+                title: 'Si',                
+                cssClass: 'btn-primary',
+                action: function(dialogRef){                    
+                    var dataPedido = {
+                    idPedido: idPedido
+                    }                    
+                    $.ajax({
+                        url: "<?=site_url('pedido/jsonEliminarPedido')?>",
+                        dataType: "json",
+                        data: dataPedido,
+                        type: 'POST',   
+                        success: function(json) {
+                            var n = noty({
+                                type: "success",
+                                layout: "top",
+                                text: json.message,
+                                animation: {
+                                    open: {
+                                        height: 'toggle'
+                                    },
+                                    close: {
+                                        height: 'toggle'
+                                    },
+                                    easing: 'swing',
+                                    speed: 500 // opening & closing animation speed
+                                }
+                            });                                    
+                            var urln = "<?= site_url('pedido/ajaxListOrder')?>";
+                            $("#pedidos_table").DataTable().ajax.url(urln);
+                            $("#pedidos_table").DataTable().ajax.reload();                                    
+                            setTimeout(function(){
+                                dialogRef.close();
+                            }, 3000);
+                        }
+                    });
+                }
+            }, {
+                icon: 'glyphicon glyphicon-ban-circle',
+                label: 'No',
+                title: 'No',
+                cssClass: 'btn-warning',
+                action: function(dialogItself){
+                    dialogItself.close();
+                }
+            }]
+        });                    
+    }
+
     $(document).ready(function() {
         // $('#product_table').DataTable( {
         //     paging: false

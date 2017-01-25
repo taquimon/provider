@@ -36,7 +36,8 @@ class Pedido extends MY_Controller {
             $id = $order->numPedido;
             $link = "pedido/factura/".$id;
             $order->options = '<a href="#" onclick="editPedido('.$id.')" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-edit glyphicon-white"></i> Editar</a>&nbsp;'.
-            '<a href="'.$link.'" class="btn btn-warning btn-sm"><i class="glyphicon glyphicon-list-alt glyphicon-white"></i> Factura</a>';
+            '<a href="'.$link.'" class="btn btn-warning btn-sm"><i class="glyphicon glyphicon-list-alt glyphicon-white"></i> Factura</a>&nbsp;'.
+            '<a href="#" onclick="deletePedido('.$id.')" class="btn btn-danger btn-sm"><i class="glyphicon glyphicon-remove-sign glyphicon-white"></i> Borrar</a>';
         }
 
         $data['data'] = $orders;
@@ -97,6 +98,20 @@ class Pedido extends MY_Controller {
 
         } catch (Exception $e) {
             $result->message = "No se pudo agregar los datos ".$e->getMessage();
+        }
+        echo json_encode($result);
+    }
+    
+    public function jsonEliminarPedido()
+    {
+        $result = new stdClass();
+        try{                                    
+            $idPedido     = $this->request['idPedido'];                        
+            $this->orderModel->deleteOrder($idPedido);                                                
+            $result->message = "Se elimino correctamente el pedido";
+
+        } catch (Exception $e) {
+            $result->message = "No se pudo eliminar los datos ".$e->getMessage();
         }
         echo json_encode($result);
     }
