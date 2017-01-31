@@ -1,10 +1,33 @@
 <script type="text/javascript" charset="utf-8">
     var detailTable;
+    
     $(function() {
         $('#fechaReporte').datetimepicker({
             format: 'YYYY-MM-DD'
         });
+        fillZonas();
     });
+
+    function fillZonas() {
+        $.ajax({
+            url: "<?=site_url('cliente/ajaxGetZonas')?>",
+            dataType: "json",
+            type: 'GET',
+            success: function(json) {
+                var options = '';
+                for (var x = 0; x < json.length; x++) {
+                    options += '<option value="' + json[x].zona + '">' + json[x].zona + '</option>';
+                }
+
+                $('#zonas').html(options); 				
+                $('#zonas').selectpicker('refresh');
+
+            },
+            error: function() {
+                //alert(options);
+            }
+        });
+    }
 </script>
 <?php echo form_open('pedido/printReport');?>
 <div class="row">
@@ -29,7 +52,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-2">
                         <label for="cliente">Opciones</label>
                         <div class="input-group col-md-4">
                             <span class="input-group-addon">
@@ -39,9 +62,22 @@
                                 <option value="pedido">Total Pedidos</option>
                                 <option value="producto">Total Productos</option>
                             </select>
-                            <button title="Buscar" type="submit" data-toggle="tooltip" class="btn btn-primary">
-                                <i class="glyphicon glyphicon-ok-sign"></i> Buscar</button>
                         </div>
+                    </div>
+                    <div class="col-md-2">                   
+                    
+                        <label class="checkbox-inline" for="Zona">
+                        <input type="checkbox" id="zona" value="zona" name="zona">Zona
+                        </label>
+                        <div class="input-group col-md-4">
+                            <span class="input-group-addon">
+                            <i class="glyphicon glyphicon-globe blue"></i>
+                            </span>
+                            <select id="zonas" class="selectpicker" data-live-search="true" data-style="btn-primary" name="zonas">                                
+                            </select>                        
+                            <button title="Buscar" type="submit" data-toggle="tooltip" class="btn btn-primary">
+                                <i class="glyphicon glyphicon-ok-sign"></i> Buscar</button>                
+                        </div>        
                     </div>
                 </div>
             </div>

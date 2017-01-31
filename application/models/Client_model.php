@@ -109,4 +109,16 @@ class Client_model extends CI_Model
 
         return $result;
     }
+    
+    public function getZonas()
+    {
+        $this->db->distinct();
+        $this->db->select('zona')
+        ->from('clientes c'); 
+        $query = $this->db->get();
+
+        $result = $query->result();
+
+        return $result;
+    }
 }

@@ -89,6 +89,12 @@ class Cliente extends MY_Controller {
 
         echo json_encode($cliente);
     }
+    public function ajaxGetZonas() {
+        
+        $zonas = $this->clientModel->getZonas();        
+
+        echo json_encode($zonas);
+    }
 	public function jsonGuardarCliente()
     {
         $result = new stdClass();

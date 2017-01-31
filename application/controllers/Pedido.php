@@ -132,10 +132,18 @@ class Pedido extends MY_Controller {
     public function printReport() {        
         if(isset($this->request['fechaReporte'])) {
            $fecha = $this->request['fechaReporte'];
-           $opcion = $this->request['opcion'];
+           $opcion = $this->request['opcion'];           
+           if(isset($this->request['zona'])) {
+               $zonaSelected = $this->request['zona'];
+               $zonas = $this->request['zonas'];
+           }
+           else {
+                $zonaSelected = null;
+                $zonas = null;
+           }                      
         }
         switch($opcion) {
-            case "pedido": $totalInfo = $this->orderModel->getPedidosByDate($fecha);
+            case "pedido": $totalInfo = $this->orderModel->getPedidosByDate($fecha, $zonas);
                            foreach($totalInfo as $pedido) {
                                $detalleInfo = $this->orderModel->getDetailById($pedido->numPedido);
                                $pedido = $this->getTotals($pedido, $detalleInfo); 
