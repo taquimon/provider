@@ -73,7 +73,7 @@
                             <span class="input-group-addon">
                             <i class="glyphicon glyphicon-globe blue"></i>
                             </span>
-                            <select id="zonas" class="selectpicker" data-live-search="true" data-style="btn-primary" name="zonas">                                
+                            <select id="zonas" class="selectpicker" data-live-search="true" data-style="btn-primary" name="zonas[]" multiple data-selected-text-format="count > 3">                                
                             </select>                        
                             <button title="Buscar" type="submit" data-toggle="tooltip" class="btn btn-primary">
                                 <i class="glyphicon glyphicon-ok-sign"></i> Buscar</button>                

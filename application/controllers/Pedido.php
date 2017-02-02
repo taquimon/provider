@@ -134,14 +134,18 @@ class Pedido extends MY_Controller {
            $fecha = $this->request['fechaReporte'];
            $opcion = $this->request['opcion'];           
            if(isset($this->request['zona'])) {
-               $zonaSelected = $this->request['zona'];
-               $zonas = $this->request['zonas'];
+               $zonaSelected = $this->request['zona'];               
            }
            else {
-                $zonaSelected = null;
-                $zonas = null;
+                $zonaSelected = null;                
            }                      
+           if(isset($this->request['zonas'])) {
+                $zonas = $this->request['zonas'];
+            } else {
+                $zonas = null;
+            }
         }
+        
         switch($opcion) {
             case "pedido": $totalInfo = $this->orderModel->getPedidosByDate($fecha, $zonas);
                            foreach($totalInfo as $pedido) {
@@ -150,7 +154,7 @@ class Pedido extends MY_Controller {
                            } 
                            
                         break;                        
-            case "producto": $totalInfo = $this->orderModel->getTotalProductsByDate($fecha);
+            case "producto": $totalInfo = $this->orderModel->getTotalProductsByDate($fecha, $zonas);
                              $totalInfo = $this->sumProducts($totalInfo);
                              //print_r($totalInfo);
                         break;
