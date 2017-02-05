@@ -205,7 +205,7 @@
                                 <span class="input-group-addon">
                             <i class="glyphicon glyphicon-user blue"></i>
                             </span>
-                                <select id="clientes" class="selectpicker" data-live-search="true" data-style="btn-primary">
+                                <select id="clientes" class="selectpicker" data-live-search="true" data-style="btn-primary" data-show-subtext="true">
                                 </select>
                             </div>
                         </div>
