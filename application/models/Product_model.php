@@ -35,7 +35,8 @@ class Product_model extends CI_Model
     {
 
         $this->db->select('*')
-        ->from('producto p');
+        ->from('producto p')
+        ->order_by("descripcion", "asc");
         //->where('YEAR(fechaIngreso)',$fechaIngreso);
         if($cantidad != null){
             $this->db->where('cantidad',$cantidad);
@@ -66,6 +67,7 @@ class Product_model extends CI_Model
     public function getProductosByIds($productIds) {
         $query = $this->db->select('idProducto, codigoExterno,descripcion, cantidad, precioUnitario')
             ->where_in('idProducto', $productIds)
+            ->order_by('descripcion','asc')
             ->get('producto');
         
         $result = $query->result();
@@ -102,7 +104,8 @@ class Product_model extends CI_Model
     {
 
         $this->db->select('idProducto, descripcion')
-        ->from('producto'); 
+        ->from('producto')
+        ->order_by('descripcion','asc'); 
         $query = $this->db->get();
 
         $result = $query->result();

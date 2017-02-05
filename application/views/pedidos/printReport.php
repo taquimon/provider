@@ -131,6 +131,9 @@ if($this->data->tipo == "pedido") {
             <div class="row">
                 <div class="col-xs-12">
                     <h5 style="text-align: center">Ventas por Factura</h5>
+                    <?php
+                        echo 'Fecha'. $this->data->fecha;
+                    ?>
                 </div>
             </div>                    
             <div class="row">
@@ -207,8 +210,7 @@ if($this->data->tipo == "pedido") {
     </div>
 </div>
 <?php } //endif
-    if($this->data->tipo == 'producto') {
-        
+    if($this->data->tipo == 'producto') {    
 ?>
 <div class="row" style="align-content: center">
     <div class="box col-xs-12">                    
@@ -223,10 +225,14 @@ if($this->data->tipo == "pedido") {
                     <h5 style="text-align: center">Zonas: 
                     <?php 
                     $zonas = $this->data->zonas;
-                    
-                    echo (implode(',',$zonas));
-                    
+                    if (isset($zonas)) {
+                        echo (implode(',',$zonas). '-');
+                    } else {
+                        echo 'Todas - ';
+                    }
+                    echo 'Fecha: '. $this->data->fecha;
                     ?>
+                    
                     </h5>
                 </div>
             </div>                    
