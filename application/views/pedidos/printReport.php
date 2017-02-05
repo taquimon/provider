@@ -217,6 +217,18 @@ if($this->data->tipo == "pedido") {
                 <div class="col-xs-12">
                     <h5 style="text-align: center">Total Productos</h5>
                 </div>
+            </div>                 
+            <div class="row">
+                <div class="col-xs-12">
+                    <h5 style="text-align: center">Zonas: 
+                    <?php 
+                    $zonas = $this->data->zonas;
+                    
+                    echo (implode(',',$zonas));
+                    
+                    ?>
+                    </h5>
+                </div>
             </div>                    
             <div class="row">
                 <div class="col-xs-12">                                    

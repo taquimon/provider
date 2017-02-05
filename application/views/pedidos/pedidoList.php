@@ -1,3 +1,8 @@
+ <style>
+    .login-dialog .modal-dialog {
+        width: 800px;
+    }
+</style>
 <script type="text/javascript" charset="utf-8">
 function editPedido(idPedido) {
         var dataPedido = {
@@ -9,24 +14,32 @@ function editPedido(idPedido) {
             data: dataPedido,
             type: 'GET',
             success: function(json) {
-                var $content = $('<table></table>');
-                $content.append('<tr><td>Fecha</td><td colspan="2"><input type="text" class="form-control" placeholder="codigoExterno" id="codigoExterno" value="'+json.fecha+'"></td></tr>');
-                $content.append('<tr><td colspan="3"><b>Detalle del Pedido</b></td><td style="width:70%;"></td></tr>');
+                var icon = '<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>';
+                var $content = $('<table id="detalle_table_update" class="table table-striped table-bordered"></table>');
+                $content.append('<tr><td>Fecha</td><td colspan="2"><div class="input-group date" id="fecha"><input type="text" class="form-control" name="fecha" id="fecha" value="'+json.fecha+'">' + icon + '</div></td></tr>');
+                $content.append('<tr><td colspan="3"><b>Detalle del Pedido</b></td></tr>');
                 $content.append('<tr><td style="width:60%">Descripcion</td><td style="width:20%">Cantidad</td><td style="width:20%">Precio</td></tr>');
                 if(json.detalle.length > 0) {
                     
                     for(x=0; x< json.detalle.length; x++) {
+                        id = json.detalle[x].IdProducto;
                         $content.append('<tr><td>'+json.detalle[x].descripcion +
-                        '</td><td><input type="number" class="form-control" placeholder="codigoExterno" id="cantidad" value="' + 
-                        json.detalle[x].cantidad+'"></td><td><input type="number" class="form-control" placeholder="codigoExterno" id="precio" value="' + 
+                        '</td><td><input type="number" class="form-control" id="cantidad" name="cantidad'+ id + '" value="' + 
+                        json.detalle[x].cantidad+'"></td><td><input type="number" class="form-control" id="precio" name="precio' + id + '" value="' + 
                         json.detalle[x].precio+'"></td></tr>');
                     }
                     
-                }                            
+                }                                            
 
                 BootstrapDialog.show({
                     title: 'Editar Pedido',
                     message: $content,
+                    onshown: function(){
+                        $('#fecha').datetimepicker({
+                            format: 'YYYY-MM-DD HH:mm:ss'
+                        });
+                    },
+                    cssClass: 'login-dialog',
                     buttons: [{
                         icon: 'glyphicon glyphicon-check',
                         label: 'Aceptar',
@@ -34,15 +47,19 @@ function editPedido(idPedido) {
                         autospin: true,
                         cssClass: 'btn-primary',
                         action: function(dialogRef){
-                            detailTable = $("#detalleTable").DataTable();
-                            var dataDetail = detailTable.$("input").serializeArray();
+                            var dataDetail = $.param($('#detalle_table_update input').map(function() {
+                                return {
+                                    name: $(this).attr('name'),
+                                    value: $(this).val().trim()
+                                };
+                            }));
+                            //detailTable = $("#detalle_table_update").html();
+                            //var dataDetail = detailTable.$("input").serializeArray();
 
                             var dataPedido = {
-                                numPedido: $("#numPedido").val(),
-                                idCliente: $("#clientes").val(),
-                                productos: $("#productos").val(),
+                                numPedido: idPedido,                                
                                 idUser: '1',
-                                fecha: $("#datetimepicker1").data('date'),
+                                fecha: $("#fecha").val(),
                                 detalle: JSON.stringify(dataDetail),
                             }
                             
@@ -151,9 +168,10 @@ function editPedido(idPedido) {
     }
 
     $(document).ready(function() {
-        // $('#product_table').DataTable( {
-        //     paging: false
-        // } );
+        $('#fecha').datetimepicker({
+            format: 'YYYY-MM-DD HH:mm:ss'
+        });
+
         $("#pedidos_table").DataTable({
             destroy: true,
             info: false,

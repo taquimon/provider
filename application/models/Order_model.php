@@ -48,9 +48,17 @@ class Order_model extends CI_Model
 
         return $result;
     }
-    public function getTotalProductsByDate($fecha) {
-        $query = $this->db->query("select d.cantidad, pr.idProducto, pr.codigoExterno, pr.descripcion from detalle d, producto pr WHERE d.idProducto = pr.idProducto and d.idPedido in (
-SELECT p.numPedido FROM pedido p where  (fecha between'".$fecha." 00:00:00' and '".$fecha." 23:59:59')) order by pr.idProducto ;");
+    public function getTotalProductsByDate($fecha, $zona = null) {
+        if($zona == null) {
+            $query = $this->db->query("select d.cantidad, pr.idProducto, pr.codigoExterno, pr.descripcion from detalle d, producto pr WHERE d.idProducto = pr.idProducto and d.idPedido in (
+            SELECT p.numPedido FROM pedido p where  (fecha between'".$fecha." 00:00:00' and '".$fecha." 23:59:59')) order by pr.idProducto ;");
+        } else {
+            $zonaGroup = implode ("','" , $zona);
+            $zonaGroup = "'".$zonaGroup."'";
+            $query = $this->db->query("select d.cantidad, pr.idProducto, pr.codigoExterno, pr.descripcion from detalle d, producto pr WHERE d.idProducto = pr.idProducto and d.idPedido in (
+            SELECT p.numPedido FROM pedido p, clientes c where  (fecha between'".$fecha." 00:00:00' and '".$fecha." 23:59:59') and p.idCliente=c.idCliente and c.zona in (".$zonaGroup.") ) order by pr.idProducto ;");
+
+        }
         $result = $query->result();
 
         return $result;

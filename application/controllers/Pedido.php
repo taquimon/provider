@@ -101,7 +101,31 @@ class Pedido extends MY_Controller {
         }
         echo json_encode($result);
     }
-    
+    public function jsonGuardarPedido()
+    {
+        $result = new stdClass();
+        try{
+            //$data['idPedido']      = $this->request['numPedido'];            
+            $data['fecha']          = $this->request['fecha'];
+            //$data['idUser']         = $this->request['idUser'];
+            $data['fecha']          = $this->request['fecha'];
+            
+            $dataDetalle = $this->request['detalle'];            
+            $idCPedido = $this->request['numPedido'];
+
+            $pedidoData = $this->clientModel->updatePedido($idPedido, $data);
+
+            if ($pedidoData) {
+                $result->message = "Se actualizo correctamente los datos del Pedido";
+            }
+
+        } catch (Exception $e) {
+            $result->message = "No se pudo actualizar los datos ".$e->getMessage();
+        }
+
+        echo json_encode($result);
+    }
+
     public function jsonEliminarPedido()
     {
         $result = new stdClass();
@@ -155,7 +179,7 @@ class Pedido extends MY_Controller {
                            
                         break;                        
             case "producto": $totalInfo = $this->orderModel->getTotalProductsByDate($fecha, $zonas);
-                             $totalInfo = $this->sumProducts($totalInfo);
+                             $totalInfo = $this->sumProducts($totalInfo);                             
                              //print_r($totalInfo);
                         break;
         }
@@ -164,6 +188,7 @@ class Pedido extends MY_Controller {
         
         $reporteArray->lista = $totalInfo;
         $reporteArray->fecha = $fecha;
+        $reporteArray->zonas = $zonas;
         
         //print_r($reporteArray);
         $this->data = $reporteArray;
