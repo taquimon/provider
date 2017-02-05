@@ -107,7 +107,7 @@
             success: function(json) {
                 var options = '';
                 for (var x = 0; x < json.length; x++) {
-                    options += '<option value="' + json[x].idCliente + '">' + json[x].apellidos + " " + json[x].nombres + '</option>';
+                    options += '<option value="' + json[x].idCliente + '" data-subtext="' + json[x].codigoCliente + '">' + json[x].apellidos + " " + json[x].nombres + '</option>';
                 }
 
                 $('#clientes').html(options);
