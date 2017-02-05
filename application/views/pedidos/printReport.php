@@ -130,10 +130,11 @@ if($this->data->tipo == "pedido") {
         <div class="box-content">
             <div class="row">
                 <div class="col-xs-12">
-                    <h5 style="text-align: center">Ventas por Factura</h5>
+                    <h5 style="text-align: center">Ventas por Factura <br><br>
                     <?php
-                        echo 'Fecha'. $this->data->fecha;
+                        echo 'Fecha: '. $this->data->fecha;
                     ?>
+                    </h5>
                 </div>
             </div>                    
             <div class="row">
