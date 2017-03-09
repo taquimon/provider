@@ -19,6 +19,7 @@
         <?= link_tag(base_url().'bower_components/bootstrap-tour/build/css/bootstrap-tour.min.css')?>
         <?= link_tag(base_url().'bower_components/bootstrap/dist/css/bootstrap-select.min.css')?>
         <?= link_tag(base_url().'bower_components/bootstrap/dist/css/bootstrap-dialog.min.css')?>                
+        <?= link_tag(base_url().'bower_components/bootstrap/dist/css/bootstrap-toggle.min.css')?>
         <?= link_tag(base_url().'css/jquery.noty.css')?>
         <?= link_tag(base_url().'css/dataTables.bootstrap.min.css')?>
         <?= link_tag(base_url().'css/noty_theme_default.css')?>
@@ -51,6 +52,7 @@
         <?= script_tag (base_url().'bower_components/bootstrap/dist/js/moment-with-locales.js')?>        
         <?= script_tag (base_url().'bower_components/bootstrap/dist/js/bootstrap-datetimepicker.js')?>        
         <?= script_tag (base_url().'bower_components/bootstrap/dist/js/bootstrap-dialog.min.js')?>  
+        <?= script_tag (base_url().'bower_components/bootstrap/dist/js/bootstrap-toggle.min.js')?>  
         <!-- data table plugin -->
         <?= script_tag (base_url().'js/jquery.dataTables.min.js')?>
         <?= script_tag (base_url().'js/dataTables.bootstrap.min.js')?>

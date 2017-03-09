@@ -32,6 +32,12 @@ class Producto extends MY_Controller {
         $data['data'] = $products;
         foreach($products as $product) {
             $id = $product->idProducto;
+            if ($product->activo == 1) {
+                $status = '<span class="label-success label label-default">Activo</span>';
+            } else {
+                $status = '<span class="label-warning label label-default">Inactivo</span>';
+            }
+            $product->status = $status;
             $product->options = '<a href="#" onclick="editProduct('.$id.')" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-edit glyphicon-white"></i> Editar</a>&nbsp;';
 
 
@@ -101,6 +107,7 @@ class Producto extends MY_Controller {
             $data['unidadVenta']    = $this->request['unidadVenta'];
             $data['numeroUnidades'] = $this->request['numeroUnidades'];
             $data['precioUnitario'] = $this->request['precioUnitario'];
+            $data['activo']         = $this->request['activo'];
 
             $idProducto = $this->request['idProducto'];
 

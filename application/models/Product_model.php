@@ -105,6 +105,7 @@ class Product_model extends CI_Model
 
         $this->db->select('idProducto, descripcion')
         ->from('producto')
+        ->where('activo', 1)
         ->order_by('descripcion','asc'); 
         $query = $this->db->get();
 

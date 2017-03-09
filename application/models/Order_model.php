@@ -120,8 +120,8 @@ class Order_model extends CI_Model
     public function updateOrder($idOrder, $data)
     {
 
-        $this->db->where('idPedido', $idOrder);
-        $data ['fechaActualizacion'] = date('Y-m-d H:i:s');
+        $this->db->where('numPedido', $idOrder);
+        $data ['fechaModificacion'] = date('Y-m-d H:i:s');
         $result = $this->db->update('pedido', $data);
 
 

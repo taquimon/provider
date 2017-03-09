@@ -105,15 +105,14 @@ class Pedido extends MY_Controller {
     {
         $result = new stdClass();
         try{
-            //$data['idPedido']      = $this->request['numPedido'];            
-            $data['fecha']          = $this->request['fecha'];
+            $idPedido = $this->request['idPedido'];
             //$data['idUser']         = $this->request['idUser'];
             $data['fecha']          = $this->request['fecha'];
-            
-            $dataDetalle = $this->request['detalle'];            
-            $idCPedido = $this->request['numPedido'];
+            $productos  = $this->request['productos'];
+            $dataDetalle = $this->request['detalle'];      
+            print_r($dataDetalle);                  
 
-            $pedidoData = $this->clientModel->updatePedido($idPedido, $data);
+            $pedidoData = $this->orderModel->updateOrder($idPedido, $data);
 
             if ($pedidoData) {
                 $result->message = "Se actualizo correctamente los datos del Pedido";

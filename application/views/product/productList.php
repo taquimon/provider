@@ -1,6 +1,9 @@
 <style>
 .dataTables tbody tr {
-min-height: 35px; /* or whatever height you need to make them all consistent */
+    min-height: 35px; /* or whatever height you need to make them all consistent */
+}
+.warning {
+    background-color: orange !important;
 }
 </style>
 
@@ -17,16 +20,27 @@ min-height: 35px; /* or whatever height you need to make them all consistent */
             type: 'GET',
             success: function(json) {
                 var $content = $('<table></table>');
+                var checked = "";
+                if(json.activo == 1) {
+                    checked = "checked";
+                }
                 $content.append('<tr><td>Codigo Externo</td><td><input type="text" class="form-control" placeholder="codigoExterno" id="codigoExterno" value="'+json.codigoExterno+'"></td></tr>');
                 $content.append('<tr><td>Descripcion</td><td style="width:70%";><input type="text" class="form-control" placeholder="descripcion" id="descripcion" value="'+json.descripcion+'"></td></tr>');
                 $content.append('<tr><td>Cantidad</td><td><input type="text" class="form-control" placeholder="codigoExterno" id="cantidad" value="'+json.cantidad+'"></td></tr>');
                 $content.append('<tr><td>Unidad de Venta</td><td><input type="text" class="form-control" placeholder="codigoExterno" id="unidadVenta" value="'+json.unidadVenta+'"></td></tr>');
                 $content.append('<tr><td>Numero de Unidades</td><td><input type="text" class="form-control" placeholder="codigoExterno" id="numeroUnidades" value="'+json.numeroUnidades+'"></td></tr>');
                 $content.append('<tr><td>Precio Unitario</td><td><input type="text" class="form-control" placeholder="codigoExterno" id="precioUnitario" value="'+json.precioUnitario+'"></td></tr>');
+                $content.append('<tr><td>Estado</td><td><div class="checkbox"><label class="checkbox-inline"><input id="status" type="checkbox" ' + checked + ' data-toggle="toggle"></label></div></td></tr>');
 
                 BootstrapDialog.show({
                     title: 'Editar Producto',
                     message: $content,
+                    onshown: function(){                           
+                             $('#status').bootstrapToggle({  
+                                 on: 'Activo',
+                                 off: 'Inactivo'
+                            });
+                    },
                     buttons: [{
                         icon: 'glyphicon glyphicon-check',
                         label: 'Aceptar',
@@ -34,6 +48,8 @@ min-height: 35px; /* or whatever height you need to make them all consistent */
                         autospin: true,
                         cssClass: 'btn-primary',
                         action: function(dialogRef){
+                            console.log($('#status').prop('checked'));
+                            var activo = $('#status').prop('checked') == true ? 1 : 0;
                             var dataProduct = {
                                 idProducto: idProduct,
                                 codigoExterno: $('#codigoExterno').val(),
@@ -42,6 +58,7 @@ min-height: 35px; /* or whatever height you need to make them all consistent */
                                 unidadVenta: $('#unidadVenta').val(),
                                 numeroUnidades: $('#numeroUnidades').val(),
                                 precioUnitario: $('#precioUnitario').val(),
+                                activo: activo,
                             }
                             $.ajax({
                                 url: "<?=site_url('producto/jsonGuardarProducto')?>",
@@ -69,7 +86,7 @@ min-height: 35px; /* or whatever height you need to make them all consistent */
                                     $("#product_table").DataTable().ajax.reload();                                    
                                     setTimeout(function(){
                                         dialogRef.close();
-                                    }, 5000);
+                                    }, 3000);
                                 }
                             });
                         }
@@ -93,7 +110,7 @@ min-height: 35px; /* or whatever height you need to make them all consistent */
         //     paging: false
         // } );
         var url = "<?= site_url('producto/ajaxListProduct')?>";
-        $("#product_table").DataTable({
+        var table = $("#product_table").DataTable({
             destroy: true,
             paging: true,
             info: false,            
@@ -115,7 +132,7 @@ min-height: 35px; /* or whatever height you need to make them all consistent */
                 url: url,
                 dataSrc: 'data',                
             },
-            "columns": [
+            columns: [
                 { "data": "idProducto", sDefaultContent: "n/a"}, 
                 { "data": "codigoExterno", sDefaultContent: ""}, 
                 { "data": "descripcion", sDefaultContent: ""},
@@ -123,16 +140,27 @@ min-height: 35px; /* or whatever height you need to make them all consistent */
                 { "data": "unidadVenta", sDefaultContent: ""}, 
                 { "data": "numeroUnidades", sDefaultContent: ""}, 
                 { "data": "precioUnitario", sDefaultContent: ""},
+                { "data": "status", sDefaultContent: ""},
                 { "data": "options", sDefaultContent: ""},
 
             ],
-            
-        });
-        var urln = "<?= site_url('producto/ajaxListProduct')?>";
-        $("#product_table").DataTable().ajax.url(urln);
-        $("#product_table").DataTable().ajax.reload(); 
+            "fnRowCallback": function( nRow, aoData, iDisplayIndex, iDisplayIndexFull ) {                
+                    if ( aoData.cantidad < 3 )
+                    {
+                        $('td:eq(3)', nRow).css('background-color', '#FC9A9A');
+                    }
+                    else
+                    {
+                        $('td:eq(3)', nRow).css('background-color', '#59BD4D');
+                    }
+                    if ( aoData.activo == 0 )
+                    {
+                        $('td', nRow).css('background-color', '#F5D167');
+                    }
+            },
+        });                                
 
-    });
+    });   
 </script>
 <ul class="breadcrumb">
     <li>
@@ -166,6 +194,7 @@ min-height: 35px; /* or whatever height you need to make them all consistent */
                             <th style="width:10%">Unidad de Venta</th>
                             <th style="width:10%">Numero de Unidades</th>
                             <th style="width:10%">Precio Unitario</th>                            
+                            <th style="width:10%">Estado</th>
                             <th style="width:20%">Opciones</th>                            
                         </tr>
                     </thead>

@@ -156,11 +156,7 @@
             error: function() {}
         });
     }
-    function removeProduct() {
-        // detailTable = $("#detalleTable").dataTable();
-        // var aPos = detailTable.fnGetPosition( $(this) );
-        // //aPosTwo = aPos.toString();
-        // alert(aPos);
+    function removeProduct() {        
         detailTable = $("#detalleTable").DataTable();        
         detailTable.row($(this).closest("tr").get(0)).remove().draw();       
     }
@@ -230,8 +226,7 @@
                             <i class="glyphicon glyphicon-shopping-cart blue"></i>
                             </span>
                                 <select id="productos" onchange="addProducts()" class="selectpicker" data-live-search="true" data-style="btn-primary" title="Elija un producto..." data-selected-text-format="count > 3" multiple data-width="200px">
-                                </select>
-                                <!--<a onclick="addProducts()" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i></a> -->
+                                </select>                                
                             </div>
                         </div>
 						<div class="col-md-4">
