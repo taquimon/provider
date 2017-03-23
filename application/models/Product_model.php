@@ -59,7 +59,8 @@ class Product_model extends CI_Model
         $Product = $query->first_row();
 
         if (!$Product) {
-            throw new Exception("No se encontro el Producto [$idProduct].");
+            //throw new Exception("No se encontro el Producto [$idProduct].");
+            return null;
         }
 
         return $Product;

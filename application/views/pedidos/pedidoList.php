@@ -84,15 +84,18 @@ function editPedido(idPedido) {
                         action: function(dialogRef){                                                                                                                
 
                             var dt = $('#detalle_table_update input').serializeArray();
+                            var dtu = $('#table_new_products input').serializeArray();
                             console.log(dt);
                             console.log(JSON.stringify(dt));
+                            console.log(JSON.stringify(dtu));
                             
                             var dataPedido = {
                                 idPedido: idPedido,
                                 idUser: '1',
                                 fecha: $("#fecha").data('date'),
-                                detalle: JSON.stringify(dt),                                
-                                productos: productosArray,
+                                detalle: JSON.stringify(dt),
+                                detalleNuevo: JSON.stringify(dtu),
+                                productos: $("#productos").val(),
                             }
                             
                             $.ajax({

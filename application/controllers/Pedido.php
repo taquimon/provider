@@ -109,8 +109,12 @@ class Pedido extends MY_Controller {
             //$data['idUser']         = $this->request['idUser'];
             $data['fecha']          = $this->request['fecha'];
             $productos  = $this->request['productos'];
-            $dataDetalle = $this->request['detalle'];      
-            print_r($dataDetalle);                  
+            $dataDetalle = $this->request['detalle'];
+            $dataNewDetalle = $this->request['detalleNuevo'];
+
+            $arrayDetails = json_decode($dataDetalle);
+            $arrayNewDetails = json_decode($dataNewDetalle);
+            print_r($dataDetalle);
 
             $pedidoData = $this->orderModel->updateOrder($idPedido, $data);
 

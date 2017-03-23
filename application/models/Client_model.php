@@ -57,7 +57,8 @@ class Client_model extends CI_Model
         $client = $query->first_row();
 
         if (!$client) {
-            throw new Exception("No se encontro el cliente [$idClient].");
+            return null;
+//            throw new Exception("No se encontro el cliente [$idClient].");
         }
 
         return $client;

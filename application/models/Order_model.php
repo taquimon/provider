@@ -35,6 +35,22 @@ class Order_model extends CI_Model
         return $result;
     }
 
+    public function getPedidoList()
+    {
+
+        $query = $this->db->query('SELECT p.numPedido, p.fecha, c.razonSocial, u.username from pedido p, clientes c, user u WHERE c.idCliente = p.idCliente and p.idUser=u.idUser');
+        $result = $query->result();
+
+        //print_r($result);
+        foreach ($result as $r) {
+            $query = $this->db->query('SELECT d.cantidad, d.precio, d.IdProducto, d.descuento, d.idPedido, p.idProducto, p.codigoExterno, p.descripcion, p.unidadVenta FROM detalle d, producto p WHERE d.idProducto = p.idProducto and d.idPedido=' . $r->numPedido);
+            $result2 = $query->result();
+            $r->detalle = $result2;
+        }
+
+        return $result;
+    }
+
     public function getPedidosByDate($fecha, $zona = null) {
         if($zona == null) {
             $queryString = "SELECT p.numPedido, c.razonSocial, c.idCliente, c.zona, p.fecha FROM pedido p, clientes c where p.idCliente=c.idCliente and (fecha between'".$fecha." 00:00:00' and '".$fecha." 23:59:59') order by c.zona ;";
@@ -70,13 +86,21 @@ class Order_model extends CI_Model
             ->where('numPedido', $idOrder)
             ->get('pedido');
 
-        $Order = $query->first_row();
+        $order = $query->first_row();
 
-        if (!$Order) {
-            throw new Exception("No se encontro el pedido [$idOrder].");
+
+        if (!$order) {
+            //throw new Exception("No se encontro el pedido [$idOrder].");
+            return null;
         }
+        else {
+            $query = $this->db->query('SELECT d.cantidad, d.precio, d.IdProducto, d.descuento, d.idPedido, p.idProducto, p.codigoExterno, p.descripcion, p.unidadVenta FROM detalle d, producto p WHERE d.idProducto = p.idProducto and d.idPedido='.$idOrder);
 
-        return $Order;
+            $result2 = $query->result();
+        }
+        $order->detalle = $result2;
+
+        return $order;
     }
     public function getDetailById($idOrder)
     {
