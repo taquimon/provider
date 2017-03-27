@@ -118,6 +118,65 @@
             }
         });
      }
+
+    /*Delete Cliente*/
+    function deleteCliente(idCliente) {
+        var $content = $('<div></div>');
+        $content.append('Desea Eliminar el Cliente?');
+
+        BootstrapDialog.show({
+            title: 'Eliminar Cliente',
+            message: $content,
+            buttons: [{
+                icon: 'glyphicon glyphicon-check',
+                label: 'Si',
+                title: 'Si',
+                cssClass: 'btn-primary',
+                action: function(dialogRef){
+                    var dataCliente = {
+                        idCliente: idCliente
+                    }
+                    $.ajax({
+                        url: "<?=site_url('cliente/jsonEliminarCliente')?>",
+                        dataType: "json",
+                        data: dataCliente,
+                        type: 'POST',
+                        success: function(json) {
+                            var n = noty({
+                                type: "success",
+                                layout: "top",
+                                text: json.message,
+                                animation: {
+                                    open: {
+                                        height: 'toggle'
+                                    },
+                                    close: {
+                                        height: 'toggle'
+                                    },
+                                    easing: 'swing',
+                                    speed: 500 // opening & closing animation speed
+                                }
+                            });
+                            var urln = "<?= site_url('cliente/ajaxListOrder')?>";
+                            $("#client_table").DataTable().ajax.url(urln);
+                            $("#client_table").DataTable().ajax.reload();
+                            setTimeout(function(){
+                                dialogRef.close();
+                            }, 3000);
+                        }
+                    });
+                }
+            }, {
+                icon: 'glyphicon glyphicon-ban-circle',
+                label: 'No',
+                title: 'No',
+                cssClass: 'btn-warning',
+                action: function(dialogItself){
+                    dialogItself.close();
+                }
+            }]
+        });
+    }
     $(document).ready(function(){
     $("#client_table").DataTable({
             destroy: true,

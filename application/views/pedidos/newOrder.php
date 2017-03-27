@@ -1,8 +1,23 @@
 <script type="text/javascript" charset="utf-8">
     var detailTable;
     $(function() {        
-        $('#datetimepicker1').datetimepicker({
-            format: 'YYYY-MM-DD HH:mm:ss'
+
+
+        $.ajax({
+            url: "<?=site_url('pedido/getLastDate')?>",
+            dataType: "json",
+            type: 'GET',
+            success: function(json) {
+                console.log(json);
+                $('#datetimepicker1').datetimepicker({
+                    format: 'YYYY-MM-DD HH:mm:ss',
+                    defaultDate: json.fecha
+                });
+
+            },
+            error: function() {
+                console.log("cannot add date");
+            }
         });
 
         fillClientes();
@@ -196,7 +211,7 @@
                 <div class="box-content">
                     <div class="row">
                         <div class="col-md-4">
-							<label for="cliente">Cliente</label>
+							<label for="cliente">Cliente / codigo</label>
                             <div class="input-group col-md-4">
                                 <span class="input-group-addon">
                             <i class="glyphicon glyphicon-user blue"></i>

@@ -168,4 +168,11 @@ class Order_model extends CI_Model
         $this->db->delete('detalle', array('idPedido' => $idPedido));
         $this->db->delete('pedido', array('numPedido' => $idPedido));
     }
+
+    public function getLastDate() {
+        $query = $this->db->query('SELECT MAX(fecha) as fecha from pedido');
+        $result = $query->result();
+
+        return $result;
+    }
 }

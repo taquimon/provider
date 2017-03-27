@@ -436,4 +436,10 @@ class Pedido extends MY_Controller {
         echo json_encode($response);
         
     }
+
+    public function getLastDate()
+    {
+        $lastDate = $this->orderModel->getLastDate();
+        echo json_encode($lastDate[0]);
+    }
 }

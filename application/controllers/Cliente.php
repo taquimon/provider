@@ -32,7 +32,8 @@ class Cliente extends MY_Controller {
 
 	   foreach($clients as $client) {
             $id = $client->idCliente;
-            $client->options = '<a href="#" onclick="editClient('.$id.')" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-edit glyphicon-white"></i> Editar</a>&nbsp;';
+            $client->options = '<a href="#" onclick="editClient('.$id.')" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-edit glyphicon-white"></i> Editar</a>&nbsp;'.
+           '<a href="#" onclick="deleteCliente('.$id.')" class="btn btn-danger btn-sm"><i class="glyphicon glyphicon-remove-sign glyphicon-white"></i> Borrar</a>';
 
 
         }
@@ -122,6 +123,19 @@ class Cliente extends MY_Controller {
 
         } catch (Exception $e) {
             $result->message = "No se pudo actualizar los datos ".$e->getMessage();
+        }
+        echo json_encode($result);
+    }
+    public function jsonEliminarCliente()
+    {
+        $result = new stdClass();
+        try{
+            $idCliente     = $this->request['idCliente'];
+            $this->clientModel->deleteCliente($idCliente);
+            $result->message = "Se elimino correctamente el cliente";
+
+        } catch (Exception $e) {
+            $result->message = "No se pudo eliminar los datos ".$e->getMessage();
         }
         echo json_encode($result);
     }

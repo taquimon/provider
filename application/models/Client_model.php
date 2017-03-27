@@ -111,16 +111,9 @@ class Client_model extends CI_Model
 
         return $result;
     }
-    
-    public function getZonas()
-    {
-        $this->db->distinct();
-        $this->db->select('zona')
-        ->from('clientes c'); 
-        $query = $this->db->get();
 
-        $result = $query->result();
+    public function deleteCliente($idCliente) {
 
-        return $result;
+        $this->db->delete('clientes', array('idCliente' => $idCliente));
     }
 }
