@@ -108,15 +108,58 @@ class Pedido extends MY_Controller {
             $idPedido = $this->request['idPedido'];
             //$data['idUser']         = $this->request['idUser'];
             $data['fecha']          = $this->request['fecha'];
-            $productos  = $this->request['productos'];
             $dataDetalle = $this->request['detalle'];
             $dataNewDetalle = $this->request['detalleNuevo'];
 
             $arrayDetails = json_decode($dataDetalle);
             $arrayNewDetails = json_decode($dataNewDetalle);
-            print_r($dataDetalle);
 
+
+
+
+            /*Update Pedido*/
             $pedidoData = $this->orderModel->updateOrder($idPedido, $data);
+            /*Delete all detalle*/
+
+            $detalleData = $this->orderModel->deleteAllDetalle($idPedido);
+
+            /*Insert new and updated detalle*/
+            if(isset($this->request['oldProductos'])) {
+                $oldProductos  = $this->request['oldProductos'];
+                $dataDetalleUpdated = array();
+                if(!empty($oldProductos)) {
+                    foreach ($oldProductos as $p) {
+                        $dataArray = array();
+                        $dataArray['idPedido'] = $idPedido;
+                        $dataArray['idProducto'] = $p;
+                        $dataArray['cantidad'] = $this->getArrayValue($arrayDetails, "cantidad" . $p);
+                        $dataArray['precio'] = $this->getArrayValue($arrayDetails, "precio" . $p);
+                        $dataArray['descuento'] = $this->getArrayValue($arrayDetails, "descuento" . $p);
+                        $dataArray['fechaCreacion'] = date('Y-m-d H:i:s');
+                        array_push($dataDetalleUpdated, $dataArray);
+                    }
+                    $detalleData = $this->orderModel->insertDetalle($dataDetalleUpdated);
+                }
+            }
+
+            if(isset($this->request['newProductos'])) {
+                $newProductos  = $this->request['newProductos'];
+                $dataDetalleNew = array();
+                if(!empty($newProductos)) {
+                    foreach ($newProductos as $p) {
+                        $dataArray = array();
+                        $dataArray['idPedido'] = $idPedido;
+                        $dataArray['idProducto'] = $p;
+                        $dataArray['cantidad'] = $this->getArrayValue($arrayNewDetails, "cantidad" . $p);
+                        $dataArray['precio'] = $this->getArrayValue($arrayNewDetails, "precioUnitario" . $p);
+                        $dataArray['descuento'] = $this->getArrayValue($arrayNewDetails, "descuento" . $p);
+                        $dataArray['fechaCreacion'] = date('Y-m-d H:i:s');
+                        array_push($dataDetalleNew, $dataArray);
+                    }
+                    $detalleData = $this->orderModel->insertDetalle($dataDetalleNew);
+                }
+            }
+
 
             if ($pedidoData) {
                 $result->message = "Se actualizo correctamente los datos del Pedido";

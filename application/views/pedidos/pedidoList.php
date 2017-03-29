@@ -5,8 +5,18 @@
 </style>
 <script type="text/javascript" charset="utf-8">
 var detailTableUpdated;
+var oldProducts = [];
 function removerow(id){
     $('#cantidad'+id).closest('tr').remove();
+
+    var i = oldProducts.indexOf(id.toString());
+    console.log(id)
+    if(i != -1) {
+        oldProducts.splice(i, 1);
+    }
+
+    console.log(oldProducts);
+
 }
 function editPedido(idPedido) {
         var dataPedido = {
@@ -23,13 +33,14 @@ function editPedido(idPedido) {
                 $tableDetalle = 'Fecha: <div class="input-group date" id="fecha"><input type="text" class="form-control" name="fecha" id="fecha" value="'+json.fecha+'">' + icon + '</div>';
                 $tableDetalle += '<div><b>Detalle del Pedido</b></div>';
                 $tableDetalle += '<table id="detalle_table_update" class="table table-striped table-bordered datatable">';
-                $tableDetalle += '<thead><tr><th style="width:60%">Descripcion</th><th style="width:20%">Cantidad</th><th style="width:20%">Precio (Bs)</th><th>Quitar</th></tr></thead>';
+                $tableDetalle += '<thead><tr><th>Codigo</th><th style="width:60%">Descripcion</th><th style="width:20%">Cantidad</th><th style="width:20%">Precio (Bs)</th><th>Quitar</th></tr></thead>';
                 if(json.detalle.length > 0) {
-                    
+                    oldProducts = [];
                     for(x=0; x< json.detalle.length; x++) {
                         var iconMinus = '<i class="glyphicon glyphicon-minus"></i>';
                         id = json.detalle[x].IdProducto;
-                        $tableDetalle += '<tr><td>'+json.detalle[x].descripcion +
+                        oldProducts.push(id);
+                        $tableDetalle += '<tr><td>' + id + '</td><td>'+json.detalle[x].descripcion +
                         '</td><td><input type="number" class="form-control" id="cantidad' + id + '" name="cantidad'+ id + '" value="' + 
                         json.detalle[x].cantidad+'"></td><td><input type="number" class="form-control" id="precio" name="precio' + id + '" value="' + 
                         json.detalle[x].precio+'"></td><td valign="center"><button class="btn btn-primary btn-sm" onclick="removerow(' + id + ')">'+ iconMinus +'</button></td></tr>';
@@ -95,7 +106,9 @@ function editPedido(idPedido) {
                                 fecha: $("#fecha").data('date'),
                                 detalle: JSON.stringify(dt),
                                 detalleNuevo: JSON.stringify(dtu),
-                                productos: $("#productos").val(),
+                                oldProductos: oldProducts,
+                                newProductos: $("#productos").val(),
+
                             }
                             
                             $.ajax({
@@ -121,7 +134,7 @@ function editPedido(idPedido) {
                                     });                                    
                                     var urln = "<?= site_url('pedido/ajaxListOrder')?>";
                                     $("#pedido_table").DataTable().ajax.url(urln);
-                                    $("#pedido_table").DataTable().ajax.reload();                                    
+                                    $("#pedido_table").DataTable().ajax.reload();
                                     setTimeout(function(){
                                         dialogRef.close();
                                     }, 5000);

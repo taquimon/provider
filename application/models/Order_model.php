@@ -175,4 +175,9 @@ class Order_model extends CI_Model
 
         return $result;
     }
+    public function deleteAllDetalle($idPedido) {
+
+        $this->db->delete('detalle', array('idPedido' => $idPedido));
+    }
 }
+
