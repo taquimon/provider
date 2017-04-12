@@ -233,7 +233,8 @@ function editPedido(idPedido) {
                 { "data": "razonSocial", sDefaultContent: ""},
                 { "data": "username", sDefaultContent: ""},
                 { "data": "fecha", sDefaultContent: ""},                 
-                { "data": "detalles", sDefaultContent: ""},                 
+                { "data": "detalles", sDefaultContent: ""},
+                { "data": "tipo_pedido", sDefaultContent: ""},                                 
                 { "data": "options", sDefaultContent: ""},                
             ],
             paging: true,
@@ -330,7 +331,8 @@ function editPedido(idPedido) {
                             <th>Cliente</th>
                             <th>Usuario</th>
                             <th>Fecha</th>
-                            <th>Detalles</th>                            
+                            <th>Detalles</th>
+                            <th>Tipo Pedido</th>           
                             <th>Opciones</th>
                         </tr>
                     </thead>
