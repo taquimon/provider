@@ -143,18 +143,18 @@ ul.action-links {
             </div>            
         
             <div class="row">
-                <div class="col-xs-4">                
+                <div class="col-xs-7">                
                     Senor(es): <?=$this->data->cliente->razonSocial?>
                 </div>
-                <div class="col-xs-4">                
+                <div class="col-xs-2">                
                     NIT/CI:
                 </div>
-                <div class="col-xs-4">                
+                <div class="col-xs-3">                
                     Codigo: <?=$this->data->cliente->codigoCliente?>
                 </div>
             </div>    
             <div class="row">
-                <div class="col-xs-4">                                    
+                <div class="col-xs-10">                                    
                     Direccion: <?=$this->data->cliente->direccion?>
                 </div>
             </div>        

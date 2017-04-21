@@ -30,7 +30,8 @@ function editPedido(idPedido) {
             success: function(json) {
                 var icon = '<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>';
                 var $content = $('<div></div>');
-                $tableDetalle = 'Fecha: <div class="input-group date" id="fecha"><input type="text" class="form-control" name="fecha" id="fecha" value="'+json.fecha+'">' + icon + '</div>';
+                $tableDetalle = '<table><tr><td>Fecha:</td><td><div class="input-group date" id="fecha"><input type="text" class="form-control" name="fecha" id="fecha" value="'+json.fecha+'">' + icon + '</div></td></tr>';
+                $tableDetalle += '<tr><td>Tipo de Pedido:</td><td><div class="checkbox"><label class="checkbox-inline"><input type="checkbox" id="tipo_pedido" checked data-toggle="toggle" data-on="Contado" data-off="Credito" data-onstyle="success" data-offstyle="danger"></label></div></td></tr><table>';
                 $tableDetalle += '<div><b>Detalle del Pedido</b></div>';
                 $tableDetalle += '<table id="detalle_table_update" class="table table-striped table-bordered datatable">';
                 $tableDetalle += '<thead><tr><th>Codigo</th><th style="width:60%">Descripcion</th><th style="width:20%">Cantidad</th><th style="width:20%">Precio (Bs)</th><th>Quitar</th></tr></thead>';
@@ -57,7 +58,7 @@ function editPedido(idPedido) {
                                 
                 $tableUpdated = '<table id="table_new_products" class="table table-striped table-bordered"><thead><tr><th>producto</th><th>codigo</th><th>descripcion</th><th>cantidad</th><th>precio</th><th>total</th></tr></thead></table>'
                 $tablex += $tableUpdated;
-                $tableDetalle += $tablex;
+                $tableDetalle += $tablex;                                
                 BootstrapDialog.show({
                     title: 'Editar Pedido',
                     message: $content.append($tableDetalle),
@@ -65,6 +66,7 @@ function editPedido(idPedido) {
                         $('#fecha').datetimepicker({
                             format: 'YYYY-MM-DD HH:mm:ss'
                         });
+                         $('#tipo_pedido').bootstrapToggle();
                         /* get current */
                         var currentdt = $('#detalle_table_update input').serializeArray();
                         currentdt = $("#detalle_table_update").DataTable({

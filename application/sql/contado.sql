@@ -1,1 +1,1 @@
-ALTER TABLE `pedido` ADD `tipo_pedido` ENUM('CONTADO','CREDITO') NOT NULL DEFAULT 'CONTADO' AFTER `tipo_pedido`;
+ALTER TABLE `pedido` ADD `tipo_pedido` ENUM('CONTADO','CREDITO') NOT NULL DEFAULT 'CONTADO' AFTER `fechaModificacion`;
