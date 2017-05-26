@@ -1,0 +1,1 @@
+CREATE TABLE `provider`.`vendedor` ( `idVendedor` INT NOT NULL AUTO_INCREMENT , `nombres` VARCHAR(200) NOT NULL , `apellidos` VARCHAR(200) NOT NULL , `telefono` VARCHAR(50) NOT NULL , `direccion` TEXT NOT NULL , `email` TEXT NOT NULL , `celular` VARCHAR(50) NOT NULL , `observaciones` TEXT NOT NULL , PRIMARY KEY (`idVendedor`)) ENGINE = InnoDB;

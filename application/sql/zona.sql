@@ -1,0 +1,1 @@
+CREATE TABLE `provider`.`zonas` ( `idZona` INT NOT NULL AUTO_INCREMENT , `nombre` VARCHAR(250) NOT NULL , `descripcion` VARCHAR(250) NOT NULL ) ENGINE = InnoDB;

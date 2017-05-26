@@ -83,7 +83,7 @@ class Order_model extends CI_Model
     public function getOrderById($idOrder)
     {
         $query = $this->db->select()
-            ->where('numPedido', $idOrder)
+            ->where('numPedido', $idOrder)            
             ->get('pedido');
 
         $order = $query->first_row();
@@ -94,7 +94,7 @@ class Order_model extends CI_Model
             return null;
         }
         else {
-            $query = $this->db->query('SELECT d.cantidad, d.precio, d.IdProducto, d.descuento, d.idPedido, p.idProducto, p.codigoExterno, p.descripcion, p.unidadVenta FROM detalle d, producto p WHERE d.idProducto = p.idProducto and d.idPedido='.$idOrder);
+            $query = $this->db->query('SELECT d.cantidad, d.precio, d.IdProducto, d.descuento, d.idPedido, p.idProducto, p.codigoExterno, p.descripcion, p.unidadVenta FROM detalle d, producto p WHERE d.idProducto = p.idProducto and d.idPedido='.$idOrder.' order by p.descripcion');
 
             $result2 = $query->result();
         }
@@ -104,7 +104,7 @@ class Order_model extends CI_Model
     }
     public function getDetailById($idOrder)
     {
-        $query = $this->db->query('SELECT d.cantidad, d.precio, d.IdProducto, d.descuento, d.idPedido, p.idProducto, p.codigoExterno, p.descripcion, p.unidadVenta FROM detalle d, producto p WHERE d.idProducto = p.idProducto and d.idPedido='.$idOrder);
+        $query = $this->db->query('SELECT d.cantidad, d.precio, d.IdProducto, d.descuento, d.idPedido, p.idProducto, p.codigoExterno, p.descripcion, p.unidadVenta FROM detalle d, producto p WHERE d.idProducto = p.idProducto and d.idPedido='.$idOrder.' order by p.descripcion');
             // ->where('idPedido', $idOrder)
             // ->where('d.idProducto', 'p.idProducto')
 

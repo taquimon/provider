@@ -108,6 +108,7 @@ class Pedido extends MY_Controller {
             $idPedido = $this->request['idPedido'];
             //$data['idUser']         = $this->request['idUser'];
             $data['fecha']          = $this->request['fecha'];
+            $data['tipo_pedido'] = $this->request['tipoPedido'];
             $dataDetalle = $this->request['detalle'];
             $dataNewDetalle = $this->request['detalleNuevo'];
 
@@ -135,7 +136,7 @@ class Pedido extends MY_Controller {
                         $dataArray['cantidad'] = $this->getArrayValue($arrayDetails, "cantidad" . $p);
                         $dataArray['precio'] = $this->getArrayValue($arrayDetails, "precio" . $p);
                         $dataArray['descuento'] = $this->getArrayValue($arrayDetails, "descuento" . $p);
-                        $dataArray['fechaCreacion'] = date('Y-m-d H:i:s');
+                        $dataArray['fechaCreacion'] = date('Y-m-d H:i:s');                        
                         array_push($dataDetalleUpdated, $dataArray);
                     }
                     $detalleData = $this->orderModel->insertDetalle($dataDetalleUpdated);
@@ -159,7 +160,6 @@ class Pedido extends MY_Controller {
                     $detalleData = $this->orderModel->insertDetalle($dataDetalleNew);
                 }
             }
-
 
             if ($pedidoData) {
                 $result->message = "Se actualizo correctamente los datos del Pedido";
@@ -187,7 +187,7 @@ class Pedido extends MY_Controller {
     }
     public function factura($id) {        
         $pedidoArray = new stdClass();
-        $pedidoInfo = $this->orderModel->getOrderById($id);
+        $pedidoInfo = $this->orderModel->getOrderById($id);        
         $detalleInfo = $this->orderModel->getDetailById($id);
         $idCliente = $pedidoInfo->idCliente;
         $clienteInfo = $this->clientModel->getClientById($idCliente);

@@ -54,6 +54,30 @@
                         <li><a href="<?=base_url().'pedido/reportes'?>">Reportes</a></li>
                     </ul>
                 </li>
+                <li><a href="#" data-toggle="dropdown"><i class="glyphicon glyphicon-briefcase"></i> Vendedores <span
+                            class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="<?=base_url().'vendedor'?>">Listar Vendedores</a></li>
+                        <li class="divider"></li>
+                        <li><a href="<?=base_url().'vendedor/newVendedor'?>">Nuevo Vendedor</a></li>                                                                        
+                    </ul>
+                </li>
+                <li><a href="#" data-toggle="dropdown"><i class="glyphicon glyphicon-map-marker"></i> Zonas <span
+                            class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="<?=base_url().'zona'?>"> Listar Zonas</a></li>
+                        <li class="divider"></li>
+                        <li><a href="<?=base_url().'zona/newZona'?>"> Nueva Zona</a></li>                                                
+                    </ul>
+                </li>
+                <li><a href="#" data-toggle="dropdown"><i class="glyphicon glyphicon-briefcase"></i> Reportes <span
+                            class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="<?=base_url().'pedido/reportes'?>"> Ventas</a></li>
+                        <li class="divider"></li>
+                        <li><a href="<?=base_url().'pedido/reportes'?>"> Vendedores</a></li>                                                
+                    </ul>
+                </li>
                 <li>
                     <form class="navbar-search pull-left">
                         <input placeholder="Search" class="search-query form-control col-md-10" name="query"

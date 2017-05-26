@@ -30,8 +30,12 @@ function editPedido(idPedido) {
             success: function(json) {
                 var icon = '<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>';
                 var $content = $('<div></div>');
+                var checked = "";
+                if(json.tipo_pedido == 'CONTADO') {
+                    checked = "checked";
+                }
                 $tableDetalle = '<table><tr><td>Fecha:</td><td><div class="input-group date" id="fecha"><input type="text" class="form-control" name="fecha" id="fecha" value="'+json.fecha+'">' + icon + '</div></td></tr>';
-                $tableDetalle += '<tr><td>Tipo de Pedido:</td><td><div class="checkbox"><label class="checkbox-inline"><input type="checkbox" id="tipo_pedido" checked data-toggle="toggle" data-on="Contado" data-off="Credito" data-onstyle="success" data-offstyle="danger"></label></div></td></tr><table>';
+                $tableDetalle += '<tr><td>Tipo de Pedido:</td><td><div class="checkbox"><label class="checkbox-inline"><input type="checkbox" id="tipo_pedido" ' + checked + ' data-toggle="toggle" data-on="CONTADO" data-off="CREDITO" data-onstyle="success" data-offstyle="danger"></label></div></td></tr><table>';
                 $tableDetalle += '<div><b>Detalle del Pedido</b></div>';
                 $tableDetalle += '<table id="detalle_table_update" class="table table-striped table-bordered datatable">';
                 $tableDetalle += '<thead><tr><th>Codigo</th><th style="width:60%">Descripcion</th><th style="width:20%">Cantidad</th><th style="width:20%">Precio (Bs)</th><th>Quitar</th></tr></thead>';
@@ -101,7 +105,7 @@ function editPedido(idPedido) {
                             console.log(dt);
                             console.log(JSON.stringify(dt));
                             console.log(JSON.stringify(dtu));
-                            
+                            var tipoPedido = $('#tipo_pedido').prop('checked') == true ? 'CONTADO' : 'CREDITO';
                             var dataPedido = {
                                 idPedido: idPedido,
                                 idUser: '1',
@@ -110,6 +114,7 @@ function editPedido(idPedido) {
                                 detalleNuevo: JSON.stringify(dtu),
                                 oldProductos: oldProducts,
                                 newProductos: $("#productos").val(),
+                                tipoPedido: tipoPedido,
 
                             }
                             
@@ -135,11 +140,11 @@ function editPedido(idPedido) {
                                         }
                                     });                                    
                                     var urln = "<?= site_url('pedido/ajaxListOrder')?>";
-                                    $("#pedido_table").DataTable().ajax.url(urln);
-                                    $("#pedido_table").DataTable().ajax.reload();
+                                    $("#pedidos_table").DataTable().ajax.url(urln);
+                                    $("#pedidos_table").DataTable().ajax.reload();
                                     setTimeout(function(){
                                         dialogRef.close();
-                                    }, 5000);
+                                    }, 3000);
                                 }
                             });
                         }
