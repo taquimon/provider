@@ -58,6 +58,7 @@ class Cliente extends MY_Controller {
             $data['direccion']      = $this->request['direccion'];
             $data['telefono']       = $this->request['telefono'];
             $data['celular']        = $this->request['celular'];
+            $data['nit']            = $this->request['nit'];
             $data['razonSocial']    = $this->request['razonSocial'];
             $data['observaciones']  = $this->request['observaciones'];
             $data['zona']           = $this->request['zona'];
@@ -107,6 +108,7 @@ class Cliente extends MY_Controller {
             $data['email'] = $this->request['email'];
             $data['telefono'] = $this->request['telefono'];
 			$data['celular'] = $this->request['celular'];
+            $data['nit'] = $this->request['nit'];
 			$data['zona'] = $this->request['zona'];
             $data['razonSocial'] = $this->request['razonSocial'];
 			$data['observaciones'] = $this->request['observaciones'];

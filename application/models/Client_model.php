@@ -21,6 +21,7 @@ class Client_model extends CI_Model
             'direccion',
             'telefono',
             'celular',
+            'nit',
             'observaciones',
             'zona'            
         );

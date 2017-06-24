@@ -40,6 +40,7 @@
                 $content.append('<tr><td>Email:</td><td><input type="text" class="form-control" placeholder="Emal" id="email" value="'+json.email+'"></td></tr>');
                 $content.append('<tr><td>Telefono:</td><td><input type="text" class="form-control" placeholder="Telefono" id="telefono" value="'+json.telefono+'"></td></tr>');
 				$content.append('<tr><td>Celular:</td><td><input type="text" class="form-control" placeholder="Celular" id="celular" value="'+json.celular+'"></td></tr>');
+                $content.append('<tr><td>NIT/CI:</td><td><input type="text" class="form-control" placeholder="nit" id="nit" value="'+json.nit+'"></td></tr>');
 				$content.append('<tr><td>Zona:</td><td><input type="text" class="form-control" placeholder="Zona" id="zona" value="'+json.zona+'"></td></tr>');
                 $content.append('<tr><td>Razon Social:</td><td><input type="text" class="form-control" placeholder="Razon Social" id="razonSocial" value="'+json.razonSocial+'"></td></tr>');
  				$content.append('<tr><td>Observaciones:</td><td><input type="text" class="form-control" placeholder="Observaciones" id="observaciones" value="'+json.observaciones+'"></td></tr>');
@@ -68,6 +69,7 @@
                                 email: $('#email').val(),
                                 telefono: $('#telefono').val(),
  								celular: $('#celular').val(),
+                                nit: $('#nit').val(),
  								zona: $('#zona').val(),
                                 razonSocial: $('#razonSocial').val(),
  								observaciones: $('#observaciones').val(),
@@ -195,6 +197,7 @@
                 { "data": "email" , sDefaultContent: ""},
                 { "data": "telefono" , sDefaultContent: ""},
                 { "data": "celular" , sDefaultContent: ""},
+                { "data": "nit" , sDefaultContent: ""},
                 { "data": "razonSocial" , sDefaultContent: ""},
                 { "data": "observaciones" , sDefaultContent: ""},
                 { "data": "zona" , sDefaultContent: ""},
@@ -240,6 +243,7 @@
                             <th>Email</th>
                             <th>Telefono</th>
                             <th>Celular</th>
+                            <th>NIT/CI</th>
                             <th>Razon Social</th>
                             <th>Observaciones</th>
                             <th>Zona</th>

@@ -147,7 +147,7 @@ ul.action-links {
                     Senor(es): <?=$this->data->cliente->razonSocial?>
                 </div>
                 <div class="col-xs-2">                
-                    NIT/CI:
+                    NIT/CI: <?=$this->data->cliente->nit?>
                 </div>
                 <div class="col-xs-3">                
                     Codigo: <?=$this->data->cliente->codigoCliente?>
@@ -180,7 +180,7 @@ ul.action-links {
                                         echo $d->codigoExterno.'<br>';
                                     }
                                     echo '</td>';
-                                    echo '<td style="width:10%;text-align:center;">';
+                                    echo '<td style="width:10%;text-align:right;">';
                                     foreach ($det as $d) {
                                         echo $d->cantidad.'<br>';
                                     }
@@ -195,14 +195,14 @@ ul.action-links {
                                         echo $d->descripcion.'<br>';
                                     }
                                     echo '</td>';
-                                    echo '<td style="width:10%;text-align:center;">';
+                                    echo '<td style="width:10%;text-align:right;">';
                                     foreach ($det as $d) {
-                                        echo $d->precio.'<br>';
+                                        echo number_format($d->precio, 2).'<br>';
                                     }
                                     echo '</td>';
-                                    echo '<td style="width:10%;text-align:center;">';
+                                    echo '<td style="width:10%;text-align:right;">';
                                     foreach ($det as $d) {
-                                        echo $d->precio* $d->cantidad.'<br>';
+                                        echo number_format($d->precio* $d->cantidad, 2).'<br>';
                                     }
                                     echo '</td>';
                                 
@@ -219,7 +219,7 @@ ul.action-links {
                     <b>Total:</b>
                 </div>
                 <div class="col-xs-1">                
-                    <b><?=$this->data->pedido->total?></b>
+                    <b><?=number_format($this->data->pedido->total, 2)?></b>
                 </div>
             </div>            
             <div class="row">                
