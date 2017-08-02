@@ -84,13 +84,25 @@ class Sales_model extends CI_Model
         return $result;
 
     }  
-    public function getZonasVendedor()
+    public function getNameZonasVendedor($idVendedor)
     {
+        
+        $queryString = "SELECT z.nombre FROM zona_xref_vendedor zxv, zonas z WHERE zxv.idZona = z.idZona and zxv.idVendedor = ".$idVendedor;
+        $query = $this->db->query($queryString);
+        
+        $result = $query->result();
 
+        return $result;
+    }
+    public function getZonasVendedor($idVendedor)
+    {
         $this->db->select('*')
-        ->from('zonas_xref_vendedor zxv'); 
+               ->from('zona_xref_vendedor zxv')
+               ->where('idvendedor', $idVendedor); 
+            
         $query = $this->db->get();
 
+        
         $result = $query->result();
 
         return $result;
@@ -126,10 +138,19 @@ class Sales_model extends CI_Model
     }
     
     public function insertVendedorZonas($data)
-    {
-        
+    {        
+
         $result = $this->db->insert_batch('zona_xref_vendedor', $data);
         
+        $insert_id = $this->db->insert_id();
+        
+        return $insert_id;
+    }
+    public function updateZonaXrefVendedor($idVendedor, $data) 
+    {
+        $this->db->delete('zona_xref_vendedor', array('idVendedor' => $idVendedor));
+        
+        $result = $this->db->insert_batch('zona_xref_vendedor', $data);        
         $insert_id = $this->db->insert_id();
         
         return $insert_id;

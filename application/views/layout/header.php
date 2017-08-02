@@ -75,7 +75,7 @@
                     <ul class="dropdown-menu" role="menu">
                         <li><a href="<?=base_url().'pedido/reportes'?>"> Ventas</a></li>
                         <li class="divider"></li>
-                        <li><a href="<?=base_url().'pedido/reportes'?>"> Vendedores</a></li>                                                
+                        <li><a href="<?=base_url().'vendedor/reportes'?>"> Vendedores</a></li>                                                
                     </ul>
                 </li>
                 <li>

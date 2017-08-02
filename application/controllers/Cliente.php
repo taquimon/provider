@@ -67,7 +67,7 @@ class Cliente extends MY_Controller {
             $clientData = $this->clientModel->insert($data);
 
             if ($clientData) {
-                $result->message = html_message("Se agrego correctamente el cliente","success");
+                $result->message = "Se agrego correctamente el cliente";
             }
 
         } catch (Exception $e) {

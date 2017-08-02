@@ -33,6 +33,12 @@ class Vendedor extends MY_Controller {
 
 	   foreach($saless as $sales) {
             $id = $sales->idVendedor;
+            $zonasString = $this->salesModel->getNameZonasVendedor($id);            
+            $salesZonas = array();
+            foreach($zonasString as $zs) {
+                 array_push($salesZonas, $zs->nombre);
+            }
+            $sales->zona = implode(",", $salesZonas);
             $sales->options = '<a href="#" onclick="editVendedor('.$id.')" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-edit glyphicon-white"></i> Editar</a>&nbsp;'.
            '<a href="#" onclick="deleteVendedor('.$id.')" class="btn btn-danger btn-sm"><i class="glyphicon glyphicon-remove-sign glyphicon-white"></i> Borrar</a>';
 
@@ -94,6 +100,8 @@ class Vendedor extends MY_Controller {
             $idsales = $this->request['idVendedor'];
         }
         $vendedor = $this->salesModel->getVendedorById($idsales);
+        $zonasByVendedor = $this->salesModel->getZonasVendedor($idsales);
+        $vendedor->zonas = $zonasByVendedor;
 
         echo json_encode($vendedor);
     }
@@ -113,25 +121,31 @@ class Vendedor extends MY_Controller {
     {
         $result = new stdClass();
         try{
-            $data['codigovendedor']  = $this->request['codigovendedor'];
+            $data['idVendedor']  = $this->request['idVendedor'];
             $data['nombres']    = $this->request['nombres'];
             $data['apellidos']       = $this->request['apellidos'];
             $data['direccion']    = $this->request['direccion'];
             $data['email'] = $this->request['email'];
             $data['telefono'] = $this->request['telefono'];
 			$data['celular'] = $this->request['celular'];
-			$data['zona'] = $this->request['zona'];
-            $data['razonSocial'] = $this->request['razonSocial'];
-			$data['observaciones'] = $this->request['observaciones'];
-			$data['tipovendedor'] = $this->request['tipovendedor'];
+			$data['observaciones'] = $this->request['observaciones'];			
 
 
-            $idvendedor = $this->request['idvendedor'];
+            $idVendedor = $this->request['idVendedor'];
 
-            $salesData = $this->salesModel->updateVendedor($idvendedor, $data);
+            $salesData = $this->salesModel->updateVendedor($idVendedor, $data);            
 
             if ($salesData) {
                 $result->message = "Se actualizo correctamente los datos del vendedor";
+                $zonas = $this->request['zonas'];                
+                $dataZonaVendedor = array();
+                $arrayZonaVendedor = array();
+                foreach($zonas as $dz) {
+                    $dataZonaVendedor['idVendedor'] = $idVendedor;
+                    $dataZonaVendedor['idZona'] = $dz;
+                    array_push($arrayZonaVendedor, $dataZonaVendedor);
+                }
+                $this->salesModel->updateZonaXrefVendedor($idVendedor, $arrayZonaVendedor);                
             }
 
         } catch (Exception $e) {

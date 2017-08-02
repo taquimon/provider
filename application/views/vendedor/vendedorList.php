@@ -1,6 +1,6 @@
 <script type="text/javascript" charset="utf-8">
 
-	function fillZonas() {        
+	function fillZonas(zonas) {        
         $.ajax({
             url: "<?=site_url('zona/ajaxGetZonas')?>",
             dataType: "json",            
@@ -12,6 +12,12 @@
                 }
 
                 $('#zonas').html(options); 				
+                console.log(zonas);
+                $.each(zonas, function(i,e){
+                    console.log(i);
+                    console.log(e.idZona);
+                    $("#zonas option[value=" + e.idZona + "]").prop("selected", true);
+                });
                 $('#zonas').selectpicker('refresh');
 
             },
@@ -41,12 +47,13 @@
  				$content.append('<tr><td>Observaciones:</td><td><input type="text" class="form-control" placeholder="Observaciones" id="observaciones" value="'+json.observaciones+'"></td></tr>');
 				$content.append('<tr><td>Zonas:</td><td><select id="zonas" data-style="btn-primary" multiple></select></td></tr>');
 				var idVendedor = json.idVendedor;
+                var zonas = json.zonas;
 
                 BootstrapDialog.show({
                     title: 'Editar Vendedor',
                     message: $content,
 					onshown: function(dialogRef){
-						fillZonas();
+						fillZonas(zonas);                        
 					},
                     buttons: [{
                         icon: 'glyphicon glyphicon-check',
@@ -180,7 +187,7 @@
                 dataSrc: 'data',
             },
             "columns": [
-                { "data": "idvendedor", sDefaultContent: "" },				
+                { "data": "idVendedor", sDefaultContent: "" },				
                 { "data": "nombres" , sDefaultContent: ""},
                 { "data": "apellidos" , sDefaultContent: ""},
                 { "data": "direccion" , sDefaultContent: ""},

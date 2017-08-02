@@ -21,6 +21,26 @@
             }
         });
     }
+    function fillZonas(idZona) {
+        $.ajax({
+            url: "<?=site_url('zona/ajaxGetZonas')?>",
+            dataType: "json",
+            type: 'GET',
+            success: function(json) {
+                var options = '';
+                for (var x = 0; x < json.length; x++) {
+                    options += '<option value="' + json[x].idZona + '">' + json[x].nombre + '</option>';
+                }
+
+                $('#zona').html(options);
+                $('#zona').val(idZona);
+                $('#zona').selectpicker('refresh');
+            },
+            error: function() {
+                alert(options);
+            }
+        });
+    }
 	function editClient(idClient) {
 
         var dataProduct = {
@@ -41,17 +61,19 @@
                 $content.append('<tr><td>Telefono:</td><td><input type="text" class="form-control" placeholder="Telefono" id="telefono" value="'+json.telefono+'"></td></tr>');
 				$content.append('<tr><td>Celular:</td><td><input type="text" class="form-control" placeholder="Celular" id="celular" value="'+json.celular+'"></td></tr>');
                 $content.append('<tr><td>NIT/CI:</td><td><input type="text" class="form-control" placeholder="nit" id="nit" value="'+json.nit+'"></td></tr>');
-				$content.append('<tr><td>Zona:</td><td><input type="text" class="form-control" placeholder="Zona" id="zona" value="'+json.zona+'"></td></tr>');
+				$content.append('<tr><td>Zona:</td><td><select id="zona" data-style="btn-primary"></select></td></tr>');
                 $content.append('<tr><td>Razon Social:</td><td><input type="text" class="form-control" placeholder="Razon Social" id="razonSocial" value="'+json.razonSocial+'"></td></tr>');
  				$content.append('<tr><td>Observaciones:</td><td><input type="text" class="form-control" placeholder="Observaciones" id="observaciones" value="'+json.observaciones+'"></td></tr>');
 				$content.append('<tr><td>Tipo Cliente:</td><td><select id="tipoCliente" data-style="btn-primary"></select></td></tr>');
 				var idTipoCliente = json.tipoCliente;
+                var idZona = json.zona;
 
                 BootstrapDialog.show({
                     title: 'Editar Cliente',
                     message: $content,
 					onshown: function(dialogRef){
 						fillTipoCliente(idTipoCliente);
+                        fillZonas(idZona);
 					},
                     buttons: [{
                         icon: 'glyphicon glyphicon-check',

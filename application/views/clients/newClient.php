@@ -1,6 +1,6 @@
 <script type="text/javascript" charset="utf-8">
     fillTipoCliente();
-
+    fillZonas();
     function addNewClientData() {
         var dataClient = {
             codigoCliente: $("#codigoCliente").val(),
@@ -14,6 +14,7 @@
             observaciones: $("#observaciones").val(),
             zona: $("#zona").val(),
             tipoCliente: $("#tipoCliente").val(),
+            nit: $("#nit").val(),
         };
 
         var url = "<?=site_url('cliente/jsonGuardarNuevo')?>";
@@ -72,6 +73,25 @@
 
                 $('#tipoCliente').html(options);
                 $('#tipoCliente').selectpicker('refresh');
+            },
+            error: function() {
+                alert(options);
+            }
+        });
+    }
+    function fillZonas() {
+        $.ajax({
+            url: "<?=site_url('zona/ajaxGetZonas')?>",
+            dataType: "json",
+            type: 'GET',
+            success: function(json) {
+                var options = '';
+                for (var x = 0; x < json.length; x++) {
+                    options += '<option value="' + json[x].idZona + '">' + json[x].nombre + '</option>';
+                }
+
+                $('#zona').html(options);
+                $('#zona').selectpicker('refresh');
             },
             error: function() {
                 alert(options);
@@ -198,25 +218,35 @@
                             <div class="input-group col-md-6">
                                 <span class="input-group-addon">
                             <i class="glyphicon glyphicon-globe blue"></i>
-                            </span>
-                                <input type="text" class="form-control" placeholder="Zona" id="zona">
+                            </span>                               
+                                <select id="zona" class="selectpicker form-control" data-live-search="true" data-style="btn-primary">
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <label for="Tipo Cliente">Tipo Cliente</label>
-                            <div class="control-group cold-md-6">
-                                <div class="controls">
-                                    <select id="tipoCliente" class="selectpicker" data-live-search="true" data-style="btn-primary">
-                                    </select>
-                                </div>
+                            <div class="input-group col-md-6">
+                                <span class="input-group-addon">
+                                <i class="glyphicon glyphicon-tasks blue"></i>
+                                </span>                                
+                                    <select id="tipoCliente" class="selectpicker form-control" data-live-search="true" data-style="btn-primary">
+                                    </select>                                
                             </div>
                         </div>
                         <div class="col-md-4">
+                            <label for="nit">Celular</label>
+                            <div class="input-group col-md-6">
+                                <span class="input-group-addon">
+                            <i class="glyphicon glyphicon-pencil blue"></i>
+                            </span>
+                                <input type="text" class="form-control" placeholder="nit" id="nit">
+                            </div>
                         </div>
                     </div>
                     <!-- row 4-->
                     <div class="row">
                         <div class="col-md-12">
+                            <label for="Tipo Cliente"></label>
                             <div class="group">
                                 <a onclick="addNewClientData()" title="Agregar Nuevo Cliente" data-toggle="tooltip" class="btn btn-primary">
                                     <i class="glyphicon glyphicon-ok-sign"></i> Guardar</a>
