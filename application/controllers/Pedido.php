@@ -19,6 +19,7 @@ class Pedido extends MY_Controller {
        $this->load->model('order_model', 'orderModel');       
        $this->load->model('client_model', 'clientModel');
        $this->load->model('product_model', 'productModel');
+       $this->load->model('zona_model', 'zonaModel');
 
    }
    public function index() {
@@ -205,8 +206,8 @@ class Pedido extends MY_Controller {
         if(isset($this->request['fechaReporte'])) {
            $fecha = $this->request['fechaReporte'];
            $opcion = $this->request['opcion'];           
-           if(isset($this->request['zona'])) {
-               $zonaSelected = $this->request['zona'];               
+           if(isset($this->request['zona'])) {                              
+               $zonaSelected = $this->request['zona'];
            }
            else {
                 $zonaSelected = null;                
@@ -230,13 +231,21 @@ class Pedido extends MY_Controller {
                              $totalInfo = $this->sumProducts($totalInfo);                             
                              //print_r($totalInfo);
                         break;
+        
         }
+        $zonaNames = array();
+        print_r($zonas);
+        foreach ($zonas as $zx) {
+            $name = $this->zonaModel->getZonaById($zx);
+            array_push($zonaNames,$name->nombre);    
+        }
+        print_r($zonaNames);
         $reporteArray = new stdClass();                
         $reporteArray->tipo = $opcion;
         
         $reporteArray->lista = $totalInfo;
         $reporteArray->fecha = $fecha;
-        $reporteArray->zonas = $zonas;
+        $reporteArray->zonas = $zonaNames;
         
         //print_r($reporteArray);
         $this->data = $reporteArray;
@@ -489,6 +498,8 @@ class Pedido extends MY_Controller {
     }
     function updateCantidadProductos($dataProduct) 
     {
-            
+        foreach($dataProduct as $dp) {
+           $x = $this->orderModel->updateQuantity($dp);    
+        }    
     }
 }
