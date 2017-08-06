@@ -234,12 +234,12 @@ class Pedido extends MY_Controller {
         
         }
         $zonaNames = array();
-        print_r($zonas);
+        
         foreach ($zonas as $zx) {
             $name = $this->zonaModel->getZonaById($zx);
-            array_push($zonaNames,$name->nombre);    
+            $zonaNames[$name->idZona] = $name->nombre;
         }
-        print_r($zonaNames);
+        
         $reporteArray = new stdClass();                
         $reporteArray->tipo = $opcion;
         
