@@ -20,6 +20,7 @@
         <?= link_tag(site_url().'bower_components/bootstrap/dist/css/bootstrap-select.min.css')?>
         <?= link_tag(site_url().'bower_components/bootstrap/dist/css/bootstrap-dialog.min.css')?>                
         <?= link_tag(site_url().'bower_components/bootstrap/dist/css/bootstrap-toggle.min.css')?>
+        <?= link_tag(site_url().'bower_components/bootstrap/dist/css/daterangepicker.css')?>
         <?= link_tag(site_url().'css/jquery.noty.css')?>
         <?= link_tag(site_url().'css/dataTables.bootstrap.min.css')?>
         <?= link_tag(site_url().'css/noty_theme_default.css')?>
@@ -53,6 +54,8 @@
         <?= script_tag (site_url().'bower_components/bootstrap/dist/js/bootstrap-datetimepicker.js')?>        
         <?= script_tag (site_url().'bower_components/bootstrap/dist/js/bootstrap-dialog.min.js')?>  
         <?= script_tag (site_url().'bower_components/bootstrap/dist/js/bootstrap-toggle.min.js')?>  
+        <?= script_tag (site_url().'bower_components/bootstrap/dist/js/moment.js')?>  
+        <?= script_tag (site_url().'bower_components/bootstrap/dist/js/daterangepicker.js')?>          
         <!-- data table plugin -->
         <?= script_tag (site_url().'js/jquery.dataTables.min.js')?>
         <?= script_tag (site_url().'js/dataTables.bootstrap.min.js')?>

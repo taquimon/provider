@@ -2,8 +2,19 @@
     var detailTable;
     
     $(function() {
-        $('#fechaReporte').datetimepicker({
-            format: 'YYYY-MM-DD'
+        // var start = moment().subtract(29, 'days');
+        var start = moment().subtract(5, 'days');
+        var end = moment();
+
+        function cb(start, end) {
+            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        }
+        $('input[name="daterange"]').daterangepicker({
+            startDate: start,
+            endDate: end,            
+            locale: {
+                format: 'YYYY-MM-DD'
+            }
         });
         fillZonas();
     });
@@ -29,7 +40,7 @@
         });
     }
 </script>
-<?php echo form_open('pedido/printReport');?>
+<?php echo form_open('vendedor/printReport');?>
 <div class="row">
     <div class="box col-md-12">
         <div class="box-inner">
@@ -41,11 +52,12 @@
             </div>
             <div class="box-content">
                 <div class="row">
-                    <div class="col-md-2">
+                    <div class="col-md-4">
                         <label for="fecha">Seleccione Fecha:</label>
-                        <div class="form-group">
-                            <div class="input-group date" id="fechaReporte" >
-                                <input type="text" class="form-control" name="fechaReporte"/>
+                        <div class="form-group date">
+                            <div class="input-group" id="daterange">
+                                <!--<input type="text" class="form-control" name="fechaReporte"/>-->
+                                <input type="text" name="daterange" class="form-control"/>
                                 <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                 </span>
@@ -64,22 +76,26 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-2">                                       
-                        <label class="checkbox-inline">
-                        <input type="checkbox" id="zona" value="zona" name="zona"/>Zona</label>
+                    <div class="col-md-2">                   
+                    
+                        <label class="checkbox-inline" for="Zona">
+                        <input type="checkbox" id="zona" value="zona" name="zona">Zona
+                        </label>
                         <div class="input-group col-md-4">
                             <span class="input-group-addon">
                             <i class="glyphicon glyphicon-globe blue"></i>
                             </span>
                             <select id="zonas" class="selectpicker" data-live-search="true" data-style="btn-primary" name="zonas[]" multiple data-selected-text-format="count > 3">                                
-                            </select>                                                   
+                            </select>                        
+
                         </div>        
                     </div>
-                    <div class="col-md-2">
-                        <label class="button">&nbsp;</label>
+                    <div class="col-md-2">                   
+                        
+                        <label class="checkbox-inline" for="Zona">&nbsp</label>
                         <div class="input-group">
                             <button title="Buscar" type="submit" data-toggle="tooltip" class="btn btn-primary">
-                                <i class="glyphicon glyphicon-ok-sign"></i> Buscar</button>                
+                            <i class="glyphicon glyphicon-ok-sign"></i> Buscar</button>                
                         </div>
                     </div>
                 </div>

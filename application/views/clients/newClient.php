@@ -234,7 +234,7 @@
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <label for="nit">Celular</label>
+                            <label for="nit">NIT/CI</label>
                             <div class="input-group col-md-6">
                                 <span class="input-group-addon">
                             <i class="glyphicon glyphicon-pencil blue"></i>

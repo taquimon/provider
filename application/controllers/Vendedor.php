@@ -166,4 +166,57 @@ class Vendedor extends MY_Controller {
         }
         echo json_encode($result);
     }
+    public function reportes() {
+        $this->middle = 'vendedor/reportes'; 
+        $this->layout();   
+    }
+
+    public function printReport() {        
+        if(isset($this->request['daterange'])) {
+           $fecha = $this->request['daterange'];
+           $opcion = $this->request['opcion'];           
+           if(isset($this->request['zona'])) {
+               $zonaSelected = $this->request['zona'];               
+           }
+           else {
+                $zonaSelected = null;                
+           }                      
+           if(isset($this->request['zonas'])) {
+                $zonas = $this->request['zonas'];
+            } else {
+                $zonas = null;            
+            }
+            print_r($fecha);
+            $fechas = explode(" - ", $fecha);
+            $startDate = $fechas[0];
+            $endDate = $fechas[1];
+            print_r($startDate);
+            print_r($endDate);
+        }
+        
+        // switch($opcion) {
+        //     case "pedido": $totalInfo = $this->orderModel->getPedidosByDate($fecha, $zonas);
+        //                    foreach($totalInfo as $pedido) {
+        //                        $detalleInfo = $this->orderModel->getDetailById($pedido->numPedido);
+        //                        $pedido = $this->getTotals($pedido, $detalleInfo); 
+        //                    } 
+                           
+        //                 break;                        
+        //     case "producto": $totalInfo = $this->orderModel->getTotalProductsByDate($fecha, $zonas);
+        //                      $totalInfo = $this->sumProducts($totalInfo);                             
+        //                      //print_r($totalInfo);
+        //                 break;
+        // }
+        $reporteArray = new stdClass();                
+        $reporteArray->tipo = $opcion;
+        
+        // $reporteArray->lista = $totalInfo;
+        // $reporteArray->fecha = $fecha;
+        // $reporteArray->zonas = $zonas;
+        
+        //print_r($reporteArray);
+        // $this->data = $reporteArray;
+        $this->middle = 'vendedor/printReport';
+        $this->layout();
+    }
 }

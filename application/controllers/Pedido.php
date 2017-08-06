@@ -94,7 +94,8 @@ class Pedido extends MY_Controller {
                 array_push($dataDetails, $dataArray);
             }
 
-            $detalleResults = $this->orderModel->insertDetalle($dataDetails);            
+            $detalleResults = $this->orderModel->insertDetalle($dataDetails);
+
 
         } catch (Exception $e) {
             $result->message = "No se pudo agregar los datos ".$e->getMessage();
@@ -158,6 +159,7 @@ class Pedido extends MY_Controller {
                         array_push($dataDetalleNew, $dataArray);
                     }
                     $detalleData = $this->orderModel->insertDetalle($dataDetalleNew);
+
                 }
             }
 
@@ -484,5 +486,9 @@ class Pedido extends MY_Controller {
     {
         $lastDate = $this->orderModel->getLastDate();
         echo json_encode($lastDate[0]);
+    }
+    function updateCantidadProductos($dataProduct) 
+    {
+            
     }
 }
