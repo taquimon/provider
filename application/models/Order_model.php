@@ -53,11 +53,11 @@ class Order_model extends CI_Model
 
     public function getPedidosByDate($fecha, $zona = null) {
         if($zona == null) {
-            $queryString = "SELECT p.numPedido, c.razonSocial, c.idCliente, c.zona, p.fecha FROM pedido p, clientes c where p.idCliente=c.idCliente and (fecha between'".$fecha." 00:00:00' and '".$fecha." 23:59:59') order by c.zona ;";
+            $queryString = "SELECT p.numPedido, c.razonSocial, c.idCliente, c.codigoCliente, c.zona, p.fecha FROM pedido p, clientes c where p.idCliente=c.idCliente and (fecha between'".$fecha." 00:00:00' and '".$fecha." 23:59:59') order by c.zona ;";
         } else {
             $zonaGroup = implode ("','" , $zona);
             $zonaGroup = "'".$zonaGroup."'";
-            $queryString = "SELECT p.numPedido, c.razonSocial, c.idCliente, c.zona, p.fecha FROM pedido p, clientes c where p.idCliente=c.idCliente and (fecha between'".$fecha." 00:00:00' and '".$fecha." 23:59:59') and c.zona in (".$zonaGroup.") order by c.zona ;";
+            $queryString = "SELECT p.numPedido, c.razonSocial, c.idCliente, c.codigoCliente, c.zona, p.fecha FROM pedido p, clientes c where p.idCliente=c.idCliente and (fecha between'".$fecha." 00:00:00' and '".$fecha." 23:59:59') and c.zona in (".$zonaGroup.") order by c.zona ;";
         }        
         $query = $this->db->query($queryString);
         $result = $query->result();
@@ -178,6 +178,10 @@ class Order_model extends CI_Model
     public function deleteAllDetalle($idPedido) {
 
         $this->db->delete('detalle', array('idPedido' => $idPedido));
+    }
+
+    public function updateQuantity($idProducto, $cantidad) {
+        $query = $this->db->query('UPDATE cantidad  producto where idProducto = '.$idProducto);
     }
 }
 

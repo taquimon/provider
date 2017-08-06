@@ -145,6 +145,7 @@ if($this->data->tipo == "pedido") {
                                 <th style="width:10%;text-align:left;">No.</th>
                                 <th style="width:20%;text-align:left;">Fecha</th>
                                 <th style="width:20%;text-align:left;">Zona</th>
+                                <th style="width:20%;text-align:left;">Codigo Cliente</th>
                                 <th style="width:50%;text-align:left;">Razon Social</th>
                                 <th style="width:10%;text-align:right;">Total</th>                                
                             </tr>
@@ -160,6 +161,7 @@ if($this->data->tipo == "pedido") {
                                 echo '<td>'.$li->numPedido.'</td>';
                                 echo '<td>'.$li->fecha.'</td>';
                                 echo '<td>'.$this->data->zonas[$li->zona].'</td>';
+                                echo '<td>'.$li->codigoCliente.'</td>';
                                 echo '<td>'.$li->razonSocial.'</td>';
                                 echo '<td style="width:10%;text-align:right;">'.$li->total.'</td>';
                                 echo '</tr>'; 

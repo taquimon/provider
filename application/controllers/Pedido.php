@@ -203,6 +203,7 @@ class Pedido extends MY_Controller {
         $this->layout();
     }
     public function printReport() {        
+        $zonaNames = array();
         if(isset($this->request['fechaReporte'])) {
            $fecha = $this->request['fechaReporte'];
            $opcion = $this->request['opcion'];           
@@ -214,6 +215,12 @@ class Pedido extends MY_Controller {
            }                      
            if(isset($this->request['zonas'])) {
                 $zonas = $this->request['zonas'];
+                
+        
+                foreach ($zonas as $zx) {
+                    $name = $this->zonaModel->getZonaById($zx);
+                    $zonaNames[$name->idZona] = $name->nombre;
+                }
             } else {
                 $zonas = null;
             }
@@ -233,12 +240,7 @@ class Pedido extends MY_Controller {
                         break;
         
         }
-        $zonaNames = array();
         
-        foreach ($zonas as $zx) {
-            $name = $this->zonaModel->getZonaById($zx);
-            $zonaNames[$name->idZona] = $name->nombre;
-        }
         
         $reporteArray = new stdClass();                
         $reporteArray->tipo = $opcion;

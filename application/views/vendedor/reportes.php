@@ -76,6 +76,20 @@
                             </select>
                         </div>
                     </div>
+                     <div class="col-md-2">                   
+                    
+                        <label class="checkbox-inline" for="Vendedor">
+                        <input type="checkbox" id="vendedor" value="Vendedor" name="vendeor">Vendedor
+                        </label>
+                        <div class="input-group col-md-4">
+                            <span class="input-group-addon">
+                            <i class="glyphicon glyphicon-globe blue"></i>
+                            </span>
+                            <select id="zonas" class="selectpicker" data-live-search="true" data-style="btn-primary" name="vendedor[]" multiple data-selected-text-format="count > 3">                                
+                            </select>                        
+
+                        </div>        
+                    </div>
                     <div class="col-md-2">                   
                     
                         <label class="checkbox-inline" for="Zona">
