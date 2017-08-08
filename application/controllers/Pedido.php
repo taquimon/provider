@@ -240,7 +240,7 @@ class Pedido extends MY_Controller {
                         break;                        
             case "producto": $totalInfo = $this->orderModel->getTotalProductsByDate($fecha, $zonas);
                              $totalInfo = $this->sumProducts($totalInfo);                             
-                             //print_r($totalInfo);
+                            //  print_r($totalInfo);
                         break;
         
         }
@@ -252,6 +252,7 @@ class Pedido extends MY_Controller {
         $reporteArray->lista = $totalInfo;
         $reporteArray->fecha = $fecha;
         $reporteArray->zonas = $zonaNames;
+        $reporteArray->zonaSelected = $zonas;
                 
         $this->data = $reporteArray;
         $this->middle = 'pedidos/printReport';

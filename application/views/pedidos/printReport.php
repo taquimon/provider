@@ -232,8 +232,8 @@ if($this->data->tipo == "pedido") {
                     <h5 style="text-align: center">Zonas: 
                     <?php 
                     $zonas = $this->data->zonas;
-                    if (isset($zonas)) {
-                        echo (implode(',',$zonas). '-');
+                    if (isset($zonaSelected)) {
+                        echo (implode(',',$zonas). ' - ');
                     } else {
                         echo 'Todas - ';
                     }
