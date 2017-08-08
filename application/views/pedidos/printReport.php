@@ -160,7 +160,11 @@ if($this->data->tipo == "pedido") {
                                 echo '<tr style="horizantal-align:left;vertical-align:top">';                                
                                 echo '<td>'.$li->numPedido.'</td>';
                                 echo '<td>'.$li->fecha.'</td>';
-                                echo '<td>'.$this->data->zonas[$li->zona].'</td>';
+                                if(!isset($this->data->zonas[$li->zona])) {
+                                    echo '<td>'.$li->zona.'</td>';
+                                } else {
+                                    echo '<td>'.$this->data->zonas[$li->zona].'</td>';
+                                } 
                                 echo '<td>'.$li->codigoCliente.'</td>';
                                 echo '<td>'.$li->razonSocial.'</td>';
                                 echo '<td style="width:10%;text-align:right;">'.$li->total.'</td>';

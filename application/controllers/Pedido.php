@@ -223,6 +223,10 @@ class Pedido extends MY_Controller {
                 }
             } else {
                 $zonas = null;
+                $zonaList = $this->zonaModel->getZonaList();
+                foreach($zonaList as $zl) {
+                    $zonaNames[$zl->idZona] = $zl->nombre;
+                }
             }
         }
         
@@ -230,7 +234,7 @@ class Pedido extends MY_Controller {
             case "pedido": $totalInfo = $this->orderModel->getPedidosByDate($fecha, $zonas);
                            foreach($totalInfo as $pedido) {
                                $detalleInfo = $this->orderModel->getDetailById($pedido->numPedido);
-                               $pedido = $this->getTotals($pedido, $detalleInfo); 
+                               $pedido = $this->getTotals($pedido, $detalleInfo);                                
                            } 
                            
                         break;                        
@@ -248,8 +252,7 @@ class Pedido extends MY_Controller {
         $reporteArray->lista = $totalInfo;
         $reporteArray->fecha = $fecha;
         $reporteArray->zonas = $zonaNames;
-        
-        //print_r($reporteArray);
+                
         $this->data = $reporteArray;
         $this->middle = 'pedidos/printReport';
         $this->layout();
