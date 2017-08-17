@@ -29,7 +29,9 @@ class Auth extends MY_Controller {
 		elseif (!$this->ion_auth->is_admin()) // remove this elseif if you want to enable this for non-admins
 		{
 			// redirect them to the home page because they must be an administrator to view this
-			return show_error('You must be an administrator to view this page.');
+			// return show_error('You must be an administrator to view this page.');
+			$this->middle = 'home';
+			$this->layout();
 		}
 		else
 		{
@@ -42,8 +44,9 @@ class Auth extends MY_Controller {
 			{
 				$this->data['users'][$k]->groups = $this->ion_auth->get_users_groups($user->id)->result();
 			}
-
-			$this->_render_page('auth/index', $this->data);
+			$this->data = $this->data;
+			$this->middle = 'auth/index';
+			$this->layout();
 		}
 	}
 
@@ -518,7 +521,10 @@ class Auth extends MY_Controller {
                 'value' => $this->form_validation->set_value('password_confirm'),
             );
 
-            $this->_render_page('auth/create_user', $this->data);
+            // $this->_render_page('auth/create_user', $this->data);
+			$this->data = $this->data;
+			$this->middle = 'auth/create_user'; 
+			$this->layout();
         }
     }
 
