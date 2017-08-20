@@ -201,16 +201,15 @@ class Vendedor extends MY_Controller {
                 foreach($zonaList as $zl) {
                     $zonaNames[$zl->idZona] = $zl->nombre;
                 }
-            }
-            //print_r($fecha);
+            }            
             $fechas = explode(" - ", $fecha);
             $startDate = $fechas[0];
             $endDate = $fechas[1];
-            //print_r($startDate);
-            //print_r($endDate);
+            
         }        
+        $tipo_pedido = $this->request['tipoPedido'];        
         switch($opcion) {
-            case "pedido": $totalInfo = $this->orderModel->getPedidosByDate($startDate, $endDate, $zonas);
+            case "pedido": $totalInfo = $this->orderModel->getPedidosByDate($startDate, $endDate, $zonas, $tipo_pedido);
                            foreach($totalInfo as $pedido) {
                                $detalleInfo = $this->orderModel->getDetailById($pedido->numPedido);
                                $pedido = $this->getTotals($pedido, $detalleInfo); 

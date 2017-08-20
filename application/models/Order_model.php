@@ -29,7 +29,7 @@ class Order_model extends CI_Model
     public function getOrderList()
     {
 
-        $query = $this->db->query('SELECT p.numPedido, p.fecha, c.razonSocial, u.username, p.tipo_pedido from pedido p, clientes c, user u WHERE c.idCliente = p.idCliente and p.idUser=u.idUser');
+        $query = $this->db->query('SELECT p.numPedido, p.fecha, c.razonSocial, c.codigoCliente, u.username, p.tipo_pedido from pedido p, clientes c, user u WHERE c.idCliente = p.idCliente and p.idUser=u.idUser');
         $result = $query->result();
 
         return $result;
@@ -51,16 +51,24 @@ class Order_model extends CI_Model
         return $result;
     }
 
-    public function getPedidosByDate($fecha, $fecha2= null, $zona = null) {
+    public function getPedidosByDate($fecha, $fecha2= null, $zona = null, $tipo_pedido = 'TODOS') {
         if ($fecha2 == null) {
             $fecha2 = $fecha;
         }
+        $sqlTipoPedido = '';
+        if ($tipo_pedido != 'TODOS') {
+            $sqlTipoPedido = ' and p.tipo_pedido = "'.$tipo_pedido.'"';
+        }         
+
+
         if($zona == null) {
-            $queryString = "SELECT p.numPedido, c.razonSocial, c.idCliente, c.codigoCliente, c.zona, p.fecha FROM pedido p, clientes c where p.idCliente=c.idCliente and (fecha between'".$fecha." 00:00:00' and '".$fecha2." 23:59:59') order by p.numPedido, c.zona ;";
+            $queryString = "SELECT p.numPedido, c.razonSocial, c.idCliente, c.codigoCliente, c.zona, p.fecha, p.tipo_pedido FROM pedido p, clientes c "; 
+            $queryString .= "where p.idCliente=c.idCliente and (fecha between'".$fecha." 00:00:00' and '".$fecha2." 23:59:59') ". $sqlTipoPedido ." order by p.numPedido, c.zona ;";
         } else {
             $zonaGroup = implode ("','" , $zona);
             $zonaGroup = "'".$zonaGroup."'";
-            $queryString = "SELECT p.numPedido, c.razonSocial, c.idCliente, c.codigoCliente, c.zona, p.fecha FROM pedido p, clientes c where p.idCliente=c.idCliente and (fecha between'".$fecha." 00:00:00' and '".$fecha2." 23:59:59') and c.zona in (".$zonaGroup.") order by p.numPedido, c.zona ;";
+            $queryString = "SELECT p.numPedido, c.razonSocial, c.idCliente, c.codigoCliente, c.zona, p.fecha, p.tipo_pedido FROM pedido p, clientes c ";
+            $queryString .= "where p.idCliente=c.idCliente and (fecha between'".$fecha." 00:00:00' and '".$fecha2." 23:59:59') ". $sqlTipoPedido ." and c.zona in (".$zonaGroup.") order by p.numPedido, c.zona ;";
         }        
         $query = $this->db->query($queryString);
         $result = $query->result();
@@ -73,12 +81,12 @@ class Order_model extends CI_Model
         }
         if($zona == null) {
             $query = $this->db->query("select d.cantidad, pr.idProducto, pr.codigoExterno, pr.descripcion from detalle d, producto pr WHERE d.idProducto = pr.idProducto and d.idPedido in (
-            SELECT p.numPedido FROM pedido p where  (fecha between'".$fecha." 00:00:00' and '".$fecha2." 23:59:59')) order by pr.idProducto ;");
+            SELECT p.numPedido FROM pedido p where  (fecha between'".$fecha." 00:00:00' and '".$fecha2." 23:59:59')) order by pr.descripcion, pr.idProducto ;");
         } else {
             $zonaGroup = implode ("','" , $zona);
             $zonaGroup = "'".$zonaGroup."'";
             $query = $this->db->query("select d.cantidad, pr.idProducto, pr.codigoExterno, pr.descripcion from detalle d, producto pr WHERE d.idProducto = pr.idProducto and d.idPedido in (
-            SELECT p.numPedido FROM pedido p, clientes c where  (fecha between'".$fecha." 00:00:00' and '".$fecha2." 23:59:59') and p.idCliente=c.idCliente and c.zona in (".$zonaGroup.") ) order by pr.idProducto ;");
+            SELECT p.numPedido FROM pedido p, clientes c where  (fecha between'".$fecha." 00:00:00' and '".$fecha2." 23:59:59') and p.idCliente=c.idCliente and c.zona in (".$zonaGroup.") ) order by pr.descripcion, pr.idProducto ;");
 
         }
         $result = $query->result();

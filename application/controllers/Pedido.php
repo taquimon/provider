@@ -73,6 +73,7 @@ class Pedido extends MY_Controller {
             $data['fecha']          = $this->request['fecha'];
             $data['idUser']         = $this->request['idUser'];                        
             $data['fecha']          = $this->request['fecha'];
+            $data['tipo_pedido']    = $this->request['tipo_pedido'];
             $dataDetalle = $this->request['detalle'];
             $pedidoData = $this->orderModel->insert($data);                        
             
@@ -274,15 +275,26 @@ class Pedido extends MY_Controller {
 
     public function getTotals($pedido, $detalle){
         
-        $totalPedido = 0.0;
+        $totalPedido = 0.0;        
+        $totalContado = 0.0;
+        $totalCredito = 0.0;
+
         if($detalle) {
                 
             foreach ($detalle as $d) {
                 $total = $d->cantidad * $d->precio;
                 $totalPedido += $total;
+                if ($pedido->tipo_pedido == 'CONTADO') {                    
+                    $totalContado += $d->cantidad * $d->precio;
+                }
+                if ($pedido->tipo_pedido == 'CREDITO') {                    
+                    $totalCredito += $d->cantidad * $d->precio;
+                }
             }
         }
         $pedido->total = $totalPedido;
+        $pedido->totalContado = $totalContado;
+        $pedido->totalCredito = $totalCredito;
         $pedido->totalLiteral = $this->numToLetras($totalPedido);
 
         return $pedido;

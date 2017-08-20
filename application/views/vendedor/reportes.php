@@ -77,7 +77,7 @@
             </div>
             <div class="box-content">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label for="fecha">Seleccione Fecha:</label>
                         <div class="form-group date">
                             <div class="input-group" id="daterange">
@@ -93,7 +93,7 @@
                         <label for="cliente">Opciones</label>
                         <div class="input-group col-md-4">
                             <span class="input-group-addon">
-                            <i class="glyphicon glyphicon-user blue"></i>
+                            <i class="glyphicon glyphicon-tasks blue"></i>
                             </span>
                             <select id="opciones" class="selectpicker" data-live-search="true" data-style="btn-primary" name="opcion">
                                 <option value="pedido">Total Pedidos</option>
@@ -108,7 +108,7 @@
                         </label>
                         <div class="input-group col-md-4">
                             <span class="input-group-addon">
-                            <i class="glyphicon glyphicon-globe blue"></i>
+                            <i class="glyphicon glyphicon-user blue"></i>
                             </span>
                             <select id="vendedores" class="selectpicker" data-live-search="true" data-style="btn-primary" name="vendedores" onchange="fillZonas();">
                             </select>                        
@@ -130,6 +130,21 @@
                         </div>        
                     </div>
                     <div class="col-md-2">                   
+                    
+                        <label>Tipo Pedido</label>
+                        <div class="input-group col-md-4">
+                            <span class="input-group-addon">
+                            <i class="glyphicon glyphicon-usd green"></i>
+                            </span>
+                            <select id="tipoPedido" class="selectpicker" data-live-search="true" data-style="btn-success" name="tipoPedido">                                
+                                <option value="TODOS" checked>TODOS</option>
+                                <option value="CONTADO">CONTADO</option>
+                                <option value="CREDITO">CREDITO</option>
+                            </select>                        
+
+                        </div>        
+                    </div>
+                    <div class="col-md-1">                   
                         
                         <label class="checkbox-inline" for="Zona">&nbsp</label>
                         <div class="input-group">

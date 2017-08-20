@@ -238,6 +238,7 @@ function editPedido(idPedido) {
             "columns": [
                 { "data": "numPedido", sDefaultContent: ""}, 
                 { "data": "razonSocial", sDefaultContent: ""},
+                { "data": "codigoCliente", sDefaultContent: ""},
                 { "data": "username", sDefaultContent: ""},
                 { "data": "fecha", sDefaultContent: ""},                 
                 { "data": "detalles", sDefaultContent: ""},
@@ -336,9 +337,10 @@ function editPedido(idPedido) {
                         <tr>
                             <th>numPedido</th>
                             <th>Cliente</th>
+                            <th>Codigo Cliente</th>
                             <th>Usuario</th>
                             <th>Fecha</th>
-                            <th>Detalles</th>
+                            <th>Detalles</th>                            
                             <th>Tipo Pedido</th>           
                             <th>Opciones</th>
                         </tr>

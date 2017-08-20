@@ -41,7 +41,7 @@
     function addNewOrderData() {
         detailTable = $("#detalleTable").DataTable();
         var dataDetail = detailTable.$("input").serializeArray();
-
+        var tipoPedido = $('#tipo_pedido').prop('checked') == true ? 'CONTADO' : 'CREDITO';
         var dataOrder = {
             numPedido: $("#numPedido").val(),
             idCliente: $("#clientes").val(),
@@ -49,6 +49,7 @@
             idUser: '1',
             fecha: $("#datetimepicker1").data('date'),
             detalle: JSON.stringify(dataDetail),
+            tipo_pedido: tipoPedido,
         };
 
         var url = "<?=site_url('pedido/jsonGuardarNuevo')?>";
@@ -219,6 +220,15 @@
                                 <select id="clientes" class="selectpicker" data-live-search="true" data-style="btn-primary" data-show-subtext="true">
                                 </select>
                             </div>
+                        </div>
+                        <div>
+                           <div class="col-md-4">
+                            <label for="cliente">Tipo de Pedido</label>
+                                <div class="checkbox">
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" id="tipo_pedido" ' + checked + ' data-toggle="toggle" data-on="CONTADO" data-off="CREDITO" data-onstyle="success" data-offstyle="danger">
+                                    </label></div>
+                           </div>                        
                         </div>
                         <div class="col-md-4">
                             <label for="fecha">Fecha</label>

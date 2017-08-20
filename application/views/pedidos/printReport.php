@@ -144,6 +144,7 @@ if($this->data->tipo == "pedido") {
                             <tr>
                                 <th style="width:10%;text-align:left;">No.</th>
                                 <th style="width:20%;text-align:left;">Fecha</th>
+                                <th style="width:20%;text-align:left;">Tipo de Pedido</th>
                                 <th style="width:20%;text-align:left;">Zona</th>
                                 <th style="width:20%;text-align:left;">Codigo Cliente</th>
                                 <th style="width:50%;text-align:left;">Razon Social</th>
@@ -154,12 +155,15 @@ if($this->data->tipo == "pedido") {
                             <?php
                             $list = $this->data->lista;
                             $totalGeneral = 0;
+                            $totalContado = 0;
+                            $totalCredito = 0;
                             $totalClientes = 0;
                             $array_clientes = array();
                             foreach($list as $li) {
                                 echo '<tr style="horizantal-align:left;vertical-align:top">';                                
                                 echo '<td>'.$li->numPedido.'</td>';
                                 echo '<td>'.$li->fecha.'</td>';
+                                echo '<td>'.$li->tipo_pedido.'</td>';
                                 if(!isset($this->data->zonas[$li->zona])) {
                                     echo '<td>'.$li->zona.'</td>';
                                 } else {
@@ -170,7 +174,8 @@ if($this->data->tipo == "pedido") {
                                 echo '<td style="width:10%;text-align:right;">'.$li->total.'</td>';
                                 echo '</tr>'; 
                                 $totalGeneral += $li->total;
-                                
+                                $totalContado += $li->totalContado;
+                                $totalCredito += $li->totalCredito;
                                 array_push($array_clientes, $li->idCliente);
                             }
                             $totalClientes = count(array_unique($array_clientes));
@@ -179,6 +184,26 @@ if($this->data->tipo == "pedido") {
                     </table>              
                 </div>
             </div>
+            <div class="row">
+                <div class="col-xs-4"></div>
+                <div class="col-xs-5"></div>
+                <div class="col-xs-2">                
+                    <b>Contado:</b>
+                </div>
+                <div class="col-xs-1" style="text-align:right">                
+                    <b><?=$totalContado?></b>
+                </div>
+            </div>      
+            <div class="row">
+                <div class="col-xs-4"></div>
+                <div class="col-xs-5"></div>
+                <div class="col-xs-2">                
+                    <b>Credito:</b>
+                </div>
+                <div class="col-xs-1" style="text-align:right">                
+                    <b><?=$totalCredito?></b>
+                </div>
+            </div>      
             <div class="row">
                 <div class="col-xs-4"></div>
                 <div class="col-xs-5"></div>
