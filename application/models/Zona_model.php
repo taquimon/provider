@@ -119,11 +119,11 @@ class Zona_model extends CI_Model
     }
     public function getZonasByVendedor($idVendedor) {
 
-      $query = $this->db->select()
-            ->where('idVendedor', $idVendedor)
-            ->get('zona_xref_vendedor');
+      $query = "SELECT zv.idVendedor, zv.idZona, z.nombre FROM zona_xref_vendedor zv LEFT JOIN zonas as z on z.idZona =  zv.idZona WHERE zv.idVendedor = ". $idVendedor;
+      $query = $this->db->query($query);
+            
 
-        $z_x_v = $query->first_row();
+        $z_x_v = $query->result();
 
         if (!$z_x_v) {
             return null;

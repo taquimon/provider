@@ -15,14 +15,18 @@
             locale: {
                 format: 'YYYY-MM-DD'
             }
-        });
-        fillZonas();
+        });        
+        fillVendedor();        
     });
 
     function fillZonas() {
-        $.ajax({
-            url: "<?=site_url('zona/ajaxGetZonas')?>",
+        var dataVendedor = {
+            idVendedor: $("#vendedores").val()
+        };
+        $.ajax({            
+            url: "<?=site_url('vendedor/ajaxGetZonasByVendedor')?>",
             dataType: "json",
+            data: dataVendedor,
             type: 'GET',
             success: function(json) {
                 var options = '';
@@ -31,7 +35,28 @@
                 }
 
                 $('#zonas').html(options); 				
-                $('#zonas').selectpicker('refresh');
+                $('#zonas').selectpicker('refresh');                
+
+            },
+            error: function() {
+                //alert(options);
+            }
+        });
+    }
+    function fillVendedor() {
+        $.ajax({
+            url: "<?=site_url('vendedor/ajaxGetVendedores')?>",
+            dataType: "json",
+            type: 'GET',
+            success: function(json) {
+                var options = '';
+                for (var x = 0; x < json.length; x++) {
+                    options += '<option value="' + json[x].idVendedor + '">' + json[x].nombres + ' ' + json[x].apellidos + '</option>';
+                }
+
+                $('#vendedores').html(options); 				
+                $('#vendedores').selectpicker('refresh');
+                fillZonas();
 
             },
             error: function() {
@@ -79,13 +104,13 @@
                      <div class="col-md-2">                   
                     
                         <label class="checkbox-inline" for="Vendedor">
-                        <input type="checkbox" id="vendedor" value="Vendedor" name="vendeor">Vendedor
+                        <input type="checkbox" id="vendedor" value="Vendedor" name="vendedor">Vendedor
                         </label>
                         <div class="input-group col-md-4">
                             <span class="input-group-addon">
                             <i class="glyphicon glyphicon-globe blue"></i>
                             </span>
-                            <select id="zonas" class="selectpicker" data-live-search="true" data-style="btn-primary" name="vendedor[]" multiple data-selected-text-format="count > 3">                                
+                            <select id="vendedores" class="selectpicker" data-live-search="true" data-style="btn-primary" name="vendedores" onchange="fillZonas();">
                             </select>                        
 
                         </div>        

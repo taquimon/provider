@@ -132,7 +132,7 @@ if($this->data->tipo == "pedido") {
                 <div class="col-xs-12">
                     <h5 style="text-align: center">Ventas por Factura <br><br>
                     <?php
-                        echo 'Fecha: '. $this->data->fecha;
+                        echo 'Del '. $this->data->startDate . ' al '. $this->data->endDate;
                     ?>
                     </h5>
                 </div>
@@ -159,7 +159,12 @@ if($this->data->tipo == "pedido") {
                                 echo '<tr style="horizantal-align:left;vertical-align:top">';                                
                                 echo '<td>'.$li->numPedido.'</td>';
                                 echo '<td>'.$li->fecha.'</td>';
-                                echo '<td>'.$li->zona.'</td>';
+                                // echo '<td>'.$li->zona.'</td>';
+                                if(!isset($this->data->zonas[$li->zona])) {
+                                    echo '<td>'.$li->zona.'</td>';
+                                } else {
+                                    echo '<td>'.$this->data->zonas[$li->zona].'</td>';
+                                } 
                                 echo '<td>'.$li->razonSocial.'</td>';
                                 echo '<td style="width:10%;text-align:right;">'.$li->total.'</td>';
                                 echo '</tr>'; 
@@ -231,7 +236,7 @@ if($this->data->tipo == "pedido") {
                     } else {
                         echo 'Todas - ';
                     }
-                    echo 'Fecha: '. $this->data->fecha;
+                    echo 'Del '. $this->data->startDate . ' al '. $this->data->endDate;
                     ?>
                     
                     </h5>

@@ -18,6 +18,7 @@ class Vendedor extends MY_Controller {
 
        $this->load->model('sales_model', 'salesModel');
        $this->load->model('zona_model', 'zonasModel');
+       $this->load->model('order_model', 'orderModel');
 
    }
    public function index() {
@@ -111,10 +112,10 @@ class Vendedor extends MY_Controller {
 
         echo json_encode($zonas);
     }
-    public function ajaxZonasByVendedor() {
+    public function ajaxGetZonasByVendedor() {
         $idVendedor = $this->request['idVendedor'];
         $zonas = $this->zonasModel->getZonasByVendedor($idVendedor);        
-        print_r($zonas);    
+            
         echo json_encode($zonas);
     }
 	public function jsonGuardarVendedor()
@@ -181,42 +182,89 @@ class Vendedor extends MY_Controller {
            else {
                 $zonaSelected = null;                
            }                      
-           if(isset($this->request['zonas'])) {
+        //    if(isset($this->request['zonas'])) {
+        //         $zonas = $this->request['zonas'];
+        //     } else {
+        //         $zonas = null;            
+        //     }
+            if(isset($this->request['zonas'])) {
                 $zonas = $this->request['zonas'];
+                
+        
+                foreach ($zonas as $zx) {
+                    $name = $this->zonasModel->getZonaById($zx);
+                    $zonaNames[$name->idZona] = $name->nombre;
+                }
             } else {
-                $zonas = null;            
+                $zonas = null;
+                $zonaList = $this->zonasModel->getZonaList();
+                foreach($zonaList as $zl) {
+                    $zonaNames[$zl->idZona] = $zl->nombre;
+                }
             }
-            print_r($fecha);
+            //print_r($fecha);
             $fechas = explode(" - ", $fecha);
             $startDate = $fechas[0];
             $endDate = $fechas[1];
-            print_r($startDate);
-            print_r($endDate);
-        }
-        
-        // switch($opcion) {
-        //     case "pedido": $totalInfo = $this->orderModel->getPedidosByDate($fecha, $zonas);
-        //                    foreach($totalInfo as $pedido) {
-        //                        $detalleInfo = $this->orderModel->getDetailById($pedido->numPedido);
-        //                        $pedido = $this->getTotals($pedido, $detalleInfo); 
-        //                    } 
+            //print_r($startDate);
+            //print_r($endDate);
+        }        
+        switch($opcion) {
+            case "pedido": $totalInfo = $this->orderModel->getPedidosByDate($startDate, $endDate, $zonas);
+                           foreach($totalInfo as $pedido) {
+                               $detalleInfo = $this->orderModel->getDetailById($pedido->numPedido);
+                               $pedido = $this->getTotals($pedido, $detalleInfo); 
+                           } 
                            
-        //                 break;                        
-        //     case "producto": $totalInfo = $this->orderModel->getTotalProductsByDate($fecha, $zonas);
-        //                      $totalInfo = $this->sumProducts($totalInfo);                             
-        //                      //print_r($totalInfo);
-        //                 break;
-        // }
+                        break;                        
+            case "producto": $totalInfo = $this->orderModel->getTotalProductsByDate($startDate, $endDate, $zonas);
+                             $totalInfo = $this->sumProducts($totalInfo);                             
+                             //print_r($totalInfo);
+                        break;
+        }
         $reporteArray = new stdClass();                
         $reporteArray->tipo = $opcion;
         
-        // $reporteArray->lista = $totalInfo;
-        // $reporteArray->fecha = $fecha;
+        $reporteArray->lista = $totalInfo;
+        $reporteArray->startDate = $startDate;
+        $reporteArray->endDate = $endDate;
         // $reporteArray->zonas = $zonas;
+        $reporteArray->zonas = $zonaNames;
+        $reporteArray->zonaSelected = $zonas;
         
         //print_r($reporteArray);
-        // $this->data = $reporteArray;
+        $this->data = $reporteArray;
         $this->middle = 'vendedor/printReport';
         $this->layout();
     }
+  
+   function sumProducts($products) {        
+        $res  = array();
+        foreach($products as $vals){
+            if(array_key_exists($vals->idProducto,$res)){
+                $res[$vals->idProducto]->cantidad    += $vals->cantidad;                
+            }
+            else{
+                $res[$vals->idProducto]  = $vals;
+            }
+        }
+       
+        return $res;
+    }
+    public function getTotals($pedido, $detalle){
+        
+        $totalPedido = 0.0;
+        if($detalle) {
+                
+            foreach ($detalle as $d) {
+                $total = $d->cantidad * $d->precio;
+                $totalPedido += $total;
+            }
+        }
+        $pedido->total = $totalPedido;
+        $pedido->totalLiteral = $this->numToLetras($totalPedido);
+
+        return $pedido;
+    }
+   
 }
