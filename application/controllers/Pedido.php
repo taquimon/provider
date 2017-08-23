@@ -232,14 +232,14 @@ class Pedido extends MY_Controller {
         }
         
         switch($opcion) {
-            case "pedido": $totalInfo = $this->orderModel->getPedidosByDate($fecha, $zonas);
+            case "pedido": $totalInfo = $this->orderModel->getPedidosByDate($fecha, null, $zonas);
                            foreach($totalInfo as $pedido) {
                                $detalleInfo = $this->orderModel->getDetailById($pedido->numPedido);
                                $pedido = $this->getTotals($pedido, $detalleInfo);                                
                            } 
                            
                         break;                        
-            case "producto": $totalInfo = $this->orderModel->getTotalProductsByDate($fecha, $zonas);
+            case "producto": $totalInfo = $this->orderModel->getTotalProductsByDate($fecha, null, $zonas);
                              $totalInfo = $this->sumProducts($totalInfo);                             
                             //  print_r($totalInfo);
                         break;

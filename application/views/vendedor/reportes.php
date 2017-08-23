@@ -103,9 +103,7 @@
                     </div>
                      <div class="col-md-2">                   
                     
-                        <label class="checkbox-inline" for="Vendedor">
-                        <input type="checkbox" id="vendedor" value="Vendedor" name="vendedor">Vendedor
-                        </label>
+                        <label for="Vendedor">Vendedor</label>
                         <div class="input-group col-md-4">
                             <span class="input-group-addon">
                             <i class="glyphicon glyphicon-user blue"></i>
@@ -117,9 +115,7 @@
                     </div>
                     <div class="col-md-2">                   
                     
-                        <label class="checkbox-inline" for="Zona">
-                        <input type="checkbox" id="zona" value="zona" name="zona">Zona
-                        </label>
+                        <label for="Zona">Zona</label>
                         <div class="input-group col-md-4">
                             <span class="input-group-addon">
                             <i class="glyphicon glyphicon-globe blue"></i>
