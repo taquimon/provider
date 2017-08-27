@@ -90,31 +90,66 @@ class Discal extends REST_Controller {
     }
     public function pedido_get()
     {
-
-        $id = $this->get('id');
-
-        $pedidos = $this->orderModel->getPedidoList();
-
-        if (!empty($pedidos)) {
-
+        $pedido = '';
+        $pedidos = [];
+        $id = null;
+        if ($this->get('id')) {            
+            $id = $this->get('id');
             $pedido = $this->orderModel->getOrderById($id);
+        }                            
+        if ($this->get('ajaxListOrder')) {
+            $orders = $this->orderModel->getPedidoList();    
+        
+                foreach($orders as $order) {
+                    $id = $order->numPedido;
+                    $link = "pedido/factura/".$id;
+                    $order->options = '<a href="#" onclick="editPedido('.$id.')" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-edit glyphicon-white"></i> Editar</a>&nbsp;'.
+                    '<a href="'.$link.'" class="btn btn-warning btn-sm"><i class="glyphicon glyphicon-list-alt glyphicon-white"></i> Factura</a>&nbsp;'.
+                    '<a href="#" onclick="deletePedido('.$id.')" class="btn btn-danger btn-sm"><i class="glyphicon glyphicon-remove-sign glyphicon-white"></i> Borrar</a>';
+                }
+                $data['data'] = $orders;
+                $pedidos = $data;
         }
-
+        else {
+            $orders = $this->orderModel->getOrderList();
+            
+        }
+        
         $this->api_get($pedidos, "pedido", $pedido, $id);
+
 
     }
 
     public function producto_get()
     {
-        $id = $this->get('id');
-
-        $productos = $this->productModel->getProductList();
-
-        if (!empty($productos)) {
-
+        $producto = '';
+        $productos = [];
+        $id = null;
+        if ($this->get('id') ){
+            $id = $this->get('id');
             $producto = $this->productModel->getProductById($id);
+        }   
+        if ($this->get('getAjaxListProducts')) {
+            $products = $this->productModel->getProductList();
+            $data['data'] = $products;
+            foreach($products as $product) {
+                $id = $product->idProducto;
+                if ($product->activo == 1) {
+                    $status = '<span class="label-success label label-default">Activo</span>';
+                } else {
+                    $status = '<span class="label-warning label label-default">Inactivo</span>';
+                }
+                $product->status = $status;
+                $product->options = '<a href="#" onclick="editProduct('.$id.')" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-edit glyphicon-white"></i> Editar</a>&nbsp;';
+    
+    
+            }
+    
+            $productos = $data;
         }
-
+        else {
+            $productos = $this->productModel->getProductList();            
+        }                
         $this->api_get($productos, "producto", $producto, $id);
     }
     public function cliente_get()
@@ -166,5 +201,6 @@ class Discal extends REST_Controller {
 
         $this->set_response($message, REST_Controller::HTTP_NO_CONTENT); // NO_CONTENT (204) being the HTTP response code
     }
+            
 
 }
