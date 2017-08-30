@@ -144,10 +144,10 @@ if($this->data->tipo == "pedido") {
                             <tr>
                                 <th style="width:10%;text-align:left;">No.</th>
                                 <th style="width:20%;text-align:left;">Fecha</th>
-                                <th style="width:20%;text-align:left;">Tipo de Pedido</th>
-                                <th style="width:20%;text-align:left;">Zona</th>
-                                <th style="width:20%;text-align:left;">Codigo Cliente</th>
-                                <th style="width:50%;text-align:left;">Razon Social</th>
+                                <th style="width:10%;text-align:left;">Tipo de Pedido</th>
+                                <th style="width:10%;text-align:left;">Zona</th>
+                                <th style="width:10%;text-align:left;">Codigo Cliente</th>
+                                <th style="width:30%;text-align:left;">Razon Social</th>
                                 <th style="width:10%;text-align:right;">Total</th>                                
                             </tr>
                         </thead>

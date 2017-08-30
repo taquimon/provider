@@ -1,0 +1,1 @@
+ALTER TABLE `pedido` ADD `descuento` FLOAT NULL DEFAULT '0' AFTER `tipo_pedido`;

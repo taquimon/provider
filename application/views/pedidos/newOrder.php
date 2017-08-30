@@ -1,8 +1,12 @@
 <script type="text/javascript" charset="utf-8">
     var detailTable;
     $(function() {        
-
-
+        $('#descuento').bind('input', function() {                        
+            total = parseFloat($('#totalBruto').val() - $('#descuento').val());                
+            $('#valorTotal').val(total);            
+        });
+        var productIds = [];
+      
         $.ajax({
             url: "<?=site_url('pedido/getLastDate')?>",
             dataType: "json",
@@ -50,6 +54,7 @@
             fecha: $("#datetimepicker1").data('date'),
             detalle: JSON.stringify(dataDetail),
             tipo_pedido: tipoPedido,
+            descuento: $("#descuento").val(),
         };
 
         var url = "<?=site_url('pedido/jsonGuardarNuevo')?>";
@@ -136,6 +141,7 @@
     }
 
     function addProducts() {
+        productIds = [];
         var dataProduct = {
             products: $("#productos").val(),
         };
@@ -150,7 +156,8 @@
                 var valorTotal = 0;
                 for (x=0; x< json.length; x++) {
                     total = json[x].cantidad * json[x].precioUnitario;
-                    totalBruto +=  total;
+                    // totalBruto +=  total;
+                    productIds.push(json[x].idProducto);
 				detailTable.row.add([
                     json[x].idProducto,
                     json[x].codigoExterno,
@@ -158,16 +165,19 @@
 					'<div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-usd"></i></span><input type="number" class="form-control" value="' +
                     json[x].cantidad + '" name="cantidad' + json[x].idProducto + '" id="cantidad' + json[x].idProducto + '"></div>',
 					'<div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-usd"></i></span><input type="number" class="form-control" value="' +
-                    json[x].precioUnitario + '" name="precioUnitario' + json[x].idProducto + '" onChange="calcularTotalIndividual('+json[x].idProducto +')" '+
-                    ' id= "precioUnitario' + json[x].idProducto + '"></div>',
-                    '<input type="number" class="form-control" placeholder="totalBruto" id="total' + json[x].idProducto+'" disabled value="' + total + '">'
+                    json[x].precioUnitario + '" name="precioUnitario' + json[x].idProducto + '" id= "precioUnitario' + json[x].idProducto + '" readonly></div>',
+                    '<input type="number" class="form-control" placeholder="totalBruto" id="total' + json[x].idProducto+'" readonly value="' + total + '">'                    
 				]).draw();                
-                }
-                $('#totalBruto').val(totalBruto);
-                descuento = $('#descuento').val();
-                valorTotal = totalBruto - descuento;
-                $('#valorTotal').val(valorTotal);
-                //fillProductos();
+                }                                
+                
+                productIds.forEach(idProd => {                
+                    $('#cantidad'+idProd).bind('input', function() {                        
+                        total = $('#cantidad'+idProd).val() * $('#precioUnitario'+idProd).val();                
+                        $('#total'+idProd).val(total);
+                        calcularTotal(productIds);
+                    } );
+                    
+                })
 			},
             error: function() {}
         });
@@ -176,15 +186,26 @@
         detailTable = $("#detalleTable").DataTable();        
         detailTable.row($(this).closest("tr").get(0)).remove().draw();       
     }
-    function calcularTotal() {
-        totalBruto = $('#totalBruto').val();
+    function calcularTotal(prodIds) {
+        //$('#totalBruto').val().clear();
+        totalBruto = 0.0;
+        prodIds.forEach(idProd => {                
+            totalBruto += parseFloat($('#total'+idProd).val());
+        })
+        console.log(totalBruto);
+        $('#totalBruto').val(totalBruto);
         descuento = $('#descuento').val();
         valorTotal = totalBruto - descuento;
         $('#valorTotal').val(valorTotal);
     }
     function calcularTotalIndividual(id) {
-        total = $('#cantidad'+id).val() * $('#precioUnitario'+id).val();                
-        $('#total'+id).val(total);
+        // $('#cantidad'+id).keyup(function () {
+        console.log('#cantidad'+id);
+        // $('#'+id).on('input',function(e){
+            
+            total = $('#cantidad'+id).val() * $('#precioUnitario'+id).val();                
+            $('#total'+id).val(total);
+        // });        
     }
 </script>
 
@@ -289,7 +310,7 @@
                                 <span class="input-group-addon">
                             <i class="glyphicon glyphicon-barcode blue"></i>
                             </span>
-                                <input type="number" class="form-control" placeholder="totalBruto" id="totalBruto" disabled>
+                                <input type="number" class="form-control" placeholder="totalBruto" id="totalBruto" readonly>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -298,7 +319,7 @@
                                 <span class="input-group-addon">
                             <i class="glyphicon glyphicon-usd blue"></i>
                             </span>
-                                <input type="number" class="form-control" placeholder="descuento" id="descuento" value = "0" onchange="calcularTotal()">
+                                <input type="number" class="form-control" placeholder="descuento" id="descuento" value = "0">
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -307,7 +328,7 @@
                                 <span class="input-group-addon">
                             <i class="glyphicon glyphicon-usd blue"></i>
                             </span>
-                                <input type="number" class="form-control" placeholder="Valor Total" id="valorTotal" disabled>
+                                <input type="number" class="form-control" placeholder="Valor Total" id="valorTotal" readonly>
                             </div>
                         </div>
                     </div>

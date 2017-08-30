@@ -72,8 +72,9 @@ class Pedido extends MY_Controller {
             $data['idCliente']      = $this->request['idCliente'];            
             $data['fecha']          = $this->request['fecha'];
             $data['idUser']         = $this->request['idUser'];                        
-            $data['fecha']          = $this->request['fecha'];
+            $data['fecha']          = $this->request['fecha'];            
             $data['tipo_pedido']    = $this->request['tipo_pedido'];
+            $data['descuento']      = $this->request['descuento'];
             $dataDetalle = $this->request['detalle'];
             $pedidoData = $this->orderModel->insert($data);                        
             
