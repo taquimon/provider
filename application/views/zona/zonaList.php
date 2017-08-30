@@ -144,6 +144,64 @@
         });                                
 
     });   
+    /*Delete Zona*/
+    function deleteZona(idZona) {
+        var $content = $('<div></div>');
+        $content.append('Desea Eliminar la Zona?');
+
+        BootstrapDialog.show({
+            title: 'Eliminar Zona',
+            message: $content,
+            buttons: [{
+                icon: 'glyphicon glyphicon-check',
+                label: 'Si',
+                title: 'Si',                
+                cssClass: 'btn-primary',
+                action: function(dialogRef){                    
+                    var dataPedido = {
+                    idZona: idZona
+                    }                    
+                    $.ajax({
+                        url: "<?=site_url('zona/jsonEliminarZona')?>",
+                        dataType: "json",
+                        data: dataPedido,
+                        type: 'POST',   
+                        success: function(json) {
+                            var n = noty({
+                                type: "success",
+                                layout: "top",
+                                text: json.message,
+                                animation: {
+                                    open: {
+                                        height: 'toggle'
+                                    },
+                                    close: {
+                                        height: 'toggle'
+                                    },
+                                    easing: 'swing',
+                                    speed: 500 // opening & closing animation speed
+                                }
+                            });                                    
+                            var urln = "<?= site_url('zona/ajaxListZona')?>";
+                            $("#zona_table").DataTable().ajax.url(urln);
+                            $("#zona_table").DataTable().ajax.reload();                                    
+                            setTimeout(function(){
+                                dialogRef.close();
+                            }, 3000);
+                        }
+                    });
+                }
+            }, {
+                icon: 'glyphicon glyphicon-ban-circle',
+                label: 'No',
+                title: 'No',
+                cssClass: 'btn-warning',
+                action: function(dialogItself){
+                    dialogItself.close();
+                }
+            }]
+        });                    
+    }
 </script>
 <ul class="breadcrumb">
     <li>
