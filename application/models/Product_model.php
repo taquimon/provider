@@ -114,4 +114,11 @@ class Product_model extends CI_Model
 
         return $result;
     }
+    public function updateProductQuantity($dataProduct) 
+    {
+        $this->db->set('cantidad', 'cantidad - '. $dataProduct["cantidad"], FALSE);
+        $this->db->where('idProducto', $dataProduct["idProducto"]);
+        $result = $this->db->update('producto');
+        return $result;
+    }
 }

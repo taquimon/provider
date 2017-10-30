@@ -122,5 +122,15 @@ class Producto extends MY_Controller {
         }
         echo json_encode($result);
     }
+    
+    /**
+    *   function that update the quantity
+    **/
+    function updateCantidadProductos($dataProduct) 
+    {
+        $result = $this->productModel->updateProductQuantity($dataProduct);
+        print_r($result);
+
+    }
 }
 

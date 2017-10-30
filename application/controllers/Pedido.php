@@ -95,10 +95,11 @@ class Pedido extends MY_Controller {
                 $dataArray['descuento'] = $this->getArrayValue($arrayDetails, "descuento".$p);
                 $dataArray['fechaCreacion'] = date('Y-m-d H:i:s');
                 array_push($dataDetails, $dataArray);
+                $this->productModel->updateProductQuantity($dataArray);
             }
 
             $detalleResults = $this->orderModel->insertDetalle($dataDetails);
-
+            
 
         } catch (Exception $e) {
             $result->message = "No se pudo agregar los datos ".$e->getMessage();
@@ -142,7 +143,9 @@ class Pedido extends MY_Controller {
                         $dataArray['descuento'] = $this->getArrayValue($arrayDetails, "descuento" . $p);
                         $dataArray['fechaCreacion'] = date('Y-m-d H:i:s');                        
                         array_push($dataDetalleUpdated, $dataArray);
+                        $this->productModel->updateProductQuantity($dataArray);
                     }
+                    
                     $detalleData = $this->orderModel->insertDetalle($dataDetalleUpdated);
                 }
             }
@@ -514,11 +517,5 @@ class Pedido extends MY_Controller {
     {
         $lastDate = $this->orderModel->getLastDate();
         echo json_encode($lastDate[0]);
-    }
-    function updateCantidadProductos($dataProduct) 
-    {
-        foreach($dataProduct as $dp) {
-           $x = $this->orderModel->updateQuantity($dp);    
-        }    
-    }
+    }    
 }
