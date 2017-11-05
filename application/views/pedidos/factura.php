@@ -220,7 +220,7 @@ ul.action-links {
                 <div class="col-xs-1">                
                     <b>Desc. Fin.:</b>
                 </div>
-                <div class="col-xs-1">                
+                <div class="col-xs-1" style="text-align:right;">                
                     <b><?=number_format($this->data->pedido->descuento, 2)?></b>
                 </div>
                 <div class="col-xs-4"></div>
@@ -228,7 +228,7 @@ ul.action-links {
                 <div class="col-xs-1">                
                     <b>Total:</b>
                 </div>
-                <div class="col-xs-1">                
+                <div class="col-xs-1" style="text-align:right;">                
                     <b><?=number_format($this->data->pedido->total - $this->data->pedido->descuento, 2)?></b>
                 </div>
             </div>            
