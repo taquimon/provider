@@ -176,6 +176,7 @@ class Vendedor extends MY_Controller {
         if(isset($this->request['daterange'])) {
            $fecha = $this->request['daterange'];
            $opcion = $this->request['opcion'];           
+           $idVendedor = $this->request['vendedores']; 
            if(isset($this->request['zona'])) {
                $zonaSelected = $this->request['zona'];               
            }
@@ -197,7 +198,7 @@ class Vendedor extends MY_Controller {
                 }
             } else {
                 $zonas = null;
-                $zonaList = $this->zonasModel->getZonaList();
+                $zonaList = $this->zonasModel->getZonasByVendedor($idVendedor);
                 foreach($zonaList as $zl) {
                     $zonaNames[$zl->idZona] = $zl->nombre;
                 }

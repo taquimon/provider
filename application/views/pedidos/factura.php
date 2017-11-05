@@ -123,7 +123,7 @@ ul.action-links {
 </style>
 
 <?php
-//print_r($this->data->detalle)
+// print_r($this->data->detalle)
 ?>
 <div class="row" style="align-content: center">
     <div class="box col-xs-12">                    
@@ -216,10 +216,18 @@ ul.action-links {
                 <div class="col-xs-4"></div>
                 <div class="col-xs-6"></div>
                 <div class="col-xs-1">                
+                    <b>Desc. Fin.:</b>
+                </div>
+                <div class="col-xs-1">                
+                    <b><?=number_format($this->data->pedido->descuento, 2)?></b>
+                </div>
+                <div class="col-xs-4"></div>
+                <div class="col-xs-6"></div>
+                <div class="col-xs-1">                
                     <b>Total:</b>
                 </div>
                 <div class="col-xs-1">                
-                    <b><?=number_format($this->data->pedido->total, 2)?></b>
+                    <b><?=number_format($this->data->pedido->total - $this->data->pedido->descuento, 2)?></b>
                 </div>
             </div>            
             <div class="row">                

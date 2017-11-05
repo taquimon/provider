@@ -132,5 +132,11 @@ class Producto extends MY_Controller {
         print_r($result);
 
     }
+
+    function comprasVentas()
+    {
+        $this->middle = 'product/compraVenta'; 
+        $this->layout();   
+    }
 }
 

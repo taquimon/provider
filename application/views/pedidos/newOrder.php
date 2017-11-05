@@ -162,8 +162,8 @@
                     json[x].idProducto,
                     json[x].codigoExterno,
                     json[x].descripcion,
-					'<div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-usd"></i></span><input type="number" class="form-control" value="' +
-                    json[x].cantidad + '" name="cantidad' + json[x].idProducto + '" id="cantidad' + json[x].idProducto + '"></div><a href="#">Stock <span class="badge">' + json[x].cantidad + '</span></a>',
+					'<div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-usd"></i></span><input type="number" class="form-control" value="'+
+                    '" name="cantidad' + json[x].idProducto + '" id="cantidad' + json[x].idProducto + '"></div><a href="#">Stock <span class="badge">' + json[x].cantidad + '</span></a>',
 					'<div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-usd"></i></span><input type="number" class="form-control" value="' +
                     json[x].precioUnitario + '" name="precioUnitario' + json[x].idProducto + '" id= "precioUnitario' + json[x].idProducto + '" readonly></div>',
                     '<input type="number" class="form-control" placeholder="totalBruto" id="total' + json[x].idProducto+'" readonly value="' + total + '">'                    

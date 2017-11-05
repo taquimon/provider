@@ -39,6 +39,8 @@
                         <li><a href="<?=base_url().'producto'?>">Listar Productos</a></li>
                         <li class="divider"></li>
                         <li><a href="<?=base_url().'producto/newProduct'?>">Nuevo Producto</a></li>
+                        <li class="divider"></li>
+                        <li><a href="<?=base_url().'producto/comprasVentas'?>">Compras/Ventas</a></li>
                     </ul>
                 </li>                
                 <li class="dropdown">
@@ -81,7 +83,9 @@
                     <ul class="dropdown-menu" role="menu">
                         <li><a href="<?=base_url().'pedido/reportes'?>"> Ventas</a></li>
                         <li class="divider"></li>
-                        <li><a href="<?=base_url().'vendedor/reportes'?>"> Vendedores</a></li>                                                
+                        <li><a href="<?=base_url().'vendedor/reportes'?>"> Vendedores</a></li>
+                        <li class="divider"></li>
+                        <li><a href="<?=base_url().'pedido/creditos'?>"> Lista de Creditos</a></li>                                                
                     </ul>
                 </li>
                 <li>

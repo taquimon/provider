@@ -202,6 +202,7 @@ class Pedido extends MY_Controller {
         $pedidoArray->pedido = $this->getTotals($pedidoInfo, $detalleInfo);
         $pedidoArray->detalle = $detalleInfo;
         $pedidoArray->cliente = $clienteInfo;
+        $pedidoArray->descuento = $pedidoInfo->descuento;
         
         $this->data = $pedidoArray;
         $this->middle = 'pedidos/factura';
@@ -518,4 +519,11 @@ class Pedido extends MY_Controller {
         $lastDate = $this->orderModel->getLastDate();
         echo json_encode($lastDate[0]);
     }    
+
+    public function creditos() 
+    {
+        // $this->data = $reporteArray;
+        $this->middle = 'pedidos/creditos';
+        $this->layout();        
+    }
 }

@@ -143,11 +143,13 @@ if($this->data->tipo == "pedido") {
                         <thead>
                             <tr>
                                 <th style="width:10%;text-align:left;">No.</th>
-                                <th style="width:20%;text-align:left;">Fecha</th>
-                                <th style="width:10%;text-align:left;">Tipo de Pedido</th>
+                                <th style="width:10%;text-align:left;">Fecha</th>
+                                <!-- <th style="width:10%;text-align:left;">Tipo de Pedido</th> -->
                                 <th style="width:10%;text-align:left;">Zona</th>
                                 <th style="width:10%;text-align:left;">Codigo Cliente</th>
                                 <th style="width:30%;text-align:left;">Razon Social</th>
+                                <th style="width:5%;text-align:left;">Contado</th>
+                                <th style="width:5%;text-align:left;">Credito</th>
                                 <th style="width:10%;text-align:right;">Total</th>                                
                             </tr>
                         </thead>
@@ -162,8 +164,8 @@ if($this->data->tipo == "pedido") {
                             foreach($list as $li) {
                                 echo '<tr style="horizantal-align:left;vertical-align:top">';                                
                                 echo '<td>'.$li->numPedido.'</td>';
-                                echo '<td>'.$li->fecha.'</td>';
-                                echo '<td>'.$li->tipo_pedido.'</td>';
+                                echo '<td>'.substr($li->fecha,0,10).'</td>';
+                                // echo '<td>'.$li->tipo_pedido.'</td>';
                                 if(!isset($this->data->zonas[$li->zona])) {
                                     echo '<td>'.$li->zona.'</td>';
                                 } else {
@@ -171,7 +173,9 @@ if($this->data->tipo == "pedido") {
                                 } 
                                 echo '<td>'.$li->codigoCliente.'</td>';
                                 echo '<td>'.$li->razonSocial.'</td>';
-                                echo '<td style="width:10%;text-align:right;">'.$li->total.'</td>';
+                                echo '<td style="width:10%;text-align:right;">'.number_format($li->totalContado, 2).'</td>';
+                                echo '<td style="width:10%;text-align:right;">'.number_format($li->totalCredito, 2).'</td>';
+                                echo '<td style="width:10%;text-align:right;">'.number_format($li->total, 2).'</td>';
                                 echo '</tr>'; 
                                 $totalGeneral += $li->total;
                                 $totalContado += $li->totalContado;
@@ -191,7 +195,7 @@ if($this->data->tipo == "pedido") {
                     <b>Contado:</b>
                 </div>
                 <div class="col-xs-1" style="text-align:right">                
-                    <b><?=$totalContado?></b>
+                    <b><?=number_format($totalContado, 2)?></b>
                 </div>
             </div>      
             <div class="row">
@@ -201,7 +205,7 @@ if($this->data->tipo == "pedido") {
                     <b>Credito:</b>
                 </div>
                 <div class="col-xs-1" style="text-align:right">                
-                    <b><?=$totalCredito?></b>
+                    <b><?=number_format($totalCredito, 2)?></b>
                 </div>
             </div>      
             <div class="row">
@@ -211,7 +215,7 @@ if($this->data->tipo == "pedido") {
                     <b>Totales:</b>
                 </div>
                 <div class="col-xs-1" style="text-align:right">                
-                    <b><?=$totalGeneral?></b>
+                    <b><?=number_format($totalGeneral, 2)?></b>
                 </div>
             </div>            
             <div class="row">                
