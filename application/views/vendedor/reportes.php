@@ -108,7 +108,7 @@
                             <span class="input-group-addon">
                             <i class="glyphicon glyphicon-user blue"></i>
                             </span>
-                            <select id="vendedores" class="selectpicker" data-live-search="true" data-style="btn-primary" name="vendedores" onchange="fillZonas();">
+                            <select id="vendedores" class="selectpicker" data-live-search="true" data-style="btn-primary" name="vendedores[]" onchange="fillZonas();" multiple>
                             </select>                        
 
                         </div>        

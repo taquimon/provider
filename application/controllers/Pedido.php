@@ -203,6 +203,7 @@ class Pedido extends MY_Controller {
         $pedidoArray->detalle = $detalleInfo;
         $pedidoArray->cliente = $clienteInfo;
         $pedidoArray->descuento = $pedidoInfo->descuento;
+        $pedidoArray->tipo_pedido = $pedidoInfo->tipo_pedido;
         
         $this->data = $pedidoArray;
         $this->middle = 'pedidos/factura';
