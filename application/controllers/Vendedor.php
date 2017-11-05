@@ -197,10 +197,11 @@ class Vendedor extends MY_Controller {
                     $zonaNames[$name->idZona] = $name->nombre;
                 }
             } else {
-                $zonas = null;
+                $zonas = array();
                 $zonaList = $this->zonasModel->getZonasByVendedor($idVendedor);
                 foreach($zonaList as $zl) {
                     $zonaNames[$zl->idZona] = $zl->nombre;
+                    array_push($zonas,$zl->idZona); 
                 }
             }            
             $fechas = explode(" - ", $fecha);
