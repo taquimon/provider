@@ -46,6 +46,41 @@
             }
         });
     }
+    function loadProducts() {
+               
+        var url = "<?=site_url('producto/getProducts')?>";        
+            
+        $.ajax({
+            url: url,
+            dataType: "json",
+            type: 'POST',
+            success: function (json) {
+                var n = noty({
+                    type: "success",
+                    text: json.message,
+                    animation: {
+                        open: {height: 'toggle'},
+                        close: {height: 'toggle'},
+                        easing: 'swing',
+                        speed: 500 // opening & closing animation speed
+                    }
+                });
+            },
+            error: function () {                            
+                var n = noty({
+                    type: "error",
+                    text: "Error al cargar productos",
+                    animation: {
+                        open: {height: 'toggle'},
+                        close: {height: 'toggle'},
+                        easing: 'swing',
+                        speed: 500 // opening & closing animation speed
+                    }
+                });
+
+            }
+        });
+    }
 </script>
 
 <ul class="breadcrumb">
@@ -73,13 +108,15 @@
                 <div class="row">
                     <div class="col-md-4">
                         <label for="codigoExterno">Codigo Externo</label>
+                        <div><select name="products" id="products" class="selectpicker" data-live-search="true"></select></div>
                         <div class="input-group col-md-6">                            
                             <span class="input-group-addon">
                             <i class="glyphicon glyphicon-barcode blue"></i>
                             </span>
-                            <input type="text" class="form-control" placeholder="codigoExterno" id="codigoExterno" required>
+                            <input type="text" class="form-control" placeholder="codigoExterno" id="codigoExterno" required>                            
                         </div>
-                    </div>
+                        
+                    </div>                    
                     <div class="col-md-4">
                         <label for="descripcion">Descripcion</label>
                         <div class="input-group col-md-9">                            
@@ -129,6 +166,28 @@
                         </div>
                     </div>
                 </div>               
+                <div class="row">
+                    <div class="col-md-4">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="precio unitario">#Factura</label>
+                            <div class="input-group col-md-6">                            
+                                <span class="input-group-addon">
+                                <i class="glyphicon glyphicon-usd blue"></i>
+                                </span>
+                                <input type="number" class="form-control" placeholder="Precio Unitario" id="precioUnitario">
+                            </div>  
+                    </div>
+                    <div class="col-md-4">
+                        <label for="precio unitario">Valor Total</label>
+                            <div class="input-group col-md-6">                            
+                                <span class="input-group-addon">
+                                <i class="glyphicon glyphicon-usd blue"></i>
+                                </span>
+                                <input type="number" class="form-control" placeholder="Precio Unitario" id="precioUnitario">
+                        </div>
+                    </div>
+                </div>
                 <!-- row 4-->                                
                 <div class="row">
                     <div class="col-md-12">
