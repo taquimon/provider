@@ -128,8 +128,8 @@ class Vendedor extends MY_Controller {
             $data['direccion']    = $this->request['direccion'];
             $data['email'] = $this->request['email'];
             $data['telefono'] = $this->request['telefono'];
-			$data['celular'] = $this->request['celular'];
-			$data['observaciones'] = $this->request['observaciones'];			
+            $data['celular'] = $this->request['celular'];
+            $data['observaciones'] = $this->request['observaciones'];
 
 
             $idVendedor = $this->request['idVendedor'];
@@ -141,7 +141,7 @@ class Vendedor extends MY_Controller {
                 $zonas = $this->request['zonas'];                
                 $dataZonaVendedor = array();
                 $arrayZonaVendedor = array();
-                foreach($zonas as $dz) {
+                foreach ($zonas as $dz) {
                     $dataZonaVendedor['idVendedor'] = $idVendedor;
                     $dataZonaVendedor['idZona'] = $dz;
                     array_push($arrayZonaVendedor, $dataZonaVendedor);
@@ -154,6 +154,12 @@ class Vendedor extends MY_Controller {
         }
         echo json_encode($result);
     }
+
+    /**
+     * Elimina vendedor
+     * 
+     * @return json encode response
+     **/
     public function jsonEliminarVendedor()
     {
         $result = new stdClass();
@@ -167,7 +173,13 @@ class Vendedor extends MY_Controller {
         }
         echo json_encode($result);
     }
-    public function reportes() {
+    /**
+     * Show report view
+     * 
+     * @return do not return nothing
+     */
+    public function reportes() 
+    {
         $this->middle = 'vendedor/reportes'; 
         $this->layout();   
     }
@@ -219,7 +231,7 @@ class Vendedor extends MY_Controller {
                            
                         break;                        
             case "producto": $totalInfo = $this->orderModel->getTotalProductsByDate($startDate, $endDate, $zonas);
-                             $totalInfo = $this->sumProducts($totalInfo);                             
+                             $totalInfo = $this->sumProducts($totalInfo);
                              //print_r($totalInfo);
                         break;
         }
@@ -252,10 +264,10 @@ class Vendedor extends MY_Controller {
        
         return $res;
     }
-    public function getTotals($pedido, $detalle){
+    public function getTotals($pedido, $detalle) {
         
         $totalPedido = 0.0;
-        if($detalle) {
+        if ($detalle) {
                 
             foreach ($detalle as $d) {
                 $total = $d->cantidad * $d->precio;

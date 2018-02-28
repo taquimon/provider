@@ -41,10 +41,12 @@ function editPedido(idPedido) {
                 $tableDetalle += '<thead><tr><th>Codigo</th><th style="width:60%">Descripcion</th><th style="width:20%">Cantidad</th><th style="width:20%">Precio (Bs)</th><th>Quitar</th></tr></thead>';
                 if(json.detalle.length > 0) {
                     oldProducts = [];
+                    oldQuantities = [];
                     for(x=0; x< json.detalle.length; x++) {
                         var iconMinus = '<i class="glyphicon glyphicon-minus"></i>';
                         id = json.detalle[x].IdProducto;
                         oldProducts.push(id);
+                        oldQuantities.push(json.detalle[x].cantidad);
                         $tableDetalle += '<tr><td>' + id + '</td><td>'+json.detalle[x].descripcion +
                         '</td><td><input type="number" class="form-control" id="cantidad' + id + '" name="cantidad'+ id + '" value="' + 
                         json.detalle[x].cantidad+'"></td><td><input type="number" class="form-control" id="precio" name="precio' + id + '" value="' + 
@@ -115,7 +117,7 @@ function editPedido(idPedido) {
                                 oldProductos: oldProducts,
                                 newProductos: $("#productos").val(),
                                 tipoPedido: tipoPedido,
-
+                                oldQuantities: oldQuantities,    
                             }
                             
                             $.ajax({

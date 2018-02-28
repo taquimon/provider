@@ -82,6 +82,7 @@
         <?= script_tag (site_url()."js/jquery.history.js")?>
         <!-- application script for Charisma demo -->
         <?= script_tag (site_url()."js/charisma.js")?>
+        <?= script_tag (site_url()."js/discal.js")?>
 
 
 </head>

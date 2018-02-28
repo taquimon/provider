@@ -33,7 +33,7 @@ class Pedido extends MY_Controller {
 
         $orders = $this->orderModel->getOrderList();
 
-        foreach($orders as $order) {
+        foreach ($orders as $order) {
             $id = $order->numPedido;
             $link = "pedido/factura/".$id;
             $order->options = '<a href="#" onclick="editPedido('.$id.')" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-edit glyphicon-white"></i> Editar</a>&nbsp;'.
@@ -46,7 +46,7 @@ class Pedido extends MY_Controller {
         echo json_encode($data);
     }
     public function ajaxGetPedidoById() {
-        if(isset($this->request['idPedido'])){
+        if (isset($this->request['idPedido'])) {
             $idPedido = $this->request['idPedido'];
         }
         $pedido = $this->orderModel->getOrderById($idPedido);
@@ -71,7 +71,7 @@ class Pedido extends MY_Controller {
             //$data['numPedido']      = $this->request['numPedido'];
             $data['idCliente']      = $this->request['idCliente'];            
             $data['fecha']          = $this->request['fecha'];
-            $data['idUser']         = $this->request['idUser'];                        
+            $data['idUser']         = $this->request['idUser'];
             $data['fecha']          = $this->request['fecha'];            
             $data['tipo_pedido']    = $this->request['tipo_pedido'];
             $data['descuento']      = $this->request['descuento'];
@@ -79,7 +79,7 @@ class Pedido extends MY_Controller {
             $pedidoData = $this->orderModel->insert($data);                        
             
             if ($pedidoData) {
-                $result->message = html_message("Se agrego correctamente el pedido","success");
+                $result->message = "Se agrego correctamente el pedido";
             }
             
             $arrayDetails = json_decode($dataDetalle);
@@ -89,7 +89,7 @@ class Pedido extends MY_Controller {
             foreach ($productos as $p) {
                 $dataArray = array();
                 $dataArray['idPedido'] = $pedidoData;
-                $dataArray['idProducto'] = $p;                                                                
+                $dataArray['idProducto'] = $p;
                 $dataArray['cantidad'] = $this->getArrayValue($arrayDetails, "cantidad".$p);
                 $dataArray['precio'] = $this->getArrayValue($arrayDetails, "precioUnitario".$p);
                 $dataArray['descuento'] = $this->getArrayValue($arrayDetails, "descuento".$p);
@@ -120,9 +120,6 @@ class Pedido extends MY_Controller {
             $arrayDetails = json_decode($dataDetalle);
             $arrayNewDetails = json_decode($dataNewDetalle);
 
-
-
-
             /*Update Pedido*/
             $pedidoData = $this->orderModel->updateOrder($idPedido, $data);
             /*Delete all detalle*/
@@ -130,10 +127,13 @@ class Pedido extends MY_Controller {
             $detalleData = $this->orderModel->deleteAllDetalle($idPedido);
 
             /*Insert new and updated detalle*/
-            if(isset($this->request['oldProductos'])) {
+            if (isset($this->request['oldProductos'])) {
                 $oldProductos  = $this->request['oldProductos'];
+                $oldCantidad = array ();
+                $oldCantidad   = $this->request['oldQuantities'];                
                 $dataDetalleUpdated = array();
-                if(!empty($oldProductos)) {
+                if (!empty($oldProductos)) {
+                    $i = 0;
                     foreach ($oldProductos as $p) {
                         $dataArray = array();
                         $dataArray['idPedido'] = $idPedido;
@@ -141,9 +141,11 @@ class Pedido extends MY_Controller {
                         $dataArray['cantidad'] = $this->getArrayValue($arrayDetails, "cantidad" . $p);
                         $dataArray['precio'] = $this->getArrayValue($arrayDetails, "precio" . $p);
                         $dataArray['descuento'] = $this->getArrayValue($arrayDetails, "descuento" . $p);
-                        $dataArray['fechaCreacion'] = date('Y-m-d H:i:s');                        
+                        $dataArray['fechaCreacion'] = date('Y-m-d H:i:s'); 
                         array_push($dataDetalleUpdated, $dataArray);
-                        $this->productModel->updateProductQuantity($dataArray);
+                        $operator = $oldCantidad[$i] - $dataArray['cantidad'] >= 0 ? "+" : '-';
+                        $this->productModel->updateProductQuantity($dataArray, $operator);
+                        $i++;
                     }
                     
                     $detalleData = $this->orderModel->insertDetalle($dataDetalleUpdated);
@@ -211,19 +213,18 @@ class Pedido extends MY_Controller {
     }
     public function printReport() {        
         $zonaNames = array();
-        if(isset($this->request['fechaReporte'])) {
-           $fecha = $this->request['fechaReporte'];
-           $opcion = $this->request['opcion'];           
-           if(isset($this->request['zona'])) {                              
-               $zonaSelected = $this->request['zona'];
-           }
-           else {
+        if (isset($this->request['fechaReporte'])) {
+            $fecha = $this->request['fechaReporte'];
+            $opcion = $this->request['opcion'];           
+            if (isset($this->request['zona'])) {                              
+                $zonaSelected = $this->request['zona'];
+            } else {
                 $zonaSelected = null;                
-           }                      
-           if(isset($this->request['zonas'])) {
+            }    
+
+            if (isset($this->request['zonas'])) {
                 $zonas = $this->request['zonas'];
                 
-        
                 foreach ($zonas as $zx) {
                     $name = $this->zonaModel->getZonaById($zx);
                     $zonaNames[$name->idZona] = $name->nombre;
@@ -231,7 +232,7 @@ class Pedido extends MY_Controller {
             } else {
                 $zonas = null;
                 $zonaList = $this->zonaModel->getZonaList();
-                foreach($zonaList as $zl) {
+                foreach ($zonaList as $zl) {
                     $zonaNames[$zl->idZona] = $zl->nombre;
                 }
             }
@@ -265,13 +266,12 @@ class Pedido extends MY_Controller {
         $this->middle = 'pedidos/printReport';
         $this->layout();
     }
-    function sumProducts($products) {        
+    public function sumProducts($products) {        
         $res  = array();
-        foreach($products as $vals){
-            if(array_key_exists($vals->idProducto,$res)){
-                $res[$vals->idProducto]->cantidad    += $vals->cantidad;                
-            }
-            else{
+        foreach ($products as $vals) {
+            if (array_key_exists($vals->idProducto, $res)) {
+                $res[$vals->idProducto]->cantidad += $vals->cantidad;                
+            } else {
                 $res[$vals->idProducto]  = $vals;
             }
         }
@@ -279,13 +279,14 @@ class Pedido extends MY_Controller {
         return $res;
     }
 
-    public function getTotals($pedido, $detalle){
+    public function getTotals($pedido, $detalle) 
+    {
         
         $totalPedido = 0.0;        
         $totalContado = 0.0;
         $totalCredito = 0.0;
 
-        if($detalle) {
+        if ($detalle) {
                 
             foreach ($detalle as $d) {
                 $total = $d->cantidad * $d->precio;

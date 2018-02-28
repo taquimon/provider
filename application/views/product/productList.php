@@ -13,6 +13,7 @@
         var dataProduct = {
             idProduct: idProduct
         };
+        var optionSelected = "";
         $.ajax({
             url: "<?=site_url('producto/ajaxGetProductById')?>",
             dataType: "json",
@@ -30,8 +31,9 @@
                 $content.append('<tr><td>Unidad de Venta</td><td><input type="text" class="form-control" placeholder="codigoExterno" id="unidadVenta" value="'+json.unidadVenta+'"></td></tr>');
                 $content.append('<tr><td>Numero de Unidades</td><td><input type="text" class="form-control" placeholder="codigoExterno" id="numeroUnidades" value="'+json.numeroUnidades+'"></td></tr>');
                 $content.append('<tr><td>Precio Unitario</td><td><input type="text" class="form-control" placeholder="codigoExterno" id="precioUnitario" value="'+json.precioUnitario+'"></td></tr>');
+                $content.append('<tr><td>Empresa</td><td><select class="selectpicker" data-live-search="true" id="empresa" title="Elija una Empresa..."></select></td></tr>');
                 $content.append('<tr><td>Estado</td><td><div class="checkbox"><label class="checkbox-inline"><input id="status" type="checkbox" ' + checked + ' data-toggle="toggle"></label></div></td></tr>');
-
+                optionSelected = json.idCategoria;    
                 BootstrapDialog.show({
                     title: 'Editar Producto',
                     message: $content,
@@ -40,6 +42,8 @@
                                  on: 'Activo',
                                  off: 'Inactivo'
                             });
+                            var url = "<?php echo site_url('producto/ajaxGetCategoria') ?>";
+                            loadCategoria(url, "empresa", optionSelected);
                     },
                     buttons: [{
                         icon: 'glyphicon glyphicon-check',
@@ -58,6 +62,7 @@
                                 unidadVenta: $('#unidadVenta').val(),
                                 numeroUnidades: $('#numeroUnidades').val(),
                                 precioUnitario: $('#precioUnitario').val(),
+                                empresa: $('#empresa').val(),
                                 activo: activo,
                             }
                             $.ajax({

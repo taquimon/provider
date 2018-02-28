@@ -197,5 +197,35 @@ class Order_model extends CI_Model
     public function updateQuantity($idProducto, $cantidad) {
         $query = $this->db->query('UPDATE cantidad  producto where idProducto = '.$idProducto);
     }
+    /**
+     * This method returns compra venta report
+     */
+    public function getPedidoByDateandProduct($fecha, $fecha2 = null, $products=null) 
+    {
+        if ($fecha2 == null) {
+            $fecha2 = $fecha;
+        }
+        if ($products == null) {
+            $addProducts = "";
+        } else {
+            $idProducts = implode("','", $products);
+            $idProducts = "'".$idProducts."'";
+            $addProducts = "AND d.idProducto IN ($idProducts)";
+
+        }    
+        $query = "
+        SELECT 
+            *.d
+        FROM
+            detalle d
+        WHERE
+            d.fechaCreacion BETWEEN '$fecha 00:00:00' AND '$fecha 23:59:59'
+            $addProducts;
+        ";        
+        $queryResult = $this->db->query($query);        
+        $result = $queryResult->result();
+        
+        return $result;
+    }
 }
 

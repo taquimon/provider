@@ -7,9 +7,9 @@
  */
 
 /**
- * Description of Player
+ * Description of Producto Class
  *
- * @author phantom
+ * @author "Edwin Taquichiri <taquimon@gmail.com>"
  */
 class Producto extends MY_Controller {
 
@@ -49,38 +49,71 @@ class Producto extends MY_Controller {
         $this->middle = 'product/newProduct'; 
         $this->layout();   
     }
-
+    /**
+     * Guardar nuevo producto o ingreso
+     * 
+     * @return do not return nothing
+     */
     public function jsonGuardarNuevo()
     {
         $result = new stdClass();
-        try{            
-            $data['codigoExterno']   = $this->request['codigoExterno'];
-            $data['descripcion']     = $this->request['descripcion'];
-            $data['cantidad']        = $this->request['cantidad'];
-            $data['unidadVenta']     = $this->request['unidadVenta'];
-            $data['numeroUnidades']  = $this->request['numeroUnidades'];
-            $data['precioUnitario']  = $this->request['precioUnitario'];
+        $productId = -1;
+        try{                
+            if ($this->request['idProducto'] == -1) {
+                
+                /* Guardar en producto*/
+                $data['codigoExterno']   = $this->request['codigoExterno'];
+                $data['descripcion']     = $this->request['descripcion'];
+                $data['cantidad']        = $this->request['cantidad'];
+                $data['unidadVenta']     = $this->request['unidadVenta'];
+                $data['numeroUnidades']  = $this->request['numeroUnidades'];
+                $data['precioUnitario']  = $this->request['precioUnitario'];
+                $data['precioVenta']     = $this->request['precioVenta'];
 
-            $productData = $this->productModel->insert($data);
+                $productId = $this->productModel->insert($data);
 
-            if ($productData) {
-                $result->message = "Se agrego correctamente el producto";
+                if ($productId) {
+                    $result->message = "Se agrego correctamente el producto ";
+                }               
+                $dataIngreso['idProducto'] = $productId;
+            } else {
+                $dataIngreso['idProducto'] = $this->request['idProducto'];
             }
+            /*Guardar en ingresos*/
+            // $dataIngreso['codigoExterno']   = $this->request['codigoExterno'];
+            $dataIngreso['descripcion']     = $this->request['descripcion'];
+            $dataIngreso['cantidad']        = $this->request['cantidad'];
+            $dataIngreso['factura']         = $this->request['factura'];
+            $dataIngreso['valorUnitario']   = $this->request['precioUnitario'];
+            $dataIngreso['valorTotal']      = $this->request['valorTotal'];
+
+            $ingresoData = $this->productModel->insertIngreso($dataIngreso);
+            if ($ingresoData) {
+                $result->message = "Se agrego correctamente el ingreso ";
+                $this->updateCantidadProductos($dataIngreso, "+");
+            }               
 
         } catch (Exception $e) {
             $result->message = "No se pudo agregar los datos ".$e->getMessage();
-        }
+        }        
         echo json_encode($result);
     }
-    public function ajaxGetProductos() {
+    /**
+     * This method get all the productos from model
+     * 
+     * @return ajax productos
+     */
+    public function ajaxGetProductos() 
+    {
         $productos = $this->productModel->getProductos();
         echo json_encode($productos);
     }
-    public function ajaxGetProductosByIds() {
+    public function ajaxGetProductosByIds() 
+    {
 
-        if(isset($this->request['products'])){
+        if (isset($this->request['products'])) {
             $arrayProductIds = $this->request['products'];
-        }else{
+        } else {
             $arrayProductIds = null;
         }
 
@@ -88,8 +121,14 @@ class Producto extends MY_Controller {
 
         echo json_encode($productos);
     }
-    public function ajaxGetProductById() {
-        if(isset($this->request['idProduct'])){
+    /**
+     * This method get the productos by ids from model
+     * 
+     * @return ajax producto
+     */
+    public function ajaxGetProductById() 
+    {
+        if (isset($this->request['idProduct'])) {
             $idProduct = $this->request['idProduct'];
         }
         $producto = $this->productModel->getProductById($idProduct);
@@ -107,6 +146,7 @@ class Producto extends MY_Controller {
             $data['unidadVenta']    = $this->request['unidadVenta'];
             $data['numeroUnidades'] = $this->request['numeroUnidades'];
             $data['precioUnitario'] = $this->request['precioUnitario'];
+            $data['idCategoria']    = $this->request['empresa'];
             $data['activo']         = $this->request['activo'];
 
             $idProducto = $this->request['idProducto'];
@@ -114,7 +154,7 @@ class Producto extends MY_Controller {
             $productData = $this->productModel->updateProducto($idProducto, $data);
 
             if ($productData) {
-                $result->message = "Se actualizo correctamente los datos del producto";
+                $result->message = "Se actualizo correctamente datos del producto";
             }
 
         } catch (Exception $e) {
@@ -126,10 +166,9 @@ class Producto extends MY_Controller {
     /**
     *   function that update the quantity
     **/
-    function updateCantidadProductos($dataProduct) 
+    public function updateCantidadProductos($dataProduct, $op) 
     {
-        $result = $this->productModel->updateProductQuantity($dataProduct);
-        print_r($result);
+        $result = $this->productModel->updateProductQuantity($dataProduct, $op);
 
     }
 
@@ -137,6 +176,51 @@ class Producto extends MY_Controller {
     {
         $this->middle = 'product/compraVenta'; 
         $this->layout();   
+    }
+    public function ajaxGetCompraVenta() 
+    {
+        $productos = array();
+        if (isset($this->request['fecha'])) {
+            $fecha = $this->request['fecha'];
+            $productos = $this->request['productos'];
+            $fechas = explode(" - ", $fecha);
+            $startDate = $fechas[0];
+            $endDate = $fechas[1];
+            $result = $this->productModel->getCompraVentaByDate($startDate, $endDate, $productos);
+            
+        }
+        echo json_encode($result);
+        
+    }
+    public function compraVentaReport() 
+    {
+        $productos = array();     
+        $fecha = "";
+        if (isset($this->request['daterange'])) {
+            $fecha = $this->request['daterange'];
+            if (isset($this->request['productos'])) {
+                $productos = $this->request['productos'];
+            } else {
+                $productos = null;
+            }
+                        
+            $fechas = explode(" - ", $fecha);
+            $startDate = $fechas[0];
+            $endDate = $fechas[1];
+            $result = $this->productModel->getCompraVentaByDate($startDate, $endDate, $productos);
+            //$resultPedido = $this->orderModel->getPedidoByDateandProduct($startDate, $endDate, $productos);
+                        
+        }        
+        $this->data = $result;    
+        $this->fecha = $fecha;    
+        $this->middle = 'product/compraVentaReport';
+        $this->layout();
+        
+    }
+    public function ajaxGetcategoria() 
+    {
+        $result = $this->productModel->getCategoria();
+        echo json_encode($result);        
     }
 }
 

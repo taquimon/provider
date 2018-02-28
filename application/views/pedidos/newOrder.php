@@ -289,7 +289,7 @@
                     <table id="detalleTable" class="table table-striped table-bordered bootstrap-datatable datatable">
                         <thead>
                             <tr>
-                                <th>IDPRODUCTO</th>
+                                <th style="width:5%">IDPRODUCTO</th>
                                 <th>CODIGO</th>
                                 <th>DESCRIPCION</th>
                                 <th>CANTIDAD</th>
