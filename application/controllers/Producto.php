@@ -222,5 +222,9 @@ class Producto extends MY_Controller {
         $result = $this->productModel->getCategoria();
         echo json_encode($result);        
     }
+    public function ingreso() {
+        $this->middle = 'product/ingresoList'; 
+        $this->layout();   
+    }
 }
 

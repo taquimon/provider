@@ -51,6 +51,7 @@ class Pedido extends MY_Controller {
         }
         $pedido = $this->orderModel->getOrderById($idPedido);
         $pedido->detalle = $this->orderModel->getDetailById($idPedido);
+        $pedido->credito = $this->orderModel->getCreditoById($idPedido);
 
         echo json_encode($pedido);
     }
@@ -123,7 +124,6 @@ class Pedido extends MY_Controller {
             /*Update Pedido*/
             $pedidoData = $this->orderModel->updateOrder($idPedido, $data);
             /*Delete all detalle*/
-
             $detalleData = $this->orderModel->deleteAllDetalle($idPedido);
 
             /*Insert new and updated detalle*/
@@ -151,6 +151,13 @@ class Pedido extends MY_Controller {
                     $detalleData = $this->orderModel->insertDetalle($dataDetalleUpdated);
                 }
             }
+            $dataCredito['idPedido'] = $this->request['idPedido'];
+            $dataCredito['fechaUpdate'] = $this->request['fechaUpdate'];
+            $dataCredito['acuenta'] = $this->request['acuenta'];
+            $dataCredito['saldo'] = $this->request['saldo'];
+            $dataCredito['cancelado'] = $this->request['cancelado'];
+            $dataCredito['numeroRecibo'] = $this->request['recibo'];
+            $credito = $this->orderModel->insertCredito($dataCredito);
 
             if(isset($this->request['newProductos'])) {
                 $newProductos  = $this->request['newProductos'];
@@ -527,5 +534,22 @@ class Pedido extends MY_Controller {
         // $this->data = $reporteArray;
         $this->middle = 'pedidos/creditos';
         $this->layout();        
+    }
+
+    public function ajaxListCreditos(){        
+
+        $orders = $this->orderModel->getCreditosList();
+
+        foreach ($orders as $order) {
+            $id = $order->numPedido;
+            $link = "pedido/factura/".$id;
+            $order->options = '<a href="#" onclick="editPedido('.$id.')" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-edit glyphicon-white"></i> Editar</a>&nbsp;'.
+            '<a href="'.$link.'" class="btn btn-warning btn-sm"><i class="glyphicon glyphicon-list-alt glyphicon-white"></i> Factura</a>&nbsp;'.
+            '<a href="#" onclick="deletePedido('.$id.')" class="btn btn-danger btn-sm"><i class="glyphicon glyphicon-remove-sign glyphicon-white"></i> Borrar</a>';
+        }
+
+        $data['data'] = $orders;
+                
+        echo json_encode($data);
     }
 }

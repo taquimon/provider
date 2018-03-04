@@ -41,6 +41,7 @@
                         <li><a href="<?=base_url().'producto/newProduct'?>">Nuevo Producto</a></li>
                         <li class="divider"></li>
                         <li><a href="<?=base_url().'producto/comprasVentas'?>">Compras/Ventas</a></li>
+                        <li><a href="<?=base_url().'producto/ingreso'?>">Listar Ingresos</a></li>
                     </ul>
                 </li>                
                 <li class="dropdown">

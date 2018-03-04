@@ -119,17 +119,15 @@ class Order_model extends CI_Model
     public function getDetailById($idOrder)
     {
         $query = $this->db->query('SELECT d.cantidad, d.precio, d.IdProducto, d.descuento, d.idPedido, p.idProducto, p.codigoExterno, p.descripcion, p.unidadVenta FROM detalle d, producto p WHERE d.idProducto = p.idProducto and d.idPedido='.$idOrder.' order by p.descripcion');
-            // ->where('idPedido', $idOrder)
-            // ->where('d.idProducto', 'p.idProducto')
-
-            // ->get('detalle d, producto p');
-
         $result = $query->result();
-        
-        /*if (!$result) {
-            throw new Exception("No se encontro el detalle del pedido [$idOrder].");
-        }*/
-
+                
+        return $result;
+    }
+    public function getCreditoById($idOrder)
+    {
+        $query = $this->db->query('SELECT c.* FROM pedido_credito c WHERE c.idPedido='.$idOrder.' order by c.fechaUpdate');
+        $result = $query->result();
+                
         return $result;
     }
 
@@ -149,6 +147,14 @@ class Order_model extends CI_Model
         
         $insert_id = $this->db->insert_id();
         
+        return $insert_id;
+    }
+    public function insertCredito($data)
+    {
+        
+        $result = $this->db->insert('pedido_credito', $data);
+        
+        $insert_id = $this->db->insert_id();
         return $insert_id;
     }
 
@@ -225,6 +231,14 @@ class Order_model extends CI_Model
         $queryResult = $this->db->query($query);        
         $result = $queryResult->result();
         
+        return $result;
+    }
+    public function getCreditosList()
+    {
+
+        $query = $this->db->query('SELECT p.numPedido, p.fecha, c.razonSocial, c.codigoCliente, u.username, p.tipo_pedido from pedido p, clientes c, user u WHERE c.idCliente = p.idCliente and p.idUser=u.idUser AND p.tipo_pedido = "CREDITO"');
+        $result = $query->result();
+
         return $result;
     }
 }
