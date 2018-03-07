@@ -36,6 +36,7 @@ class Pedido extends MY_Controller {
         foreach ($orders as $order) {
             $id = $order->numPedido;
             $link = "pedido/factura/".$id;
+            $order->nombres =  $order->nombres . " ". $order->apellidos;
             $order->options = '<a href="#" onclick="editPedido('.$id.')" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-edit glyphicon-white"></i> Editar</a>&nbsp;'.
             '<a href="'.$link.'" class="btn btn-warning btn-sm"><i class="glyphicon glyphicon-list-alt glyphicon-white"></i> Factura</a>&nbsp;'.
             '<a href="#" onclick="deletePedido('.$id.')" class="btn btn-danger btn-sm"><i class="glyphicon glyphicon-remove-sign glyphicon-white"></i> Borrar</a>';
@@ -76,6 +77,7 @@ class Pedido extends MY_Controller {
             $data['fecha']          = $this->request['fecha'];            
             $data['tipo_pedido']    = $this->request['tipo_pedido'];
             $data['descuento']      = $this->request['descuento'];
+            $data['idVendedor']     = $this->request['idVendedor'];
             $dataDetalle = $this->request['detalle'];
             $pedidoData = $this->orderModel->insert($data);                        
             
@@ -114,9 +116,11 @@ class Pedido extends MY_Controller {
             $idPedido = $this->request['idPedido'];
             //$data['idUser']         = $this->request['idUser'];
             $data['fecha']          = $this->request['fecha'];
-            $data['tipo_pedido'] = $this->request['tipoPedido'];
+            $data['tipo_pedido']    = $this->request['tipoPedido'];
+            $data['idVendedor']     = $this->request['idVendedor'];
             $dataDetalle = $this->request['detalle'];
             $dataNewDetalle = $this->request['detalleNuevo'];
+            
 
             $arrayDetails = json_decode($dataDetalle);
             $arrayNewDetails = json_decode($dataNewDetalle);
@@ -152,17 +156,21 @@ class Pedido extends MY_Controller {
                 }
             }
             $dataCredito['idPedido'] = $this->request['idPedido'];
-            $dataCredito['fechaUpdate'] = $this->request['fechaUpdate'];
-            $dataCredito['acuenta'] = $this->request['acuenta'];
-            $dataCredito['saldo'] = $this->request['saldo'];
-            $dataCredito['cancelado'] = $this->request['cancelado'];
-            $dataCredito['numeroRecibo'] = $this->request['recibo'];
-            $credito = $this->orderModel->insertCredito($dataCredito);
+            if (isset($this->request['fechaUpdate'])) {
+                $dataCredito['fechaUpdate'] = $this->request['fechaUpdate'];
+                $dataCredito['acuenta'] = $this->request['acuenta'];
+                $dataCredito['saldo'] = $this->request['saldo'];
+                $dataCredito['cancelado'] = $this->request['cancelado'];
+                $dataCredito['numeroRecibo'] = $this->request['recibo'];
+                $dataCredito['idVendedor']   = $this->request['idVendedor'];
+                $credito = $this->orderModel->insertCredito($dataCredito);
+            }
+            
 
-            if(isset($this->request['newProductos'])) {
+            if (isset($this->request['newProductos'])) {
                 $newProductos  = $this->request['newProductos'];
                 $dataDetalleNew = array();
-                if(!empty($newProductos)) {
+                if (!empty($newProductos)) {
                     foreach ($newProductos as $p) {
                         $dataArray = array();
                         $dataArray['idPedido'] = $idPedido;
@@ -194,7 +202,7 @@ class Pedido extends MY_Controller {
         $result = new stdClass();
         try{                                    
             $idPedido     = $this->request['idPedido'];                        
-            $this->orderModel->deleteOrder($idPedido);                                                
+            $this->orderModel->deleteOrder($idPedido);
             $result->message = "Se elimino correctamente el pedido";
 
         } catch (Exception $e) {
@@ -536,16 +544,18 @@ class Pedido extends MY_Controller {
         $this->layout();        
     }
 
-    public function ajaxListCreditos(){        
+    public function ajaxListCreditos()
+    {        
 
         $orders = $this->orderModel->getCreditosList();
 
         foreach ($orders as $order) {
             $id = $order->numPedido;
             $link = "pedido/factura/".$id;
-            $order->options = '<a href="#" onclick="editPedido('.$id.')" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-edit glyphicon-white"></i> Editar</a>&nbsp;'.
-            '<a href="'.$link.'" class="btn btn-warning btn-sm"><i class="glyphicon glyphicon-list-alt glyphicon-white"></i> Factura</a>&nbsp;'.
-            '<a href="#" onclick="deletePedido('.$id.')" class="btn btn-danger btn-sm"><i class="glyphicon glyphicon-remove-sign glyphicon-white"></i> Borrar</a>';
+            $order->options = '<a href="#" onclick="editPedido('.$id.')" class="btn btn-warning btn-sm"><i class="glyphicon glyphicon-edit glyphicon-white"></i> Editar</a>&nbsp;'; 
+            // '<i class="glyphicon glyphicon-edit glyphicon-white"></i> Editar</a>&nbsp;'.
+            // '<a href="'.$link.'" class="btn btn-warning btn-sm"><i class="glyphicon glyphicon-list-alt glyphicon-white"></i> Factura</a>&nbsp;'.
+            // '<a href="#" onclick="deletePedido('.$id.')" class="btn btn-danger btn-sm"><i class="glyphicon glyphicon-remove-sign glyphicon-white"></i> Borrar</a>';
         }
 
         $data['data'] = $orders;

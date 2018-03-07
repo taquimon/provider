@@ -69,6 +69,7 @@ class Producto extends MY_Controller {
                 $data['numeroUnidades']  = $this->request['numeroUnidades'];
                 $data['precioUnitario']  = $this->request['precioUnitario'];
                 $data['precioVenta']     = $this->request['precioVenta'];
+                $data['idCategoria']     = $this->request['idCategoria'];
 
                 $productId = $this->productModel->insert($data);
 

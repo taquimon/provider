@@ -28,8 +28,20 @@ class Order_model extends CI_Model
      */
     public function getOrderList()
     {
+        $queryOrder = "SELECT 
+                            p.numPedido,
+                            p.fecha,
+                            c.razonSocial,
+                            c.codigoCliente,    
+                            p.tipo_pedido,
+                            v.nombres,
+                            v.apellidos
+                        FROM
+                            pedido p    
+                        LEFT JOIN vendedor v on v.idVendedor = p.idVendedor
+                        LEFT JOIN clientes c on c.idCliente = p.idCliente";
 
-        $query = $this->db->query('SELECT p.numPedido, p.fecha, c.razonSocial, c.codigoCliente, u.username, p.tipo_pedido from pedido p, clientes c, user u WHERE c.idCliente = p.idCliente and p.idUser=u.idUser');
+        $query = $this->db->query($queryOrder);
         $result = $query->result();
 
         return $result;

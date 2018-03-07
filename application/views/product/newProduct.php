@@ -36,6 +36,7 @@
             precioVenta: $("#precioVenta").val(),
             factura: $("#factura").val(),
             valorTotal: $("#valorTotal").val(),
+            idCategoria: $("#empresa").val(),
         };
 
         var url = "<?=site_url('producto/jsonGuardarNuevo')?>";
@@ -150,8 +151,8 @@
                     options += json[x].nombre + '</option>';
                 }
 
-                $('#categoriaProducto').html(options);
-                $('#categoriaProducto').selectpicker('refresh');                
+                $('#empresa').html(options);
+                $('#empresa').selectpicker('refresh');                
             },
             error: function() {
                 var n = noty({
@@ -308,7 +309,7 @@
                         <div class="col-md-12">
                         <label for="Empresa">Empresa</label>
                         <div class="input-group col-md-3">
-                                <select name="categoria" id="categoriaProducto" 
+                                <select name="categoria" id="empresa" 
                                     class="selectpicker" data-live-search="true" 
                                     data-style="btn-warning">
                                 </select>

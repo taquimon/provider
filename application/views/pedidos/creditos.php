@@ -38,7 +38,8 @@ function editPedido(idPedido) {
                 }
                 $tableDetalle = '<table><tr><td>Fecha:</td><td><div class="input-group date" id="fecha"><input type="text" class="form-control" name="fecha" id="fecha" value="'+json.fecha+'">' + icon + '</div></td>';
                 $tableDetalle += '<td>Numero de Pedido:</td><td><strong>' + json.numPedido + '</strong></td></tr>';
-                $tableDetalle += '<tr><td>Tipo de Pedido:</td><td><div class="checkbox"><label class="checkbox-inline"><input type="checkbox" id="tipo_pedido" ' + checked + ' data-toggle="toggle" data-on="CONTADO" data-off="CREDITO" data-onstyle="success" data-offstyle="danger"></label></div></td></tr><table>';
+                $tableDetalle += '<tr><td>Tipo de Pedido:</td><td><div class="checkbox"><label class="checkbox-inline"><input type="checkbox" id="tipo_pedido" ' + checked + ' data-toggle="toggle" data-on="CONTADO" data-off="CREDITO" data-onstyle="success" data-offstyle="danger"></label></div></td>';
+                $tableDetalle += '<td>Vendedor</td><td><select id="vendedores" class="selectpicker" data-live-search="true" data-style="btn-warning" name="vendedores"></select></td></tr><table>'
                 $tableDetalle += '<div><b>Detalle del Pedido</b></div>';
                 $tableDetalle += '<table id="detalle_table_update" class="table table-striped table-bordered datatable">';
                 $tableDetalle += '<thead><tr><th>Codigo</th><th style="width:60%">Descripcion</th><th style="width:20%">Cantidad</th><th style="width:20%">Precio (Bs)</th><th>Quitar</th></tr></thead>';
@@ -130,6 +131,8 @@ function editPedido(idPedido) {
                         });
                         console.log(currentdt);
                         fillProductos();
+                        var urlVendedor = "<?=site_url('vendedor/ajaxGetVendedores')?>";
+                        fillVendedor(urlVendedor, "vendedores","");
 
                         detailTableUpdated = $("#table_new_products").DataTable({
                             destroy: true,
@@ -170,6 +173,7 @@ function editPedido(idPedido) {
                                 saldo: $("#saldo").val(),
                                 cancelado: creditoCancelado,
                                 recibo: $("#numeroRecibo").val(),
+                                idVendedor: $("#vendedores").val()
                             }
                             
                             $.ajax({
@@ -296,9 +300,8 @@ function editPedido(idPedido) {
                 { "data": "numPedido", sDefaultContent: ""}, 
                 { "data": "razonSocial", sDefaultContent: ""},
                 { "data": "codigoCliente", sDefaultContent: ""},
-                { "data": "username", sDefaultContent: ""},
-                { "data": "fecha", sDefaultContent: ""},                 
-                { "data": "detalles", sDefaultContent: ""},
+                { "data": "nombres", sDefaultContent: ""},
+                { "data": "fecha", sDefaultContent: ""},
                 { "data": "tipo_pedido", sDefaultContent: ""},                                 
                 { "data": "options", sDefaultContent: ""},                
             ],
@@ -387,12 +390,11 @@ function editPedido(idPedido) {
                 <table id="pedidos_table" class="table table-striped table-bordered bootstrap-datatable datatable responsive" style="width:100%;">
                     <thead>
                         <tr>
-                            <th>numPedido</th>
+                            <th>idPedido</th>
                             <th>Cliente</th>
                             <th>Codigo Cliente</th>
-                            <th>Usuario</th>
-                            <th>Fecha</th>
-                            <th>Detalles</th>                            
+                            <th>Vendedor</th>
+                            <th>Fecha</th>                            
                             <th>Tipo Pedido</th>
                             <th>Opciones</th>
                         </tr>
