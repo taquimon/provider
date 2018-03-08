@@ -6,7 +6,8 @@
             $('#valorTotal').val(total);            
         });
         var productIds = [];
-      
+        var urlVendedor = "<?=site_url('vendedor/ajaxGetVendedores')?>";
+        fillVendedor(urlVendedor, "vendedores","");
         $.ajax({
             url: "<?=site_url('pedido/getLastDate')?>",
             dataType: "json",
@@ -55,6 +56,7 @@
             detalle: JSON.stringify(dataDetail),
             tipo_pedido: tipoPedido,
             descuento: $("#descuento").val(),
+            idVendedor: $("#vendedores").val(),
         };
 
         var url = "<?=site_url('pedido/jsonGuardarNuevo')?>";
@@ -232,7 +234,7 @@
                 </div>
                 <div class="box-content">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
 							<label for="cliente">Cliente / codigo</label>
                             <div class="input-group col-md-4">
                                 <span class="input-group-addon">
@@ -243,7 +245,7 @@
                             </div>
                         </div>
                         <div>
-                           <div class="col-md-4">
+                           <div class="col-md-3">
                             <label for="cliente">Tipo de Pedido</label>
                                 <div class="checkbox">
                                     <label class="checkbox-inline">
@@ -251,7 +253,14 @@
                                     </label></div>
                            </div>                        
                         </div>
-                        <div class="col-md-4">
+                        <div>
+                           <div class="col-md-3">
+                            <label for="cliente">Vendedor</label>                                
+                                <select id="vendedores" class="selectpicker" data-live-search="true" data-style="btn-warning" name="vendedores"></select>                                                                        
+                           </div>                        
+                        </div>
+
+                        <div class="col-md-3">
                             <label for="fecha">Fecha</label>
                             <div class="form-group">
                                 <div class="input-group date" id="datetimepicker1">
