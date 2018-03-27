@@ -180,4 +180,18 @@ class Product_model extends CI_Model
 
         return $result;   
     }
+
+    public function getIngresosList($fechaIngreso = null, $cantidad = null)
+    {
+
+        $this->db->select('*')
+            ->from('ingreso p')
+            ->order_by("descripcion", "asc");
+       
+        $query = $this->db->get();
+
+        $result = $query->result();
+
+        return $result;
+    }
 }

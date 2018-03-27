@@ -45,6 +45,23 @@ class Producto extends MY_Controller {
 
         echo json_encode($data);
     }
+    public function ajaxListIngreso(){
+        $ingresos = $this->productModel->getIngresosList();
+        $data['data'] = $ingresos;
+        // foreach($products as $product) {
+        //     $id = $product->idProducto;
+        //     if ($product->activo == 1) {
+        //         $status = '<span class="label-success label label-default">Activo</span>';
+        //     } else {
+        //         $status = '<span class="label-warning label label-default">Inactivo</span>';
+        //     }
+        //     $product->status = $status;
+        //     $product->options = '<a href="#" onclick="editProduct('.$id.')" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-edit glyphicon-white"></i> Editar</a>&nbsp;';
+
+
+        // }
+        echo json_encode($data);
+    }
     public function newProduct() {
         $this->middle = 'product/newProduct'; 
         $this->layout();   

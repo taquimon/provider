@@ -148,6 +148,7 @@ class Pedido extends MY_Controller {
                         $dataArray['fechaCreacion'] = date('Y-m-d H:i:s'); 
                         array_push($dataDetalleUpdated, $dataArray);
                         $operator = $oldCantidad[$i] - $dataArray['cantidad'] >= 0 ? "+" : '-';
+                        $dataArray['cantidad'] = abs($oldCantidad[$i] - $dataArray['cantidad']);
                         $this->productModel->updateProductQuantity($dataArray, $operator);
                         $i++;
                     }
