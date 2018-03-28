@@ -15,7 +15,7 @@
         };
         var optionSelected = "";
         $.ajax({
-            url: "<?=site_url('Ingresoo/ajaxGetIngresoById')?>",
+            url: "<?=site_url('producto/ajaxGetIngresoById')?>",
             dataType: "json",
             data: dataIngreso,
             type: 'GET',
@@ -114,8 +114,8 @@
         // $('#Ingreso_table').DataTable( {
         //     paging: false
         // } );
-        var url = "<?= site_url('Ingresoo/ajaxListIngreso')?>";
-        var table = $("#Ingreso_table").DataTable({
+        var url = "<?= site_url('producto/ajaxListIngreso')?>";
+        var table = $("#ingreso_table").DataTable({
             destroy: true,
             paging: true,
             info: false,            
@@ -138,31 +138,30 @@
                 dataSrc: 'data',                
             },
             columns: [
-                { "data": "idIngresoo", sDefaultContent: "n/a"}, 
-                { "data": "codigoExterno", sDefaultContent: ""}, 
-                { "data": "descripcion", sDefaultContent: ""},
+                { "data": "idIngreso", sDefaultContent: "n/a"}, 
+                { "data": "fechaIngreso", sDefaultContent: ""}, 
+                { "data": "factura", sDefaultContent: ""},
+                { "data": "idProducto", sDefaultContent: ""}, 
+                { "data": "descripcion", sDefaultContent: ""}, 
                 { "data": "cantidad", sDefaultContent: ""}, 
-                { "data": "unidadVenta", sDefaultContent: ""}, 
-                { "data": "numeroUnidades", sDefaultContent: ""}, 
-                { "data": "precioUnitario", sDefaultContent: ""},
-                { "data": "status", sDefaultContent: ""},
-                { "data": "options", sDefaultContent: ""},
+                { "data": "valorUnitario", sDefaultContent: ""},
+                { "data": "valorTotal", sDefaultContent: ""},                
 
             ],
-            "fnRowCallback": function( nRow, aoData, iDisplayIndex, iDisplayIndexFull ) {                
-                    if ( aoData.cantidad < 3 )
-                    {
-                        $('td:eq(3)', nRow).css('background-color', '#FC9A9A');
-                    }
-                    else
-                    {
-                        $('td:eq(3)', nRow).css('background-color', '#59BD4D');
-                    }
-                    if ( aoData.activo == 0 )
-                    {
-                        $('td', nRow).css('background-color', '#F5D167');
-                    }
-            },
+            // "fnRowCallback": function( nRow, aoData, iDisplayIndex, iDisplayIndexFull ) {                
+            //         if ( aoData.cantidad < 3 )
+            //         {
+            //             $('td:eq(3)', nRow).css('background-color', '#FC9A9A');
+            //         }
+            //         else
+            //         {
+            //             $('td:eq(3)', nRow).css('background-color', '#59BD4D');
+            //         }
+            //         if ( aoData.activo == 0 )
+            //         {
+            //             $('td', nRow).css('background-color', '#F5D167');
+            //         }
+            // },
         });                                
 
     });   
@@ -185,17 +184,17 @@
                 </div>
             </div>
             <div class="box-content">
-                <table id="Ingreso_table" class="table table-striped table-bordered bootstrap-datatable" cellspacing="0">
+                <table id="ingreso_table" class="table table-striped table-bordered bootstrap-datatable" cellspacing="0">
                     <thead>
                         <tr>
-                            <th style="width:5%">IdIngresoo</th>
+                            <th style="width:5%">IdIngreso</th>
                             <th style="width:10%">Fecha</th>
-                            <th style="width:30%">factura</th>
+                            <th style="width:20%">factura</th>
                             <th style="width:5%">idProducto</th>
+                            <th style="width:5%">Descripcion</th>
                             <th style="width:10%">Cantidad</th>
                             <th style="width:10%">Valor Unitario</th>
-                            <th style="width:10%">Valor Total</th>
-                            <th style="width:20%">Opciones</th>
+                            <th style="width:10%">Valor Total</th>                            
                         </tr>
                     </thead>
                     <tbody>
