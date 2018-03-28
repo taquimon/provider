@@ -148,6 +148,12 @@ if($this->data->tipo == "pedido") {
                                 <th style="width:10%;text-align:left;">Zona</th>
                                 <th style="width:10%;text-align:left;">Codigo Cliente</th>
                                 <th style="width:30%;text-align:left;">Razon Social</th>
+                                <?php 
+                                if ($this->data->tipoPedido == 'CREDITO') {
+                                    echo '<th style="width:5%;text-align:right;">A cuenta</th>';
+                                    echo '<th style="width:5%;text-align:right;">Saldo</th>';
+                                }
+                                ?>
                                 <th style="width:10%;text-align:right;">Total</th>                                
                             </tr>
                         </thead>
@@ -169,7 +175,13 @@ if($this->data->tipo == "pedido") {
                                     echo '<td>'.$this->data->zonas[$li->zona].'</td>';
                                 } 
                                 echo '<td>'.$li->codigoCliente.'</td>';
-                                echo '<td>'.$li->razonSocial.'</td>';
+                                echo '<td>'.$li->razonSocial.'</td>';                                
+                                
+                                if ($this->data->tipoPedido == 'CREDITO') {
+                                    echo '<td style="width:5%;text-align:right;">'.$li->acuenta.'</td>';
+                                    echo '<td style="width:5%;text-align:right;">'.$li->saldo.'</td>';
+                                }
+                                
                                 echo '<td style="width:10%;text-align:right;">'.$li->total.'</td>';
                                 echo '</tr>'; 
                                 $totalGeneral += $li->total;

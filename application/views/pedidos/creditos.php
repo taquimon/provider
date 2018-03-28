@@ -56,7 +56,7 @@ function editPedido(idPedido) {
                         '</td><td><input type="number" class="form-control" id="cantidad' + id + '" name="cantidad'+ id + '" value="' + 
                         json.detalle[x].cantidad+'"></td><td><input type="number" class="form-control" id="precio" name="precio' + id + '" value="' + 
                         json.detalle[x].precio+'"></td><td valign="center"><button class="btn btn-primary btn-sm" onclick="removerow(' + id + ')">'+ iconMinus +'</button></td></tr>';
-                        total += parseFloat(json.detalle[x].precio);
+                        total += parseFloat(json.detalle[x].precio * json.detalle[x].cantidad);
                     }
 
                 }

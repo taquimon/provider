@@ -67,21 +67,62 @@ class Order_model extends CI_Model
         if ($fecha2 == null) {
             $fecha2 = $fecha;
         }
-        $sqlTipoPedido = '';
-        if ($tipo_pedido != 'TODOS') {
-            $sqlTipoPedido = ' and p.tipo_pedido = "'.$tipo_pedido.'"';
-        }         
-
-
-        if($zona == null) {
-            $queryString = "SELECT p.numPedido, c.razonSocial, c.idCliente, c.codigoCliente, c.zona, p.fecha, p.tipo_pedido FROM pedido p, clientes c "; 
-            $queryString .= "where p.idCliente=c.idCliente and (fecha between'".$fecha." 00:00:00' and '".$fecha2." 23:59:59') ". $sqlTipoPedido ." order by p.numPedido, c.zona ;";
-        } else {
+        $sqlZona = "";
+        if ($zona != null) {                    
             $zonaGroup = implode ("','" , $zona);
             $zonaGroup = "'".$zonaGroup."'";
-            $queryString = "SELECT p.numPedido, c.razonSocial, c.idCliente, c.codigoCliente, c.zona, p.fecha, p.tipo_pedido FROM pedido p, clientes c ";
-            $queryString .= "where p.idCliente=c.idCliente and (fecha between'".$fecha." 00:00:00' and '".$fecha2." 23:59:59') ". $sqlTipoPedido ." and c.zona in (".$zonaGroup.") order by p.numPedido, c.zona ;";
-        }        
+            $sqlZona = "and c.zona in (".$zonaGroup.")";
+        }
+        $sqlTipoPedido = '';
+        if ($tipo_pedido == 'CREDITO') {
+            $sqlTipoPedido = 'p.tipo_pedido = "'.$tipo_pedido.'"';
+        }   
+        $sqlCreditoVariables = "";
+        $sqlCreditoJoinTable = "";
+        $sqlCreditoCancelado = "";
+
+        if ($tipo_pedido == 'CREDITO') {
+            $sqlCreditoVariables = ", 
+            pc.idPedido AS numPedido,
+            SUM(pc.acuenta) AS acuenta,
+            MIN(pc.saldo) AS saldo
+            ";
+            $sqlCreditoJoinTable = "JOIN pedido_credito pc ON p.numPedido = pc.idPedido";
+            $sqlCreditoCancelado = "AND pc.cancelado = 'NO'";
+        }
+
+        $queryString = "
+        SELECT 
+            c.razonSocial,
+            c.idCliente,
+            c.codigoCliente,
+            c.zona,
+            p.fecha,
+            p.tipo_pedido
+            $sqlCreditoVariables
+            
+        FROM
+            pedido p
+                JOIN clientes c ON p.idCliente = c.idCliente
+                $sqlCreditoJoinTable                
+        WHERE
+                $sqlTipoPedido
+                AND (fecha BETWEEN '$fecha 00:00:00' AND '$fecha2 23:59:59')
+                $sqlCreditoCancelado
+                $sqlZona            
+        GROUP BY numPedido    
+        ORDER BY numPedido , c.zona;
+        ";        
+
+        // if($zona == null) {
+        //     $queryString = "SELECT p.numPedido, c.razonSocial, c.idCliente, c.codigoCliente, c.zona, p.fecha, p.tipo_pedido FROM pedido p, clientes c "; 
+        //     $queryString .= "where p.idCliente=c.idCliente and (fecha between'".$fecha." 00:00:00' and '".$fecha2." 23:59:59') ". $sqlTipoPedido ." order by p.numPedido, c.zona ;";
+        // } else {
+            
+        //     $queryString = "SELECT p.numPedido, c.razonSocial, c.idCliente, c.codigoCliente, c.zona, p.fecha, p.tipo_pedido FROM pedido p, clientes c ";
+        //     $queryString .= "where p.idCliente=c.idCliente and (fecha between'".$fecha." 00:00:00' and '".$fecha2." 23:59:59') ". $sqlTipoPedido ." and c.zona in (".$zonaGroup.") order by p.numPedido, c.zona ;";
+        // }        
+        print_r($queryString);
         $query = $this->db->query($queryString);
         $result = $query->result();
 

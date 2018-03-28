@@ -239,6 +239,7 @@ class Vendedor extends MY_Controller {
         $reporteArray->tipo = $opcion;
         
         $reporteArray->lista = $totalInfo;
+        $reporteArray->tipoPedido = $tipo_pedido;
         $reporteArray->startDate = $startDate;
         $reporteArray->endDate = $endDate;
         // $reporteArray->zonas = $zonas;

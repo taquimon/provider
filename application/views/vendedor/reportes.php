@@ -80,7 +80,7 @@
                     <div class="col-md-3">
                         <label for="fecha">Seleccione Fecha:</label>
                         <div class="form-group date">
-                            <div class="input-group" id="daterange">
+                            <div class="input-group col-md-8" id="daterange">
                                 <!--<input type="text" class="form-control" name="fechaReporte"/>-->
                                 <input type="text" name="daterange" class="form-control"/>
                                 <span class="input-group-addon">
@@ -91,7 +91,7 @@
                     </div>
                     <div class="col-md-2">
                         <label for="cliente">Opciones</label>
-                        <div class="input-group col-md-4">
+                        <div class="input-group col-md-3">
                             <span class="input-group-addon">
                             <i class="glyphicon glyphicon-tasks blue"></i>
                             </span>
@@ -104,7 +104,7 @@
                      <div class="col-md-2">                   
                     
                         <label for="Vendedor">Vendedor</label>
-                        <div class="input-group col-md-4">
+                        <div class="input-group col-md-3">
                             <span class="input-group-addon">
                             <i class="glyphicon glyphicon-user blue"></i>
                             </span>
@@ -113,22 +113,22 @@
 
                         </div>        
                     </div>
-                    <div class="col-md-2">                   
+                    <div class="col-md-3">                   
                     
                         <label for="Zona">Zona</label>
-                        <div class="input-group col-md-4">
+                        <div class="input-group col-md-8">
                             <span class="input-group-addon">
                             <i class="glyphicon glyphicon-globe blue"></i>
                             </span>
-                            <select id="zonas" class="selectpicker" data-live-search="true" data-style="btn-primary" name="zonas[]" multiple data-selected-text-format="count > 3">                                
+                            <select id="zonas" class="selectpicker" data-live-search="true" data-style="btn-primary" name="zonas[]" multiple data-actions-box="true" data-selected-text-format="count > 3">
                             </select>                        
 
                         </div>        
                     </div>
-                    <div class="col-md-2">                   
+                    <div class="col-md-1">                   
                     
                         <label>Tipo Pedido</label>
-                        <div class="input-group col-md-4">
+                        <div class="input-group col-md-2">
                             <span class="input-group-addon">
                             <i class="glyphicon glyphicon-usd green"></i>
                             </span>
@@ -142,7 +142,7 @@
                     </div>
                     <div class="col-md-1">                   
                         
-                        <label class="checkbox-inline" for="Zona">&nbsp</label>
+                        <label class="checkbox-inline" for="Buscar">&nbsp</label>
                         <div class="input-group">
                             <button title="Buscar" type="submit" data-toggle="tooltip" class="btn btn-primary">
                             <i class="glyphicon glyphicon-ok-sign"></i> Buscar</button>                
