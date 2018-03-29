@@ -130,7 +130,7 @@
             success: function(json) {
                 var options = '';
                 for (var x = 0; x < json.length; x++) {
-                    options += '<option value="' + json[x].idCliente + '" data-subtext="' + json[x].codigoCliente + '">' + json[x].apellidos + " " + json[x].nombres + '</option>';
+                    options += '<option value="' + json[x].idCliente + '" data-subtext="' + json[x].codigoCliente + '">' + json[x].nombres + " " + json[x].apellidos + '</option>';
                 }
 
                 $('#clientes').html(options);
@@ -209,6 +209,26 @@
             $('#total'+id).val(total);
         // });        
     }
+    function selectVendedor() {
+        var dataCliente = {
+            idCliente : $("#clientes").val()
+        };
+        $.ajax({
+        url: "<?=site_url('pedido/ajaxGetVendedorToClient')?>",
+        dataType: "json",
+        data: dataCliente,
+        type: 'GET',
+        success: function(json) {
+            console.log(json);
+            $('#vendedores').val(parseInt(json.idVendedor));
+            $('#vendedores').selectpicker('refresh');
+        },
+        error: function() {
+            console.log("cannot select vendedor");
+        }
+        });
+        
+    }
 </script>
 
 <ul class="breadcrumb">
@@ -234,33 +254,31 @@
                 </div>
                 <div class="box-content">
                     <div class="row">
-                        <div class="col-md-3">
-							<label for="cliente">Cliente / codigo</label>
+                        <div class="col-md-4">
+							<label for="cliente">Cliente - codigo</label>
                             <div class="input-group col-md-4">
                                 <span class="input-group-addon">
                             <i class="glyphicon glyphicon-user blue"></i>
                             </span>
-                                <select id="clientes" class="selectpicker" data-live-search="true" data-style="btn-primary" data-show-subtext="true">
+                                <select id="clientes" name="clientes" class="selectpicker" data-live-search="true" data-style="btn-primary" data-show-subtext="true" onchange="selectVendedor()">
                                 </select>
                             </div>
-                        </div>
-                        <div>
-                           <div class="col-md-3">
-                            <label for="cliente">Tipo de Pedido</label>
+                        </div>                        
+                        <div class="col-md-2">
+                            <label for="tipo_pedido">Tipo de Pedido</label>
                                 <div class="checkbox">
                                     <label class="checkbox-inline">
                                         <input type="checkbox" id="tipo_pedido" ' + checked + ' data-toggle="toggle" data-on="CONTADO" data-off="CREDITO" data-onstyle="success" data-offstyle="danger">
-                                    </label></div>
-                           </div>                        
-                        </div>
-                        <div>
-                           <div class="col-md-3">
-                            <label for="cliente">Vendedor</label>                                
-                                <select id="vendedores" class="selectpicker" data-live-search="true" data-style="btn-warning" name="vendedores"></select>                                                                        
-                           </div>                        
+                                    </label></div>                        
+                        </div>                        
+                        <div class="col-md-4">
+                            <label for="vendedor">Vendedor</label>
+                            <div class="input-group col-md-6">
+                                <select id="vendedores" class="selectpicker" data-live-search="true" data-style="btn-warning" name="vendedores"></select>                    
+                            </div>
                         </div>
 
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label for="fecha">Fecha</label>
                             <div class="form-group">
                                 <div class="input-group date" id="datetimepicker1">

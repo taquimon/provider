@@ -74,12 +74,13 @@ class Order_model extends CI_Model
             $sqlZona = "and c.zona in (".$zonaGroup.")";
         }
         $sqlTipoPedido = '';
-        if ($tipo_pedido == 'CREDITO') {
-            $sqlTipoPedido = 'p.tipo_pedido = "'.$tipo_pedido.'"';
+        if ($tipo_pedido != 'TODOS') {
+            $sqlTipoPedido = 'AND p.tipo_pedido = "'.$tipo_pedido.'"';
         }   
         $sqlCreditoVariables = "";
         $sqlCreditoJoinTable = "";
         $sqlCreditoCancelado = "";
+        $sqlNumPedido = "";
 
         if ($tipo_pedido == 'CREDITO') {
             $sqlCreditoVariables = ", 
@@ -89,7 +90,10 @@ class Order_model extends CI_Model
             ";
             $sqlCreditoJoinTable = "JOIN pedido_credito pc ON p.numPedido = pc.idPedido";
             $sqlCreditoCancelado = "AND pc.cancelado = 'NO'";
+        } else {
+            $sqlNumPedido = ", p.numPedido"; 
         }
+
 
         $queryString = "
         SELECT 
@@ -99,6 +103,7 @@ class Order_model extends CI_Model
             c.zona,
             p.fecha,
             p.tipo_pedido
+            $sqlNumPedido
             $sqlCreditoVariables
             
         FROM
@@ -106,8 +111,8 @@ class Order_model extends CI_Model
                 JOIN clientes c ON p.idCliente = c.idCliente
                 $sqlCreditoJoinTable                
         WHERE
+                (fecha BETWEEN '$fecha 00:00:00' AND '$fecha2 23:59:59')        
                 $sqlTipoPedido
-                AND (fecha BETWEEN '$fecha 00:00:00' AND '$fecha2 23:59:59')
                 $sqlCreditoCancelado
                 $sqlZona            
         GROUP BY numPedido    
@@ -122,7 +127,7 @@ class Order_model extends CI_Model
         //     $queryString = "SELECT p.numPedido, c.razonSocial, c.idCliente, c.codigoCliente, c.zona, p.fecha, p.tipo_pedido FROM pedido p, clientes c ";
         //     $queryString .= "where p.idCliente=c.idCliente and (fecha between'".$fecha." 00:00:00' and '".$fecha2." 23:59:59') ". $sqlTipoPedido ." and c.zona in (".$zonaGroup.") order by p.numPedido, c.zona ;";
         // }        
-        print_r($queryString);
+        
         $query = $this->db->query($queryString);
         $result = $query->result();
 
@@ -132,17 +137,47 @@ class Order_model extends CI_Model
         if ($fecha2 == null) {
             $fecha2 = $fecha;
         }
-        if($zona == null) {
-            $query = $this->db->query("select d.cantidad, pr.idProducto, pr.codigoExterno, pr.descripcion from detalle d, producto pr WHERE d.idProducto = pr.idProducto and d.idPedido in (
-            SELECT p.numPedido FROM pedido p where  (fecha between'".$fecha." 00:00:00' and '".$fecha2." 23:59:59')) order by pr.descripcion, pr.idProducto ;");
-        } else {
+        $sqlZona = "";
+        if($zona != null) {
             $zonaGroup = implode ("','" , $zona);
             $zonaGroup = "'".$zonaGroup."'";
-            $query = $this->db->query("select d.cantidad, pr.idProducto, pr.codigoExterno, pr.descripcion from detalle d, producto pr WHERE d.idProducto = pr.idProducto and d.idPedido in (
-            SELECT p.numPedido FROM pedido p, clientes c where  (fecha between'".$fecha." 00:00:00' and '".$fecha2." 23:59:59') and p.idCliente=c.idCliente and c.zona in (".$zonaGroup.") ) order by pr.descripcion, pr.idProducto ;");
-
+            $sqlZona = "AND c.zona in (".$zonaGroup.")";
         }
+            // $query = $this->db->query("select d.cantidad, pr.idProducto, pr.codigoExterno, pr.descripcion from detalle d, producto pr WHERE d.idProducto = pr.idProducto and d.idPedido in (
+            // SELECT p.numPedido FROM pedido p where  (p.fecha between'".$fecha." 00:00:00' and '".$fecha2." 23:59:59')) order by pr.descripcion, pr.idProducto ;");
+        // } else {
+            
+        //     $query = $this->db->query("select d.cantidad, pr.idProducto, pr.codigoExterno, pr.descripcion from detalle d, producto pr WHERE d.idProducto = pr.idProducto and d.idPedido in (
+        //     SELECT p.numPedido FROM pedido p, clientes c where  (p.fecha between'".$fecha." 00:00:00' and '".$fecha2." 23:59:59') and p.idCliente=c.idCliente and c.zona in (".$zonaGroup.") ) order by pr.descripcion, pr.idProducto ;");
+
+        // }
+
+        $queryString = "
+        SELECT 
+            d.idPedido,
+            d.cantidad,
+            pr.idProducto,
+            pr.codigoExterno,
+            pr.descripcion,
+            pe.fecha
+        FROM
+            detalle d
+        JOIN pedido pe ON pe.numPedido = d.idPedido
+        JOIN producto pr ON d.idProducto = pr.idProducto
+        WHERE
+            d.idPedido IN (SELECT 
+                    p.numPedido
+                FROM
+                    pedido p,
+                    clientes c
+                WHERE
+                    (p.fecha BETWEEN '$fecha 00:00:00' AND '$fecha2 23:59:59')
+                        AND p.idCliente = c.idCliente
+                $sqlZona)        
+        ORDER BY pr.descripcion , pr.idProducto;";
+        $query = $this->db->query($queryString);
         $result = $query->result();
+        
 
         return $result;
     }
@@ -290,6 +325,25 @@ class Order_model extends CI_Model
     {
 
         $query = $this->db->query('SELECT p.numPedido, p.fecha, c.razonSocial, c.codigoCliente, u.username, p.tipo_pedido from pedido p, clientes c, user u WHERE c.idCliente = p.idCliente and p.idUser=u.idUser AND p.tipo_pedido = "CREDITO"');
+        $result = $query->result();
+
+        return $result;
+    }
+    public function getVendedorByClient($idCliente) {
+        $queryString = "
+        SELECT 
+            idVendedor
+        FROM
+            provider.zona_xref_vendedor
+        WHERE
+            idZona = (SELECT 
+                        zona
+                    FROM
+                        clientes
+                    WHERE
+                        idCliente = $idCliente);
+        ";        
+        $query = $this->db->query($queryString);
         $result = $query->result();
 
         return $result;

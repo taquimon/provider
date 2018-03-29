@@ -49,6 +49,9 @@ function fillVendedor(url, dropdown, optionSelected) {
             }
 
             $('#' + dropdown).html(options);
+            if(optionSelected != "") {
+                $('#' + dropdown).val(optionSelected);
+            }            
             $('#' + dropdown).selectpicker('refresh');
 
         },

@@ -19,6 +19,7 @@ function removerow(id){
 
 }
 function editPedido(idPedido) {
+    var vendedor = "";
         var dataPedido = {
             idPedido: idPedido
         };
@@ -34,6 +35,8 @@ function editPedido(idPedido) {
                 if(json.tipo_pedido == 'CONTADO') {
                     checked = "checked";
                 }
+                console.log(json.idVendedor);
+                vendedor = parseInt(json.idVendedor);
                 $tableDetalle = '<table><tr><td>Fecha:</td><td><div class="input-group date" id="fecha"><input type="text" class="form-control" name="fecha" id="fecha" value="'+json.fecha+'">' + icon + '</div></td></tr>';
                 $tableDetalle += '<tr><td>Tipo de Pedido:</td><td><div class="checkbox"><label class="checkbox-inline"><input type="checkbox" id="tipo_pedido" ' + checked + ' data-toggle="toggle" data-on="CONTADO" data-off="CREDITO" data-onstyle="success" data-offstyle="danger"></label></div></td>';
                 $tableDetalle += '<td>Vendedor</td><td><select id="vendedores" class="selectpicker" data-live-search="true" data-style="btn-primary" name="vendedores"></select></td></tr><table>'
@@ -86,7 +89,7 @@ function editPedido(idPedido) {
                         console.log(currentdt);
                         fillProductos();
                         var urlVendedor = "<?=site_url('vendedor/ajaxGetVendedores')?>";
-                        fillVendedor(urlVendedor, "vendedores","");
+                        fillVendedor(urlVendedor, "vendedores", vendedor);
 
                         detailTableUpdated = $("#table_new_products").DataTable({
                             destroy: true,

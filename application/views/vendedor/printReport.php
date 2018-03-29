@@ -244,7 +244,7 @@ if($this->data->tipo == "pedido") {
             </div>                 
             <div class="row">
                 <div class="col-xs-12">
-                    <h5 style="text-align: center">Zonas: 
+                    <h5 style="text-align: center"><b>Zonas:</b> 
                     <?php 
                     $zonas = $this->data->zonas;
                     if (isset($zonas)) {
@@ -252,7 +252,7 @@ if($this->data->tipo == "pedido") {
                     } else {
                         echo 'Todas - ';
                     }
-                    echo 'Del '. $this->data->startDate . ' al '. $this->data->endDate;
+                    echo ' <b>Del</b> '. $this->data->startDate . ' <b>al</b> '. $this->data->endDate;
                     ?>
                     
                     </h5>
@@ -276,7 +276,7 @@ if($this->data->tipo == "pedido") {
                             foreach($productos as $p){
                                 echo '<tr style="horizantal-align:left;vertical-align:top">';                                
                                 echo '<td>'.$p->idProducto.'</td>';
-                                echo '<td>'.$this->data->fecha.'</td>';
+                                echo '<td>'.substr($p->fecha,0,10).'</td>';
                                 echo '<td>'.$p->codigoExterno.'</td>';
                                 echo '<td>'.$p->descripcion.'</td>';                                
                                 echo '<td style="width:10%;text-align:right;"><b>'.$p->cantidad.'</b></td>';

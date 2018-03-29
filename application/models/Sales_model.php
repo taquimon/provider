@@ -112,7 +112,7 @@ class Sales_model extends CI_Model
 
         $this->db->select('idVendedor, nombres, apellidos')
         ->from('vendedor v')
-        ->order_by('apellidos','asc'); 
+        ->order_by('apellidos','desc'); 
         $query = $this->db->get();
 
         $result = $query->result();

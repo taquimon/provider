@@ -563,4 +563,12 @@ class Pedido extends MY_Controller {
                 
         echo json_encode($data);
     }
+    public function ajaxGetVendedorToClient() {
+        $idVendedor = -1;
+        if (isset($this->request['idCliente'])) {
+            $idCliente = $this->request['idCliente'];
+            $idVendedor = $this->orderModel->getVendedorByClient($idCliente);
+        }        
+        echo json_encode($idVendedor[0]);        
+    }
 }

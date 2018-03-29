@@ -35,12 +35,9 @@ class Client_model extends CI_Model
     public function getClientList()
     {
 
-        $this->db->select('*')
-        ->from('clientes c');        
-        // if($cantidad != null){
-        //     $this->db->where('cantidad',$cantidad);
-        // }
-
+        $this->db->select('idCliente, codigoCliente, nombres, razonSocial')
+        ->from('clientes c')
+        ->order_by('nombres','asc');
 
         $query = $this->db->get();
 
@@ -105,7 +102,7 @@ class Client_model extends CI_Model
 
         $this->db->select('idCliente, codigoCliente, nombres, apellidos')
         ->from('clientes c')
-        ->order_by('apellidos','asc'); 
+        ->order_by('nombres','asc'); 
         $query = $this->db->get();
 
         $result = $query->result();
