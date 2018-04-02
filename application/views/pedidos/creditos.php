@@ -73,7 +73,8 @@ function editPedido(idPedido) {
                     $tableCreditos = "<table class='table table-striped table-bordered'>";
                     $tableCreditos += '<thead><tr><th>Fecha</th><th>Acuenta</th><th>Saldo</th><th>Numero de Recibo</th></tr></thead>';
                     for(x=0; x< json.credito.length; x++) {
-                        console.log(json.credito[x].fechaUpdate);
+                        console.log(json.credito[x].acuenta);
+                        console.log(json.credito[x].saldo);
                         $tableCreditos += '<tr><td>' + json.credito[x].fechaUpdate + '</td>';
                         $tableCreditos += '<td>' + parseFloat(json.credito[x].acuenta).toFixed(2) + '</td>';
                         $tableCreditos += '<td>' + parseFloat(json.credito[x].saldo).toFixed(2) + '</td>';
@@ -88,7 +89,7 @@ function editPedido(idPedido) {
                 }
                 
                 $tableCreditos += '<table><tr><td>Fecha:</td><td><div class="input-group date" id="fechaUpdate"><input type="text" class="form-control" name="fechaUpdate" id="fechaUpdate">' + icon + '</div></td>';
-                $tableCreditos += '<td>Acuenta: </td><td>' + '<input type="number" step=".01" class="form-control" id="acuenta" name="acuenta"></td>';
+                $tableCreditos += '<td>Acuenta: </td><td>' + '<input type="number" step=".1" class="form-control" id="acuenta" name="acuenta"></td>';
                 $tableCreditos += '<td>Saldo: </td><td>' + '<input type="number" class="form-control" id="saldo" name="saldo"></td>';
                 $tableCreditos += '<td>Recibo: </td><td>' + '<input type="number" class="form-control" id="numeroRecibo" name="numeroRecibo"></td>';
                 $tableCreditos += '<td>Cancelado: </td><td><div class="checkbox"><label class="checkbox-inline"><input type="checkbox" id="cancelado" ' + cancel_check + ' data-toggle="toggle" data-on="SI" data-off="NO" data-onstyle="success" data-offstyle="danger"></label></div></td></tr><table>';
@@ -116,7 +117,8 @@ function editPedido(idPedido) {
                          $('#tipo_pedido').bootstrapToggle();
                          $('#cancelado').bootstrapToggle();
                          /* Update saldo automatically */
-                        $('#acuenta').bind('input', function() {                                        
+                        $('#acuenta').bind('input', function() {       
+                            console.log(sumAcuenta);                                 
                             newTotal = (totalProductos - sumAcuenta) - $('#acuenta').val();
                             $('#saldo').val(parseFloat(newTotal).toFixed(2));
                         } );
