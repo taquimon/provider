@@ -35,7 +35,7 @@ class Client_model extends CI_Model
     public function getClientList()
     {
 
-        $this->db->select('idCliente, codigoCliente, nombres, razonSocial')
+        $this->db->select('*')
         ->from('clientes c')
         ->order_by('nombres','asc');
 
