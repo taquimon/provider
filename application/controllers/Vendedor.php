@@ -223,7 +223,7 @@ class Vendedor extends MY_Controller {
         }        
         $tipo_pedido = $this->request['tipoPedido'];        
         switch($opcion) {
-            case "pedido": $totalInfo = $this->orderModel->getPedidosByDate($startDate, $endDate, $zonas, $tipo_pedido);
+            case "pedido": $totalInfo = $this->orderModel->getPedidosByDate($startDate, $endDate, $zonas, $tipo_pedido, $idVendedor);
                            foreach($totalInfo as $pedido) {
                                $detalleInfo = $this->orderModel->getDetailById($pedido->numPedido);
                                $pedido = $this->getTotals($pedido, $detalleInfo); 

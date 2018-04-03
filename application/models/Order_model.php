@@ -63,7 +63,7 @@ class Order_model extends CI_Model
         return $result;
     }
 
-    public function getPedidosByDate($fecha, $fecha2= null, $zona = null, $tipo_pedido = 'TODOS') {
+    public function getPedidosByDate($fecha, $fecha2= null, $zona = null, $tipo_pedido = 'TODOS', $idVendedor = NULL) {
         if ($fecha2 == null) {
             $fecha2 = $fecha;
         }
@@ -84,16 +84,20 @@ class Order_model extends CI_Model
 
         if ($tipo_pedido == 'CREDITO') {
             $sqlCreditoVariables = ", 
-            pc.idPedido AS numPedido,
+            p.numPedido AS numPedido,            
+            pc.cancelado,
             SUM(pc.acuenta) AS acuenta,
             MIN(pc.saldo) AS saldo
             ";
-            $sqlCreditoJoinTable = "JOIN pedido_credito pc ON p.numPedido = pc.idPedido";
+            $sqlCreditoJoinTable = "LEFT OUTER JOIN pedido_credito pc ON p.numPedido = pc.idPedido";
             $sqlCreditoCancelado = "AND pc.cancelado = 'NO'";
         } else {
             $sqlNumPedido = ", p.numPedido"; 
         }
-
+        $sqlVendedor = "";
+        if ($idVendedor != NULL) {
+            $sqlVendedor = "AND p.idVendedor = ". $idVendedor;
+        }
 
         $queryString = "
         SELECT 
@@ -102,7 +106,8 @@ class Order_model extends CI_Model
             c.codigoCliente,
             c.zona,
             p.fecha,
-            p.tipo_pedido
+            p.tipo_pedido,
+            p.idVendedor
             $sqlNumPedido
             $sqlCreditoVariables
             
@@ -110,15 +115,16 @@ class Order_model extends CI_Model
             pedido p
                 JOIN clientes c ON p.idCliente = c.idCliente
                 $sqlCreditoJoinTable                
+                $sqlCreditoCancelado
         WHERE
                 (fecha BETWEEN '$fecha 00:00:00' AND '$fecha2 23:59:59')        
                 $sqlTipoPedido
-                $sqlCreditoCancelado
+                $sqlVendedor
                 $sqlZona            
         GROUP BY numPedido    
         ORDER BY numPedido , c.zona;
         ";        
-
+        // print_r($queryString);
         // if($zona == null) {
         //     $queryString = "SELECT p.numPedido, c.razonSocial, c.idCliente, c.codigoCliente, c.zona, p.fecha, p.tipo_pedido FROM pedido p, clientes c "; 
         //     $queryString .= "where p.idCliente=c.idCliente and (fecha between'".$fecha." 00:00:00' and '".$fecha2." 23:59:59') ". $sqlTipoPedido ." order by p.numPedido, c.zona ;";
