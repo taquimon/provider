@@ -323,8 +323,23 @@ class Order_model extends CI_Model
     }
     public function getCreditosList()
     {
-
-        $query = $this->db->query('SELECT p.numPedido, p.fecha, c.razonSocial, c.codigoCliente, u.username, p.tipo_pedido from pedido p, clientes c, user u WHERE c.idCliente = p.idCliente and p.idUser=u.idUser AND p.tipo_pedido = "CREDITO"');
+        $queryString = "
+            SELECT 
+                p.numPedido,
+                p.fecha,
+                c.razonSocial,
+                c.codigoCliente,    
+                p.tipo_pedido,
+                v.idVendedor,
+                v.nombres,
+                v.apellidos
+            FROM
+                pedido p    
+            JOIN clientes c on c.idCliente = p.idCliente       
+            LEFT JOIN vendedor v on v.idVendedor = p.idVendedor
+            WHERE p.tipo_pedido = 'CREDITO'
+        ";
+        $query = $this->db->query($queryString);
         $result = $query->result();
 
         return $result;

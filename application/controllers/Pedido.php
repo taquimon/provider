@@ -553,6 +553,7 @@ class Pedido extends MY_Controller {
         foreach ($orders as $order) {
             $id = $order->numPedido;
             $link = "pedido/factura/".$id;
+            $order->vendedor = $order->nombres. " " .$order->apellidos;
             $order->options = '<a href="#" onclick="editPedido('.$id.')" class="btn btn-warning btn-sm"><i class="glyphicon glyphicon-edit glyphicon-white"></i> Editar</a>&nbsp;'; 
             // '<i class="glyphicon glyphicon-edit glyphicon-white"></i> Editar</a>&nbsp;'.
             // '<a href="'.$link.'" class="btn btn-warning btn-sm"><i class="glyphicon glyphicon-list-alt glyphicon-white"></i> Factura</a>&nbsp;'.

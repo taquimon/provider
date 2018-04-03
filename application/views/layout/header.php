@@ -17,8 +17,8 @@
                 <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                     <i class="glyphicon glyphicon-user"></i><span class="hidden-sm hidden-xs"> 
                     <?php if ($this->ion_auth->logged_in()) {
-		                  $user = $this->ion_auth->user()->row();
-                          echo $user->first_name;
+		                $user = $this->ion_auth->user()->row();
+                        echo $user->first_name;
                     }
                     ?></span>
                     

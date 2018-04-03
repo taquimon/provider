@@ -1,0 +1,1 @@
+UPDATE pedido p JOIN detalle d on p.numPedido = d.idPedido SET p.precioTotal = (SELECT SUM(d.precio * d.cantidad) as total FROM detalle d WHERE p.numPedido = d.idPedido group by d.idPedido)

@@ -1,0 +1,1 @@
+ALTER TABLE `pedido` ADD `precioTotal` DECIMAL(10,2) NULL DEFAULT '0.00' AFTER `idVendedor`;

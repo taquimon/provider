@@ -8,6 +8,7 @@ var detailTableUpdated;
 var oldProducts = [];
 var totalProductos = 0.0; 
 var sumAcuenta = 0.0;
+var idVendedor = 0;
 function removerow(id){
     $('#cantidad'+id).closest('tr').remove();
 
@@ -36,6 +37,7 @@ function editPedido(idPedido) {
                 if(json.tipo_pedido == 'CONTADO') {
                     checked = "checked";
                 }
+                vendedor = parseInt(json.idVendedor);
                 $tableDetalle = '<table><tr><td>Fecha:</td><td><div class="input-group date" id="fecha"><input type="text" class="form-control" name="fecha" id="fecha" value="'+json.fecha+'">' + icon + '</div></td>';
                 $tableDetalle += '<td>Numero de Pedido:</td><td><strong>' + json.numPedido + '</strong></td></tr>';
                 $tableDetalle += '<tr><td>Tipo de Pedido:</td><td><div class="checkbox"><label class="checkbox-inline"><input type="checkbox" id="tipo_pedido" ' + checked + ' data-toggle="toggle" data-on="CONTADO" data-off="CREDITO" data-onstyle="success" data-offstyle="danger"></label></div></td>';
@@ -134,7 +136,7 @@ function editPedido(idPedido) {
                         console.log(currentdt);
                         fillProductos();
                         var urlVendedor = "<?=site_url('vendedor/ajaxGetVendedores')?>";
-                        fillVendedor(urlVendedor, "vendedores","");
+                        fillVendedor(urlVendedor, "vendedores", vendedor);
 
                         detailTableUpdated = $("#table_new_products").DataTable({
                             destroy: true,
@@ -302,7 +304,7 @@ function editPedido(idPedido) {
                 { "data": "numPedido", sDefaultContent: ""}, 
                 { "data": "razonSocial", sDefaultContent: ""},
                 { "data": "codigoCliente", sDefaultContent: ""},
-                { "data": "nombres", sDefaultContent: ""},
+                { "data": "vendedor", sDefaultContent: ""},
                 { "data": "fecha", sDefaultContent: ""},
                 { "data": "tipo_pedido", sDefaultContent: ""},                                 
                 { "data": "options", sDefaultContent: ""},                
