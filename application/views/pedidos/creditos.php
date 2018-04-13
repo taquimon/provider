@@ -7,7 +7,6 @@
 var detailTableUpdated;
 var oldProducts = [];
 var totalProductos = 0.0; 
-var sumAcuenta = 0.0;
 var idVendedor = 0;
 function removerow(id){
     $('#cantidad'+id).closest('tr').remove();
@@ -22,6 +21,7 @@ function removerow(id){
 
 }
 function editPedido(idPedido) {
+        var sumAcuenta = 0.0;
         var dataPedido = {
             idPedido: idPedido
         };
