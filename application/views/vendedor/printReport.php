@@ -162,6 +162,8 @@ if($this->data->tipo == "pedido") {
                             $list = $this->data->lista;
                             $totalGeneral = 0;
                             $totalClientes = 0;
+                            $totalSaldo = 0;
+                            $totalAcuenta = 0;
                             $array_clientes = array();
                             foreach($list as $li) {
                                 echo '<tr style="horizantal-align:left;vertical-align:top">';                                
@@ -185,6 +187,8 @@ if($this->data->tipo == "pedido") {
                                 echo '<td style="width:10%;text-align:right;">'.$li->total.'</td>';
                                 echo '</tr>'; 
                                 $totalGeneral += $li->total;
+                                $totalSaldo += $li->saldo;
+                                $totalAcuenta += $li->acuenta;
                                 
                                 array_push($array_clientes, $li->idCliente);
                             }
@@ -201,7 +205,27 @@ if($this->data->tipo == "pedido") {
                     <b>Totales:</b>
                 </div>
                 <div class="col-xs-1" style="text-align:right">                
-                    <b><?=$totalGeneral?></b>
+                    <b><?=number_format($totalGeneral, 2)?></b>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-4"></div>
+                <div class="col-xs-5"></div>
+                <div class="col-xs-2">                
+                    <b>Total Acuenta:</b>
+                </div>
+                <div class="col-xs-1" style="text-align:right">                
+                    <b><?=number_format($totalAcuenta, 2)?></b>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-4"></div>
+                <div class="col-xs-5"></div>
+                <div class="col-xs-2">                
+                    <b>Total Saldo:</b>
+                </div>
+                <div class="col-xs-1" style="text-align:right">                
+                    <b><?=number_format($totalSaldo, 2)?></b>
                 </div>
             </div>            
             <div class="row">                
