@@ -182,13 +182,13 @@ if($this->data->tipo == "pedido") {
                                 if ($this->data->tipoPedido == 'CREDITO') {
                                     echo '<td style="width:5%;text-align:right;">'.$li->acuenta.'</td>';
                                     echo '<td style="width:5%;text-align:right;">'.$li->saldo.'</td>';
+                                    $totalSaldo += $li->saldo;
+                                    $totalAcuenta += $li->acuenta;
                                 }
                                 
                                 echo '<td style="width:10%;text-align:right;">'.$li->total.'</td>';
                                 echo '</tr>'; 
                                 $totalGeneral += $li->total;
-                                $totalSaldo += $li->saldo;
-                                $totalAcuenta += $li->acuenta;
                                 
                                 array_push($array_clientes, $li->idCliente);
                             }
