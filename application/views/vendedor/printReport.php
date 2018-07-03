@@ -188,7 +188,9 @@ if($this->data->tipo == "pedido") {
                                 
                                 echo '<td style="width:10%;text-align:right;">'.$li->total.'</td>';
                                 echo '</tr>'; 
-                                $totalGeneral += $li->total;                                
+                                $totalGeneral += $li->total;
+                                $totalSaldo += $li->saldo;
+                                $totalAcuenta += $li->acuenta;
                                 
                                 array_push($array_clientes, $li->idCliente);
                             }
