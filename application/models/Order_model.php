@@ -79,8 +79,9 @@ class Order_model extends CI_Model
         }
         $sqlCreditoVariables = "";
         $sqlCreditoJoinTable = "";
-        $sqlCreditoCancelado = " AND pc.cancelado = 'NO' ";
+        $sqlCreditoCancelado = "";
         $sqlNumPedido = "";
+        $groupCancelado = "";
 
         if ($tipo_pedido == 'CREDITO') {
             $sqlCreditoVariables = ",
@@ -90,7 +91,8 @@ class Order_model extends CI_Model
             MIN(pc.saldo) AS saldo
             ";
             $sqlCreditoJoinTable = "LEFT OUTER JOIN pedido_credito pc ON p.numPedido = pc.idPedido";
-            // $sqlCreditoCancelado = "AND pc.cancelado = 'NO'";
+            $sqlCreditoCancelado = "AND pc.cancelado = 'NO'";
+            $groupCancelado = ", pc.cancelado ";
         } else {
             $sqlNumPedido = ", p.numPedido";
         }
@@ -121,7 +123,7 @@ class Order_model extends CI_Model
                 $sqlVendedor
                 $sqlZona
                 $sqlCreditoCancelado
-        GROUP BY numPedido, pc.cancelado
+        GROUP BY numPedido $groupCancelado
         ORDER BY numPedido , c.zona;
         ";
         //print_r($queryString);
