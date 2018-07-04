@@ -79,7 +79,7 @@ class Order_model extends CI_Model
         }
         $sqlCreditoVariables = "";
         $sqlCreditoJoinTable = "";
-        $sqlCreditoCancelado = " AND pc.cancelado = 'SI' ";
+        $sqlCreditoCancelado = " AND pc.cancelado = 'NO' ";
         $sqlNumPedido = "";
 
         if ($tipo_pedido == 'CREDITO') {
@@ -114,17 +114,17 @@ class Order_model extends CI_Model
         FROM
             pedido p
                 JOIN clientes c ON p.idCliente = c.idCliente
-                $sqlCreditoJoinTable
-                $sqlCreditoCancelado
+                $sqlCreditoJoinTable                
         WHERE
                 (fecha BETWEEN '$fecha 00:00:00' AND '$fecha2 23:59:59')
                 $sqlTipoPedido
                 $sqlVendedor
                 $sqlZona
+                $sqlCreditoCancelado
         GROUP BY numPedido, pc.cancelado
         ORDER BY numPedido , c.zona;
         ";
-        // print_r($queryString);
+        //print_r($queryString);
         // if($zona == null) {
         //     $queryString = "SELECT p.numPedido, c.razonSocial, c.idCliente, c.codigoCliente, c.zona, p.fecha, p.tipo_pedido FROM pedido p, clientes c ";
         //     $queryString .= "where p.idCliente=c.idCliente and (fecha between'".$fecha." 00:00:00' and '".$fecha2." 23:59:59') ". $sqlTipoPedido ." order by p.numPedido, c.zona ;";
