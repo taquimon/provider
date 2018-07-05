@@ -91,7 +91,7 @@ class Order_model extends CI_Model
             MIN(pc.saldo) AS saldo
             ";
             $sqlCreditoJoinTable = "LEFT OUTER JOIN pedido_credito pc ON p.numPedido = pc.idPedido";
-            $sqlCreditoCancelado = "AND pc.cancelado <> 'SI'" ;
+            $sqlCreditoCancelado = "AND (pc.cancelado = 'NO' OR pc.cancelado is null )";
             $groupCancelado = ", pc.cancelado ";
         } else {
             $sqlNumPedido = ", p.numPedido";
