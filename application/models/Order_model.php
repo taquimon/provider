@@ -91,7 +91,9 @@ class Order_model extends CI_Model
             MIN(pc.saldo) AS saldo
             ";
             $sqlCreditoJoinTable = "LEFT OUTER JOIN pedido_credito pc ON p.numPedido = pc.idPedido";
-            $sqlCreditoCancelado = "AND (pc.cancelado = 'NO' OR pc.cancelado is null )";
+            // $sqlCreditoCancelado = "AND (pc.cancelado = 'NO' OR pc.cancelado is null )";
+            $sqlCreditoCancelado = "AND pc.idPedido in (SELECT idPedido from pedido_credito where cancelado = 'NO' OR cancelado IS NULL)";
+            
             $groupCancelado = ", pc.cancelado ";
         } else {
             $sqlNumPedido = ", p.numPedido";
@@ -126,7 +128,7 @@ class Order_model extends CI_Model
         GROUP BY numPedido $groupCancelado
         ORDER BY numPedido , c.zona;
         ";
-        // print_r($queryString);
+        //print_r($queryString);
         // if($zona == null) {
         //     $queryString = "SELECT p.numPedido, c.razonSocial, c.idCliente, c.codigoCliente, c.zona, p.fecha, p.tipo_pedido FROM pedido p, clientes c ";
         //     $queryString .= "where p.idCliente=c.idCliente and (fecha between'".$fecha." 00:00:00' and '".$fecha2." 23:59:59') ". $sqlTipoPedido ." order by p.numPedido, c.zona ;";
