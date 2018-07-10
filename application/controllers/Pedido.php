@@ -257,8 +257,9 @@ class Pedido extends MY_Controller {
         switch($opcion) {
             case "pedido": $totalInfo = $this->orderModel->getPedidosByDate($fecha, null, $zonas);
                            foreach($totalInfo as $pedido) {
-                               $detalleInfo = $this->orderModel->getDetailById($pedido->numPedido);
-                               $pedido = $this->getTotals($pedido, $detalleInfo);                                
+                               
+                            $detalleInfo = $this->orderModel->getDetailById($pedido->numPedido);
+                            $pedido = $this->getTotals($pedido, $detalleInfo);                               
                            } 
                            
                         break;                        

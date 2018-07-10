@@ -222,12 +222,16 @@ class Vendedor extends MY_Controller {
             
         }        
         $tipo_pedido = $this->request['tipoPedido'];        
+        $detalleInfo = array ();
+        $pedido = 0.0;
         switch($opcion) {
             case "pedido": $totalInfo = $this->orderModel->getPedidosByDate($startDate, $endDate, $zonas, $tipo_pedido, $idVendedor);
                            foreach($totalInfo as $pedido) {
-                               $detalleInfo = $this->orderModel->getDetailById($pedido->numPedido);
-                               $pedido = $this->getTotals($pedido, $detalleInfo); 
+                               //if credito has been canceled                               
+                                $detalleInfo = $this->orderModel->getDetailById($pedido->numPedido);
+                                $pedido = $this->getTotals($pedido, $detalleInfo);                                                              
                            } 
+                        //    $totalInfo = $this->removeCancelados($totalInfoPartial);
                            
                         break;                        
             case "producto": $totalInfo = $this->orderModel->getTotalProductsByDate($startDate, $endDate, $zonas);
@@ -246,7 +250,7 @@ class Vendedor extends MY_Controller {
         $reporteArray->zonas = $zonaNames;
         $reporteArray->zonaSelected = $zonas;
         
-        //print_r($reporteArray);
+        // print_r($reporteArray);
         $this->data = $reporteArray;
         $this->middle = 'vendedor/printReport';
         $this->layout();
@@ -254,11 +258,10 @@ class Vendedor extends MY_Controller {
   
    function sumProducts($products) {        
         $res  = array();
-        foreach($products as $vals){
-            if(array_key_exists($vals->idProducto,$res)){
-                $res[$vals->idProducto]->cantidad    += $vals->cantidad;                
-            }
-            else{
+        foreach ($products as $vals) {
+            if (array_key_exists($vals->idProducto, $res)) {
+                $res[$vals->idProducto]->cantidad += $vals->cantidad;
+            } else {
                 $res[$vals->idProducto]  = $vals;
             }
         }
@@ -279,6 +282,19 @@ class Vendedor extends MY_Controller {
         $pedido->totalLiteral = $this->numToLetras($totalPedido);
 
         return $pedido;
+    }
+    /**
+     * Obsolet method
+     */
+    public function removeCancelados($arrayInfo) {
+        
+        foreach($arrayInfo as $pedido) {
+            print_r($this->orderModel->isPedidoCancelado($pedido->numPedido));
+            if ($this->orderModel->isPedidoCancelado($pedido->numPedido) == 0) {
+                unset($pedido);
+            } 
+        }
+        return $arrayInfo;        
     }
    
 }

@@ -92,7 +92,8 @@ class Order_model extends CI_Model
             ";
             $sqlCreditoJoinTable = "LEFT OUTER JOIN pedido_credito pc ON p.numPedido = pc.idPedido";
             // $sqlCreditoCancelado = "AND (pc.cancelado = 'NO' OR pc.cancelado is null )";
-            $sqlCreditoCancelado = "AND pc.idPedido in (SELECT idPedido from pedido_credito where cancelado = 'NO' OR cancelado IS NULL)";
+            $sqlCreditoCancelado = "AND 1 = (SELECT IF( EXISTS(
+                SELECT cancelado FROM pedido_credito WHERE idPedido = pc.idPedido and cancelado <> 'SI'), 1, 0))";
             
             $groupCancelado = ", pc.cancelado ";
         } else {
@@ -124,7 +125,7 @@ class Order_model extends CI_Model
                 $sqlTipoPedido
                 $sqlVendedor
                 $sqlZona
-                $sqlCreditoCancelado
+                
         GROUP BY numPedido $groupCancelado
         ORDER BY numPedido , c.zona;
         ";
@@ -372,5 +373,22 @@ class Order_model extends CI_Model
         $result = $query->result();
 
         return $result;
+    }
+    public function isPedidoCancelado($idPedido) 
+    {
+        $queryString = "
+        SELECT
+            idPedido
+        FROM
+            provider.pedido_credito
+        WHERE
+            idPedido = $idPedido
+            AND cancelado = 'SI'
+            ;
+        ";
+        $query = $this->db->query($queryString);
+        $result = $query->result();
+
+        return count($result);        
     }
 }

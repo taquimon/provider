@@ -165,36 +165,64 @@ if($this->data->tipo == "pedido") {
                             $totalSaldo = 0;
                             $totalAcuenta = 0;
                             $array_clientes = array();
-                            foreach($list as $li) {
-                                echo '<tr style="horizantal-align:left;vertical-align:top">';                                
-                                echo '<td>'.$li->numPedido.'</td>';
-                                echo '<td>'.$li->fecha.'</td>';
-                                echo '<td>'.$li->tipo_pedido.'</td>';
-                                // echo '<td>'.$li->zona.'</td>';
-                                if(!isset($this->data->zonas[$li->zona])) {
-                                    echo '<td>'.$li->zona.'</td>';
+                            $totalCredito = 0;
+                            foreach($list as $li) {                                
+                                
+                                if ($this->data->tipoPedido === 'CREDITO') {
+                                    if (($li->cancelado === "NO" || $li->cancelado === null) && ($li->saldo != 0.0 || $li->saldo === null)) {
+                                        echo '<tr style="horizantal-align:left;vertical-align:top">';
+                                        echo '<td>'.$li->numPedido.'</td>';
+                                        echo '<td>'.$li->fecha.'</td>';
+                                        echo '<td>'.$li->tipo_pedido.'</td>';
+                                        // echo '<td>'.$li->zona.'</td>';
+                                        if (!isset($this->data->zonas[$li->zona])) {
+                                            echo '<td>'.$li->zona.'</td>';
+                                        } else {
+                                            echo '<td>'.$this->data->zonas[$li->zona].'</td>';
+                                        }
+                                        echo '<td>'.$li->codigoCliente.'</td>';
+                                        echo '<td>'.$li->razonSocial.'</td>';
+                                        echo '<td style="width:5%;text-align:right;">'.$li->acuenta.'</td>';
+                                        if($li->saldo === NULL) {
+                                            $saldo = $li->total;
+                                        } else {
+                                            $saldo = $li->saldo;
+                                        }
+                                        echo '<td style="width:5%;text-align:right;">'.number_format($saldo, 2).'</td>';
+                                        $totalSaldo += $saldo;
+                                        $totalAcuenta += $li->acuenta;
+                                
+                                        echo '<td style="width:10%;text-align:right;">'.number_format($li->total, 2).'</td>';
+                                        echo '</tr>';
+                                        $totalCredito += $li->total;
+                                    }
                                 } else {
-                                    echo '<td>'.$this->data->zonas[$li->zona].'</td>';
-                                } 
-                                echo '<td>'.$li->codigoCliente.'</td>';
-                                echo '<td>'.$li->razonSocial.'</td>';                                
+                                        echo '<tr style="horizantal-align:left;vertical-align:top">';
+                                        echo '<td>'.$li->numPedido.'</td>';
+                                        echo '<td>'.$li->fecha.'</td>';
+                                        echo '<td>'.$li->tipo_pedido.'</td>';
+                                        // echo '<td>'.$li->zona.'</td>';
+                                        if (!isset($this->data->zonas[$li->zona])) {
+                                            echo '<td>'.$li->zona.'</td>';
+                                        } else {
+                                            echo '<td>'.$this->data->zonas[$li->zona].'</td>';
+                                        }
+                                        echo '<td>'.$li->codigoCliente.'</td>';
+                                        echo '<td>'.$li->razonSocial.'</td>';
+                                        echo '<td style="width:10%;text-align:right;">'.number_format($li->total, 2).'</td>';
+                                        echo '</tr>';
+                                     }
+                                    $totalGeneral += $li->total;
+                                    // $totalSaldo += $li->saldo;
+                                    // $totalAcuenta += $li->acuenta;
                                 
-                                if ($this->data->tipoPedido == 'CREDITO') {
-                                    echo '<td style="width:5%;text-align:right;">'.$li->acuenta.'</td>';
-                                    echo '<td style="width:5%;text-align:right;">'.$li->saldo.'</td>';
-                                    $totalSaldo += $li->saldo;
-                                    $totalAcuenta += $li->acuenta;
-                                }
-                                
-                                echo '<td style="width:10%;text-align:right;">'.$li->total.'</td>';
-                                echo '</tr>'; 
-                                $totalGeneral += $li->total;
-                                $totalSaldo += $li->saldo;
-                                $totalAcuenta += $li->acuenta;
-                                
-                                array_push($array_clientes, $li->idCliente);
+                                    array_push($array_clientes, $li->idCliente);
+                            }                            
+                            if ($this->data->tipoPedido === 'CREDITO') {
+                                $totalGeneral = $totalCredito;
                             }
                             $totalClientes = count(array_unique($array_clientes));
+                            
                             ?>                                
                         </tbody>
                     </table>              
