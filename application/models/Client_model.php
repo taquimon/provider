@@ -21,6 +21,7 @@ class Client_model extends CI_Model
             'direccion',
             'telefono',
             'celular',
+            'nit',
             'observaciones',
             'zona'            
         );
@@ -35,11 +36,8 @@ class Client_model extends CI_Model
     {
 
         $this->db->select('*')
-        ->from('clientes c');        
-        // if($cantidad != null){
-        //     $this->db->where('cantidad',$cantidad);
-        // }
-
+            ->from('clientes c')
+            ->order_by('nombres', 'asc');
 
         $query = $this->db->get();
 
@@ -57,7 +55,8 @@ class Client_model extends CI_Model
         $client = $query->first_row();
 
         if (!$client) {
-            throw new Exception("No se encontro el cliente [$idClient].");
+            return null;
+//            throw new Exception("No se encontro el cliente [$idClient].");
         }
 
         return $client;
@@ -76,7 +75,7 @@ class Client_model extends CI_Model
     /**
      * This method insert new data into club
      */
-    public function updateClient($idClient, $data)
+    public function updateCliente($idClient, $data)
     {
 
         $this->db->where('idCliente', $idClient);
@@ -102,7 +101,25 @@ class Client_model extends CI_Model
     {
 
         $this->db->select('idCliente, codigoCliente, nombres, apellidos')
-        ->from('clientes c'); 
+        ->from('clientes c')
+        ->order_by('nombres','asc'); 
+        $query = $this->db->get();
+
+        $result = $query->result();
+
+        return $result;
+    }
+
+    public function deleteCliente($idCliente) {
+
+        $this->db->delete('clientes', array('idCliente' => $idCliente));
+    }
+
+    public function getZonas()
+    {
+        $this->db->distinct();
+        $this->db->select('zona')
+            ->from('clientes c');
         $query = $this->db->get();
 
         $result = $query->result();
