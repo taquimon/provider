@@ -7,7 +7,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require APPPATH . '/libraries/REST_Controller.php';
 
 // use namespace
-use Restserver\Libraries\REST_Controller;
+// use Restserver\Libraries\REST_Controller;
 
 /**
  * This is an example of a few basic user interaction methods you could use
@@ -140,7 +140,7 @@ class Discal extends REST_Controller {
                     $status = '<span class="label-warning label label-default">Inactivo</span>';
                 }
                 $product->status = $status;
-                $product->options = '<a href="#" onclick="editProduct('.$id.')" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-edit glyphicon-white"></i> Editar</a>&nbsp;';
+                $product->options = '<a href="#" onclick="editProduct('.$id.')">'. $product->descripcion .'</a>';
     
     
             }
