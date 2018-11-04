@@ -32,14 +32,14 @@ class Discal extends REST_Controller {
         $this->load->model('order_model', 'orderModel');
         $this->load->model('product_model', 'productModel');
         $this->load->model('client_model', 'clientModel');
+        $this->load->model('Ion_auth_model', 'authModel');
     }
 
     public function api_get($data, $name, $single = NULL, $id = NULL)
     {
-        $id = $this->get('id');
-
+        //$id = $this->get('id');        
         if ($id === NULL)
-        {
+        {            
             // Check if the pedidos data store contains pedidos (in case the database result returns NULL)
             if ($data)
             {
@@ -54,12 +54,19 @@ class Discal extends REST_Controller {
                     'message' => 'No '.$name.' were found'
                 ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
             }
-        }
-        // Find and return a single record for a particular user.
+        } 
+        else if ($id == 'login') {
+            $this->set_response([
+                'status' => FALSE,
+                'message' => $name.' login'
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        }   // Find and return a single record for a particular user.
         else {
             $id = (int) $id;
 
             // Validate the id.
+            // print_r($id);
+            // print_r($data);
             if ($id <= 0)
             {
                 // Invalid id, set the response and exit.
@@ -70,8 +77,8 @@ class Discal extends REST_Controller {
             // Usually a model is to be used for this.
 
 
-            if (!empty($data))
-            {
+            if (empty($data))
+            {                
                 $element = $single;
             }
 
@@ -92,13 +99,13 @@ class Discal extends REST_Controller {
     {
         $pedido = '';
         $pedidos = [];
-        $id = null;
+        $id = NULL;
         if ($this->get('id')) {            
             $id = $this->get('id');
             $pedido = $this->orderModel->getOrderById($id);
         }                            
-        if ($this->get('ajaxListOrder')) {
-            $orders = $this->orderModel->getPedidoList();    
+        else if ($this->get('ajaxListOrder')) {
+            $pedidos = $this->orderModel->getOrderList();    
         
                 foreach($orders as $order) {
                     $id = $order->numPedido;
@@ -111,41 +118,39 @@ class Discal extends REST_Controller {
                 $pedidos = $data;
         }
         else {
-            $orders = $this->orderModel->getOrderList();
-            
+            $pedidos = $this->orderModel->getOrderList();            
         }
         
         $this->api_get($pedidos, "pedido", $pedido, $id);
-
-
     }
 
     public function producto_get()
     {
         $producto = '';
         $productos = [];
-        $id = null;
+        $id = NULL;
         if ($this->get('id') ){
             $id = $this->get('id');
             $producto = $this->productModel->getProductById($id);
         }   
-        if ($this->get('getAjaxListProducts')) {
+        else if ($this->get('getAjaxListProducts')) {
+            $id = NULL;            
             $products = $this->productModel->getProductList();
             $data['data'] = $products;
             foreach($products as $product) {
-                $id = $product->idProducto;
+                $idProduct = $product->idProducto;
                 if ($product->activo == 1) {
                     $status = '<span class="label-success label label-default">Activo</span>';
                 } else {
                     $status = '<span class="label-warning label label-default">Inactivo</span>';
                 }
                 $product->status = $status;
-                $product->options = '<a href="#" onclick="editProduct('.$id.')">'. $product->descripcion .'</a>';
+                $product->options = '<a href="#" onclick="editProduct('.$idProduct.')">'. $product->descripcion .'</a>';
     
     
             }
     
-            $productos = $data;
+            $productos = $data;            
         }
         else {
             $productos = $this->productModel->getProductList();            
@@ -153,15 +158,17 @@ class Discal extends REST_Controller {
         $this->api_get($productos, "producto", $producto, $id);
     }
     public function cliente_get()
-    {
-        $id = $this->get('id');
-
-        $clientes = $this->clientModel->getClientList();
-
-        if (!empty($clientes)) {
-
+    {        
+        $cliente = '';
+        $clientes = [];
+        $id = NULL;
+        if ($this->get('id') ){
+            $id = $this->get('id');
             $cliente = $this->clientModel->getClientById($id);
-        }
+        }   
+        else {
+            $clientes = $this->clientModel->getClientList();
+        }        
 
         $this->api_get($clientes, "cliente", $cliente, $id);
     }
@@ -201,6 +208,26 @@ class Discal extends REST_Controller {
 
         $this->set_response($message, REST_Controller::HTTP_NO_CONTENT); // NO_CONTENT (204) being the HTTP response code
     }
-            
+    public function user_get()
+    {
+        $user = '';
+        $users = [];
+        $id = NULL;
+        if ($this->get('id') ){
+            $id = $this->get('id');
+            $user = $this->authModel->user($id)->row();            
+        }   
+        else if ($this->get('login') ){
+            $id = $this->get('login');
+            $username = $this->get('username');
+            $password = $this->get('password');
+            $user = $this->authModel->login($username, $password, TRUE);
+        }   
+     
+        else {
+            $users = $this->authModel->users();
+        }                
+        $this->api_get($users, "user", $user, $id);
+    }           
 
 }
