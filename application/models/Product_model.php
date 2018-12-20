@@ -96,7 +96,8 @@ class Product_model extends CI_Model
      */
     public function insertIngreso($data)
     {
-
+        echo "---------------------";
+        print_r($data);
         $data ['fechaIngreso'] = date('Y-m-d H:i:s');
         $result = $this->db->insert('ingreso', $data);
         $insert_id = $this->db->insert_id();

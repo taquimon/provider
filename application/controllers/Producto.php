@@ -75,6 +75,7 @@ class Producto extends MY_Controller {
     {
         $result = new stdClass();
         $productId = -1;
+        $data = [];
         try{                
             if ($this->request['idProducto'] == -1) {
                 
@@ -87,7 +88,7 @@ class Producto extends MY_Controller {
                 $data['precioUnitario']  = $this->request['precioUnitario'];
                 $data['precioVenta']     = $this->request['precioVenta'];
                 $data['idCategoria']     = $this->request['idCategoria'];
-
+                print_r($data);
                 $productId = $this->productModel->insert($data);
 
                 if ($productId) {
