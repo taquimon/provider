@@ -1,15 +1,14 @@
 <script type="text/javascript" charset="utf-8">
     var detailTable;
+    var currentVendedor = 0;
     $(function() {        
         $('#descuento').bind('input', function() {                        
             total = parseFloat($('#totalBruto').val() - $('#descuento').val());                
             $('#valorTotal').val(total);            
         });
-        var productIds = [];
-        var urlVendedor = "<?=site_url('vendedor/ajaxGetVendedores')?>";
-        fillVendedor(urlVendedor, "vendedores","");
+        var productIds = [];        
         $.ajax({
-            url: "<?=site_url('pedido/getLastDate')?>",
+            url: "<?=site_url('pedido/getLastDate'); ?>",
             dataType: "json",
             type: 'GET',
             success: function(json) {
@@ -24,8 +23,8 @@
                 console.log("cannot add date");
             }
         });
-
-        fillClientes();
+        fillVendedor();
+        //fillClientes();
         fillProductos();
         detailTable = $("#detalleTable").DataTable({
             destroy: true,
@@ -59,7 +58,7 @@
             idVendedor: $("#vendedores").val(),
         };
 
-        var url = "<?=site_url('pedido/jsonGuardarNuevo')?>";
+        var url = "<?=site_url('pedido/jsonGuardarNuevo'); ?>";
 
         $.ajax({
             url: url,
@@ -104,7 +103,7 @@
 
     function fillProductos() {
         $.ajax({
-            url: "<?=site_url('producto/ajaxGetProductos')?>",
+            url: "<?=site_url('producto/ajaxGetProductos'); ?>",
             dataType: "json",
             type: 'GET',
             success: function(json) {
@@ -122,12 +121,46 @@
         });
     }
 
-    function fillClientes() {
+    function fillVendedor() {
+        var urlVendedor = "<?=site_url('vendedor/ajaxGetVendedores'); ?>";        
         $.ajax({
-            url: "<?=site_url('cliente/ajaxGetClientes')?>",
+            url: urlVendedor,
             dataType: "json",
             type: 'GET',
             success: function(json) {
+                var options = '';
+                currentVendedor = json[0].idVendedor;
+                console.log(currentVendedor);
+                for (var x = 0; x < json.length; x++) {
+                    
+                    options += '<option value="' + json[x].idVendedor + '">' + json[x].nombres + ' ' + json[x].apellidos + '</option>';
+                }
+
+                $('#vendedores').html(options);                
+                $('#vendedores').selectpicker('refresh');
+                fillClientes();
+            },
+            error: function() {}
+        });
+    }
+
+    function fillClientes() {
+        
+        var url = "<?=site_url('cliente/ajaxGetClientes'); ?>";        
+        var vendedor = $("#vendedores").val();
+
+        var allClientes = $('#all_clientes').prop('checked');
+        console.log(vendedor);
+        
+        var vendedorData = {
+            idVendedor : vendedor,            
+        }
+        $.ajax({
+            url: url,
+            dataType: "json",
+            data: vendedorData,
+            type: 'GET',
+            success: function(json) {                
                 var options = '';
                 for (var x = 0; x < json.length; x++) {
                     options += '<option value="' + json[x].idCliente + '" data-subtext="' + json[x].codigoCliente + '">' + json[x].nombres + " " + json[x].apellidos + '</option>';
@@ -141,14 +174,14 @@
             }
         });
     }
-
+    
     function addProducts() {
         productIds = [];
         var dataProduct = {
             products: $("#productos").val(),
         };
         $.ajax({
-            url: "<?=site_url('producto/ajaxGetProductosByIds')?>",
+            url: "<?=site_url('producto/ajaxGetProductosByIds'); ?>",
             data: dataProduct,
             dataType: "json",
             type: 'POST',
@@ -209,37 +242,20 @@
             $('#total'+id).val(total);
         // });        
     }
-    function selectVendedor() {
-        var dataCliente = {
-            idCliente : $("#clientes").val()
-        };
-        $.ajax({
-        url: "<?=site_url('pedido/ajaxGetVendedorToClient')?>",
-        dataType: "json",
-        data: dataCliente,
-        type: 'GET',
-        success: function(json) {
-            console.log(json);
-            $('#vendedores').val(parseInt(json.idVendedor));
-            $('#vendedores').selectpicker('refresh');
-        },
-        error: function() {
-            console.log("cannot select vendedor");
-        }
-        });
-        
+    function selectVendedor() {        
+        fillClientes();        
     }
 </script>
 
 <ul class="breadcrumb">
     <li>
-        <a href="<?=site_url('home')?>">Inicio</a>
+        <a href="<?=site_url('home'); ?>">Inicio</a>
     </li>
     <li>
-        <a href="<?=site_url('pedido')?>">Pedidos</a>
+        <a href="<?=site_url('pedido'); ?>">Pedidos</a>
     </li>
     <li>
-        <a href="<?=site_url('pedido/newOrder')?>">Nuevo Pedido</a>
+        <a href="<?=site_url('pedido/newOrder'); ?>">Nuevo Pedido</a>
     </li>
 </ul>
 <form id="form1">
@@ -254,31 +270,35 @@
                 </div>
                 <div class="box-content">
                     <div class="row">
-                        <div class="col-md-4">
-							<label for="cliente">Cliente - codigo</label>
+                        <div class="col-md-3">
+                        <label for="vendedor">Vendedor</label>
+                            <div class="input-group col-md-6">
+                                <select id="vendedores" class="selectpicker" data-live-search="true" data-style="btn-warning" name="vendedores" onchange="selectVendedor()"></select>
+                            </div>                                                        
+                        </div>                        
+                        <div class="col-md-3">
+                            <label for="tipo_pedido">Tipo de Pedido</label>                                
+                            <div class="input-group">
+                                
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="tipo_pedido" ' + checked + ' data-toggle="toggle" data-on="CONTADO" data-off="CREDITO" data-onstyle="success" data-offstyle="danger">
+                            </label>
+                            </div>
+                        </div>                        
+                        <div class="col-md-3">
+                        <label for="cliente">Cliente - codigo</label>
                             <div class="input-group col-md-4">
                                 <span class="input-group-addon">
                             <i class="glyphicon glyphicon-user blue"></i>
                             </span>
-                                <select id="clientes" name="clientes" class="selectpicker" data-live-search="true" data-style="btn-primary" data-show-subtext="true" onchange="selectVendedor()">
+                                <select id="clientes" name="clientes" class="selectpicker" data-live-search="true" data-style="btn-primary" data-show-subtext="true">
                                 </select>
-                            </div>
-                        </div>                        
-                        <div class="col-md-2">
-                            <label for="tipo_pedido">Tipo de Pedido</label>
-                                <div class="checkbox">
-                                    <label class="checkbox-inline">
-                                        <input type="checkbox" id="tipo_pedido" ' + checked + ' data-toggle="toggle" data-on="CONTADO" data-off="CREDITO" data-onstyle="success" data-offstyle="danger">
-                                    </label></div>                        
-                        </div>                        
-                        <div class="col-md-4">
-                            <label for="vendedor">Vendedor</label>
-                            <div class="input-group col-md-6">
-                                <select id="vendedores" class="selectpicker" data-live-search="true" data-style="btn-warning" name="vendedores"></select>                    
+                                <label class="checkbox-inline">
+                                <input type="checkbox" id="all_clientes" ' + checked + ' data-toggle="toggle" data-on="VENDEDOR" data-off="TODOS" data-onstyle="success" data-offstyle="danger">
+                            </label>
                             </div>
                         </div>
-
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <label for="fecha">Fecha</label>
                             <div class="form-group">
                                 <div class="input-group date" id="datetimepicker1">
@@ -360,12 +380,13 @@
                         </div>
                     </div>
             <!-- row 2-->
+            <br>
             <div class="row">
                 <div class="col-md-12">
                     <div class="group">
                         <a onclick="addNewOrderData()" title="Agregar Nuevo Ordere" data-toggle="tooltip" class="btn btn-primary">
                             <i class="glyphicon glyphicon-ok-sign"></i> Guardar</a>
-                        <a href="<?= site_url('pedido')?>" title="Agregar Nuevo Pedido" data-toggle="tooltip" class="btn btn-warning">
+                        <a href="<?= site_url('pedido'); ?>" title="Agregar Nuevo Pedido" data-toggle="tooltip" class="btn btn-warning">
                             <i class="glyphicon glyphicon-remove-sign"></i> Cancelar</a>
                     </div>
                 </div>

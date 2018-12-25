@@ -4,6 +4,7 @@
     }
 </style>
 <script type="text/javascript" charset="utf-8">
+var tablePedido;
 var detailTableUpdated;
 var oldProducts = [];
 function removerow(id){
@@ -24,7 +25,7 @@ function editPedido(idPedido) {
             idPedido: idPedido
         };
         $.ajax({
-            url: "<?=site_url('pedido/ajaxGetPedidoById')?>",
+            url: "<?=site_url('pedido/ajaxGetPedidoById'); ?>",
             dataType: "json",
             data: dataPedido,
             type: 'GET',
@@ -88,7 +89,7 @@ function editPedido(idPedido) {
                         });
                         console.log(currentdt);
                         fillProductos();
-                        var urlVendedor = "<?=site_url('vendedor/ajaxGetVendedores')?>";
+                        var urlVendedor = "<?=site_url('vendedor/ajaxGetVendedores'); ?>";
                         fillVendedor(urlVendedor, "vendedores", vendedor);
 
                         detailTableUpdated = $("#table_new_products").DataTable({
@@ -128,7 +129,7 @@ function editPedido(idPedido) {
                             }
                             
                             $.ajax({
-                                url: "<?=site_url('pedido/jsonGuardarPedido')?>",
+                                url: "<?=site_url('pedido/jsonGuardarPedido'); ?>",
                                 dataType: "json",
                                 data: dataPedido,
                                 type: 'POST',   
@@ -148,7 +149,7 @@ function editPedido(idPedido) {
                                             speed: 500 // opening & closing animation speed
                                         }
                                     });                                    
-                                    var urln = "<?= site_url('pedido/ajaxListOrder')?>";
+                                    var urln = "<?= site_url('pedido/ajaxListOrder'); ?>";
                                     $("#pedidos_table").DataTable().ajax.url(urln);
                                     $("#pedidos_table").DataTable().ajax.reload();
                                     setTimeout(function(){
@@ -190,7 +191,7 @@ function editPedido(idPedido) {
                     idPedido: idPedido
                     }                    
                     $.ajax({
-                        url: "<?=site_url('pedido/jsonEliminarPedido')?>",
+                        url: "<?=site_url('pedido/jsonEliminarPedido'); ?>",
                         dataType: "json",
                         data: dataPedido,
                         type: 'POST',   
@@ -210,7 +211,7 @@ function editPedido(idPedido) {
                                     speed: 500 // opening & closing animation speed
                                 }
                             });                                    
-                            var urln = "<?= site_url('pedido/ajaxListOrder')?>";
+                            var urln = "<?= site_url('pedido/ajaxListOrder'); ?>";
                             $("#pedidos_table").DataTable().ajax.url(urln);
                             $("#pedidos_table").DataTable().ajax.reload();                                    
                             setTimeout(function(){
@@ -235,13 +236,19 @@ function editPedido(idPedido) {
         $('#fecha').datetimepicker({
             format: 'YYYY-MM-DD HH:mm:ss'
         });
-
-        $("#pedidos_table").DataTable({
+                
+        var currentYear = "<?php echo date('Y'); ?>";
+        $("#yearPedido").val(currentYear);
+        
+        tablePedido = $("#pedidos_table").DataTable({
             destroy: true,
             info: false,
             responsive: true,
             ajax: {
-                url: "<?= site_url('pedido/ajaxListOrder')?>",
+                url: "<?= site_url('pedido/ajaxListOrder'); ?>",
+                data: function(d) {
+                    d.year = $("#yearPedido").val()                    
+                }, 
                 dataSrc: 'data',                
             },
             "columns": [
@@ -256,11 +263,12 @@ function editPedido(idPedido) {
             paging: true,
         });
 
+        
 
     });
     function fillProductos() {
         $.ajax({
-            url: "<?=site_url('producto/ajaxGetProductos')?>",
+            url: "<?=site_url('producto/ajaxGetProductos'); ?>",
             dataType: "json",
             type: 'GET',
             success: function(json) {
@@ -283,7 +291,7 @@ function editPedido(idPedido) {
             products: $("#productos").val(),
         };
         $.ajax({
-            url: "<?=site_url('producto/ajaxGetProductosByIds')?>",
+            url: "<?=site_url('producto/ajaxGetProductosByIds'); ?>",
             data: dataProduct,
             dataType: "json",
             type: 'POST',
@@ -295,17 +303,17 @@ function editPedido(idPedido) {
                 for (x=0; x< json.length; x++) {
                     total = json[x].cantidad * json[x].precioUnitario;
                     totalBruto +=  total;
-				detailTableUpdated.row.add([
+                    detailTableUpdated.row.add([
                     json[x].idProducto,
                     json[x].codigoExterno,
                     json[x].descripcion,
-					'<div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-usd"></i></span><input type="number" class="form-control" value="' +
+                    '<div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-usd"></i></span><input type="number" class="form-control" value="' +
                     json[x].cantidad + '" name="cantidad' + json[x].idProducto + '" id="cantidad' + json[x].idProducto + '"></div>',
-					'<div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-usd"></i></span><input type="number" class="form-control" value="' +
+                	'<div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-usd"></i></span><input type="number" class="form-control" value="' +
                     json[x].precioUnitario + '" name="precioUnitario' + json[x].idProducto + '" onChange="calcularTotalIndividual('+json[x].idProducto +')" '+
                     ' id= "precioUnitario' + json[x].idProducto + '"></div>',
                     '<input type="number" class="form-control" placeholder="totalBruto" id="total' + json[x].idProducto+'" disabled value="' + total + '">'
-				]).draw();                
+                    ]).draw();                
                 }
                 $('#totalBruto').val(totalBruto);
                 descuento = $('#descuento').val();
@@ -315,6 +323,9 @@ function editPedido(idPedido) {
 			},
             error: function() {}
         });
+    }
+    function getPedidoByYear() {        
+        tablePedido.ajax.reload();
     }
 </script>
 <ul class="breadcrumb">
@@ -326,15 +337,29 @@ function editPedido(idPedido) {
     </li>
 </ul>
 <div class="row">
-    <div class="box col-md-12">
-        <div class="box-inner">
+    <div class="col-sm-1">               
+        <div class="input-group">                
+                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar blue"></i></span>                
+                <select id='yearPedido' class="selectpicker" data-style="btn-danger" onchange="getPedidoByYear()">
+                    <option value="2017">2017</option>
+                    <option value="2018">2018</option>
+                    <option value="2019">2019</option>
+                    <option value="2020">2020</option>
+                    <option value="2021">2021</option>
+                </select>                
+        </div>            
+    </div>    
+</div>
+<div class="row">    
+    <div class="box col-md-12">    
+        <div class="box-inner">        
             <div class="box-header well" data-original-title="">
                 <h2><i class="glyphicon glyphicon-th"></i> Lista de Pedidos</h2>
                 <div class="box-icon">
                     <a href="#" class="btn btn-minimize btn-round btn-default"><i class="glyphicon glyphicon-chevron-up"></i></a>
                 </div>
                 <div style="text-align:right;">
-                    <a href="<?= site_url('pedido/newOrder')?>" title="Agregar nuevo producto" data-toggle="tooltip" class="btn btn-round">
+                    <a href="<?= site_url('pedido/newOrder'); ?>" title="Agregar nuevo producto" data-toggle="tooltip" class="btn btn-round">
                         <i class="glyphicon glyphicon-plus"></i> Nuevo Pedido</a>
                 </div>
             </div>
@@ -343,13 +368,13 @@ function editPedido(idPedido) {
                 <table id="pedidos_table" class="table table-striped table-bordered bootstrap-datatable datatable responsive" style="width:100%;">
                     <thead>
                         <tr>
-                            <th>numPedido</th>
-                            <th>Cliente</th>
-                            <th>Codigo Cliente</th>
-                            <th>Vendedor</th>
-                            <th>Fecha</th>                            
-                            <th>Tipo Pedido</th>           
-                            <th>Opciones</th>
+                            <th style="width:15%">numPedido</th>
+                            <th style="width:15%">Cliente</th>
+                            <th style="width:10%">Codigo Cliente</th>
+                            <th style="width:10%">Vendedor</th>
+                            <th style="width:15%">Fecha</th>                            
+                            <th style="width:10%">Tipo Pedido</th>           
+                            <th style="width:25%">Opciones</th>
                         </tr>
                     </thead>
                     <tbody>

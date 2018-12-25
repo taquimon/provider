@@ -26,9 +26,12 @@ class Order_model extends CI_Model
      *
      * @return array
      */
-    public function getOrderList()
+    public function getOrderList($year = null)
     {
-        $queryOrder = 'SELECT
+        if ($year == null) {
+            $year = date('Y');
+        }
+        $queryOrder = "SELECT
                             p.numPedido,
                             p.fecha,
                             c.razonSocial,
@@ -39,7 +42,8 @@ class Order_model extends CI_Model
                         FROM
                             pedido p
                         LEFT JOIN vendedor v on v.idVendedor = p.idVendedor
-                        LEFT JOIN clientes c on c.idCliente = p.idCliente';
+                        LEFT JOIN clientes c on c.idCliente = p.idCliente
+                        WHERE YEAR(fecha) = $year";
 
         $query = $this->db->query($queryOrder);
         $result = $query->result();

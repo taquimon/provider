@@ -95,8 +95,8 @@ class Client_model extends CI_Model
     public function getClientes()
     {
         $this->db->select('idCliente, codigoCliente, nombres, apellidos')
-        ->from('clientes c')
-        ->order_by('nombres', 'asc');
+            ->from('clientes c')
+            ->order_by('nombres', 'asc');
         $query = $this->db->get();
 
         $result = $query->result();
@@ -106,7 +106,12 @@ class Client_model extends CI_Model
 
     public function deleteCliente($idCliente)
     {
+        $queryString = 'SET FOREIGN_KEY_CHECKS = 0';
+        $query = $this->db->query($queryString);
+
         $this->db->delete('clientes', array('idCliente' => $idCliente));
+        $queryStrin = 'SET FOREIGN_KEY_CHECKS = 1';
+        $query = $this->db->query($queryString);
     }
 
     public function getZonas()
@@ -146,9 +151,8 @@ class Client_model extends CI_Model
             FROM clientes c
             INNER JOIN zona_xref_vendedor AS zv ON zv.idZona = c.zona
             LEFT JOIN vendedor AS v ON v.idVendedor = zv.idVendedor
-            WHERE zv.idVendedor = $idVendedor
-                AND v.id_usuario = $idUser";
-
+            WHERE zv.idVendedor = $idVendedor                
+            ";
         $query = $this->db->query($queryString);
         $result = $query->result();
 
