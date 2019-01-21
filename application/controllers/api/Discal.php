@@ -254,11 +254,14 @@ class Discal extends REST_Controller
         $data = $this->post();
         $detalle = $data['detalle'];
         unset($data['detalle']);
-        print_r($data);
-        print_r($detalle);
-        $data_result = $this->orderModel->insert($data);
-        if ($data_result) {
-            $message = 'pedido added correctly';
+        // print_r($detalle);
+        $products = $data['productos'];
+        unset($data['productos']);
+        $dataResult = $this->orderModel->insert($data);
+        if ($dataResult) {
+            $dataDetails = $this->transformDetalle($detalle, $products, $dataResult);
+            $detalleResults = $this->orderModel->insertDetalle($dataDetails);
+            $message = 'Pedido agregado correctamente';
         }
         $message = [
             'message' => $message,
@@ -266,5 +269,37 @@ class Discal extends REST_Controller
 
         // CREATED (201) being the HTTP response code
         $this->set_response($message, REST_Controller::HTTP_CREATED);
+    }
+
+    public function transformDetalle($dataDetalle, $productos, $pedidoData)
+    {
+        $arrayDetails = json_decode($dataDetalle);
+        $dataDetails = array();
+        foreach ($productos as $p) {
+            $dataArray = array();
+            $dataArray['idPedido'] = $pedidoData;
+            $dataArray['idProducto'] = $p;
+            $dataArray['cantidad'] = $this->getArrayValue($arrayDetails, 'cantidad'.$p);
+            $dataArray['precio'] = $this->getArrayValue($arrayDetails, 'precioUnitario'.$p);
+            $dataArray['descuento'] = $this->getArrayValue($arrayDetails, 'descuento'.$p);
+            $dataArray['fechaCreacion'] = date('Y-m-d H:i:s');
+            array_push($dataDetails, $dataArray);
+            $this->productModel->updateProductQuantity($dataArray);
+        }
+
+        return $dataDetails;
+    }
+
+    public function getArrayValue($array, $value)
+    {
+        $item = null;
+        foreach ($array as $struct) {
+            if ($value == $struct->name) {
+                $item = $struct->value;
+                break;
+            }
+        }
+
+        return $item;
     }
 }
