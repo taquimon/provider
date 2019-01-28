@@ -123,6 +123,18 @@ class Discal extends REST_Controller
             }
             $data['data'] = $orders;
             $pedidos = $data;
+        } elseif ($this->get('vendedor')) {
+            $idVen = $this->get('idVendedor');
+            $idUser = $this->get('idUser');
+            $fecha = $this->get('fecha');
+            //$fecha = '2019-01-28';
+            $orders = $this->orderModel->getPedidosByDate($fecha, null, null, 'TODOS', $idVen);
+
+            if ($this->get('dataFlag')) {
+                $pedidos['data'] = $orders;
+            } else {
+                $pedidos = $orders;
+            }
         } else {
             $pedidos = $this->orderModel->getOrderList();
         }
@@ -173,10 +185,13 @@ class Discal extends REST_Controller
         } elseif ($this->get('vendedor')) {
             $idVen = $this->get('idVendedor');
             $idUser = $this->get('idUser');
-            $clientes = $this->clientModel->getClientsByVendedor($idVen, $idUser);
+            $clients = $this->clientModel->getClientsByVendedor($idVen, $idUser);
 
-        // $data['data'] = $cliente;
-            // $clientes = $data;
+            if ($this->get('dataFlag')) {
+                $clientes['data'] = $clients;
+            } else {
+                $clientes = $clients;
+            }
         } else {
             $clientes = $this->clientModel->getClientList();
         }
