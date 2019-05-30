@@ -106,6 +106,8 @@ class Order_model extends CI_Model
         $sqlVendedor = '';
         if ($idVendedor != null) {
             $sqlVendedor = 'AND p.idVendedor = '.$idVendedor;
+        } else {
+            $sqlVendedor = '';
         }
 
         $queryString = "

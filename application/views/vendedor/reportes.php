@@ -49,7 +49,7 @@
             dataType: "json",
             type: 'GET',
             success: function(json) {
-                var options = '';
+                var options = '<option value="-1">TODOS</option>';
                 for (var x = 0; x < json.length; x++) {
                     options += '<option value="' + json[x].idVendedor + '">' + json[x].nombres + ' ' + json[x].apellidos + '</option>';
                 }
