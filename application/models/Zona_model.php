@@ -114,9 +114,11 @@ class Zona_model extends CI_Model
     {
         $vendedorQuery = '';
         if ($idVendedor != null) {
-            $vendedorQuery = 'WHERE zv.idVendedor = '. $idVendedor;
+            if ($idVendedor != -1) {
+                $vendedorQuery = ' WHERE zv.idVendedor = '. $idVendedor;
+            }
         }
-        $query = "SELECT zv.idVendedor, zv.idZona, z.nombre FROM zona_xref_vendedor zv LEFT JOIN zonas as z on z.idZona = zv.idZona". $vendedorQuery;
+        $query = "SELECT zv.idVendedor, zv.idZona, z.nombre FROM zona_xref_vendedor zv LEFT JOIN zonas as z on z.idZona = zv.idZona ". $vendedorQuery;
         // print_r($query);
         $query = $this->db->query($query);
             
@@ -126,6 +128,7 @@ class Zona_model extends CI_Model
         if (!$z_x_v) {
             return null;
         }
+        print_r($z_x_v);
 
         return $z_x_v;
     }
