@@ -117,8 +117,10 @@ class Vendedor extends MY_Controller
         $idVendedor = $this->request['idVendedor'];
         if ($idVendedor == -1) {
             $zonas = $this->zonasModel->getZonaList();
+        } else {
+            $zonas = $this->zonasModel->getZonasByVendedor($idVendedor);
         }
-        $zonas = $this->zonasModel->getZonasByVendedor($idVendedor);
+        
             
         echo json_encode($zonas);
     }
