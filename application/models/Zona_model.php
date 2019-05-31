@@ -128,7 +128,7 @@ class Zona_model extends CI_Model
         if (!$z_x_v) {
             return null;
         }
-        print_r($z_x_v);
+        //print_r($z_x_v);
 
         return $z_x_v;
     }
