@@ -36,3 +36,24 @@ function loadCategoria(url, dropdown, optionSelected) {
         }
     });
 }
+function fillVendedor(url, dropdown, optionSelected) {
+    $.ajax({
+        url: url,
+        dataType: "json",
+        type: 'GET',
+        success: function(json) {
+            var options = '';
+            for (var x = 0; x < json.length; x++) {
+                options += '<option value="' + json[x].idVendedor + '">' + json[x].nombres + ' ' + json[x].apellidos + '</option>';
+            }
+
+            $('#' + dropdown).html(options);
+            if(optionSelected != "") {
+                $('#' + dropdown).val(optionSelected);
+            }            
+            $('#' + dropdown).selectpicker('refresh');
+
+        },
+        error: function() {}
+    });
+}

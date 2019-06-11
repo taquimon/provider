@@ -91,7 +91,7 @@ function editPedido(idPedido) {
                         fillProductos();
                         var urlVendedor = "<?=site_url('vendedor/ajaxGetVendedores'); ?>";
                         fillVendedor(urlVendedor, "vendedores", vendedor);
-
+                        // $('#vendedores').selectpicker('refresh');
                         detailTableUpdated = $("#table_new_products").DataTable({
                             destroy: true,
                             info: false,
