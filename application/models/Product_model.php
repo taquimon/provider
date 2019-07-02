@@ -34,8 +34,8 @@ class Product_model extends CI_Model
     public function getProductList($fechaIngreso = null, $cantidad = null)
     {
         $this->db->select('*')
-        ->from('producto p')
-        ->order_by('descripcion', 'asc');
+            ->from('producto p')
+            ->order_by('descripcion', 'asc');
         //->where('YEAR(fechaIngreso)',$fechaIngreso);
         if ($cantidad != null) {
             $this->db->where('cantidad', $cantidad);
