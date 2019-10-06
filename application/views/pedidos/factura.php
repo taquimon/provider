@@ -165,7 +165,7 @@ ul.action-links {
                     <table style="width:100%;text-align:center;text-size:10px;" border="1">
                         <thead>
                             <tr>
-                                <th style="width:10%;text-align:center;">CODIGO</th>
+                                <!-- <th style="width:10%;text-align:center;">CODIGO</th> -->
                                 <th style="width:10%;text-align:center;">CANTIDAD</th>
                                 <th style="width:10%;text-align:center;">U/M</th>
                                 <th style="width:50%;text-align:center;">CONCEPTO</th>
@@ -177,10 +177,10 @@ ul.action-links {
                             <tr style="height:250px;horizantal-align:center;vertical-align:top">
                                 <?php
                                     $det = $this->data->detalle;
-                                    echo '<td style="width:10%;text-align:center;">';
+                                    /*echo '<td style="width:10%;text-align:center;">';
                                     foreach ($det as $d) {
                                         echo $d->codigoExterno.'<br>';
-                                    }
+                                    }*/
                                     echo '</td>';
                                     echo '<td style="width:10%;text-align:right;">';
                                     foreach ($det as $d) {
