@@ -181,8 +181,8 @@ ul.action-links {
                                     foreach ($det as $d) {
                                         echo $d->codigoExterno.'<br>';
                                     }*/
-                                    echo '</td>';
-                                    echo '<td style="width:10%;text-align:right;">';
+                                    //echo '</td>';
+                                    echo '<td style="width:10%;text-align:center;">';
                                     foreach ($det as $d) {
                                         echo $d->cantidad.'<br>';
                                     }
