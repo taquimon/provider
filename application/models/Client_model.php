@@ -94,7 +94,7 @@ class Client_model extends CI_Model
 
     public function getClientes()
     {
-        $this->db->select('idCliente, codigoCliente, nombres, apellidos')
+        $this->db->select()
             ->from('clientes c')
             ->order_by('nombres', 'asc');
         $query = $this->db->get();

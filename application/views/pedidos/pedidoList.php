@@ -21,6 +21,7 @@ function removerow(id){
 }
 function editPedido(idPedido) {
     var vendedor = "";
+    var clienteSelected = "";
         var dataPedido = {
             idPedido: idPedido
         };
@@ -38,9 +39,16 @@ function editPedido(idPedido) {
                 }
                 console.log(json.idVendedor);
                 vendedor = parseInt(json.idVendedor);
-                $tableDetalle = '<table><tr><td>Fecha:</td><td><div class="input-group date" id="fecha"><input type="text" class="form-control" name="fecha" id="fecha" value="'+json.fecha+'">' + icon + '</div></td></tr>';
-                $tableDetalle += '<tr><td>Tipo de Pedido:</td><td><div class="checkbox"><label class="checkbox-inline"><input type="checkbox" id="tipo_pedido" ' + checked + ' data-toggle="toggle" data-on="CONTADO" data-off="CREDITO" data-onstyle="success" data-offstyle="danger"></label></div></td>';
-                $tableDetalle += '<td>Vendedor</td><td><select id="vendedores" class="selectpicker" data-live-search="true" data-style="btn-primary" name="vendedores"></select></td></tr><table>'
+                clienteSelected = parseInt(json.idCliente);
+                $tableDetalle = '<table><tr><td>Fecha:</td><td><div class="input-group date" id="fecha"><input type="text" class="form-control" name="fecha" id="fecha" value="'+json.fecha+'">' + icon + '</div></td>';
+                $tableDetalle += '<td>Tipo de Pedido:</td><td><div class="checkbox"><label class="checkbox-inline"><input type="checkbox" id="tipo_pedido" ' + checked + ' data-toggle="toggle" data-on="CONTADO" data-off="CREDITO" data-onstyle="success" data-offstyle="danger"></label></div></td>';
+                
+                $tableDetalle += '<td>Vendedor</td><td><select id="vendedores" class="selectpicker" data-live-search="true" data-style="btn-warning" name="vendedores"></select></td></tr>'
+                $tableDetalle += '<tr><td>Todos - Vendedor</td><td><div class="checkbox"><label class="checkbox-inline"><input type="checkbox" id="all_clientes" ' + checked + ' data-toggle="toggle" data-on="VENDEDOR" data-off="TODOS" data-onstyle="success" data-offstyle="danger"></label></div></td>';
+                $tableDetalle += '<td>Clientes-RS-Codigo</td><td>';
+                $tableDetalle += '<div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-user blue"></i></span>';
+                $tableDetalle += '<select id="clientes" name="clientes" class="selectpicker" data-live-search="true" data-style="btn-primary" data-show-subtext="true"></select></div></td></tr><table>';
+
                 $tableDetalle += '<div><b>Detalle del Pedido</b></div>';
                 $tableDetalle += '<table id="detalle_table_update" class="table table-striped table-bordered datatable">';
                 $tableDetalle += '<thead><tr><th>Codigo</th><th style="width:60%">Descripcion</th><th style="width:20%">Cantidad</th><th style="width:20%">Precio (Bs)</th><th>Quitar</th></tr></thead>';
@@ -62,10 +70,12 @@ function editPedido(idPedido) {
                 $tableDetalle += '</table>';
 
                 $tablex = '';
-                $tablex +='<div class="box-content"><div class="row"><div class="col-md-6"><label for="productos">Agregar Producto(s)</label><div class="input-group col-md-6"><span class="input-group-addon">';
-                $tablex +='<i class="glyphicon glyphicon-shopping-cart blue"></i></span>';
-                $tablex +='<select id="productos" class="selectpicker" onchange="addProducts()" data-live-search="true" data-style="btn-primary" title="Elija un producto..." data-selected-text-format="count > 2" multiple>';
-                $tablex +='</select></div></div></div></div>';
+                $tablex += '<div class="box-content"><div class="row"><div class="col-md-6"><label for="productos">Agregar Producto(s)</label><div class="input-group col-md-6"><span class="input-group-addon">';
+                $tablex += '<i class="glyphicon glyphicon-shopping-cart blue"></i></span>';
+                $tablex += '<select id="productos" class="selectpicker" onchange="addProducts()" data-live-search="true" data-style="btn-primary" title="Elija un producto..." data-selected-text-format="count > 2" multiple>';
+                $tablex += '</select></div></div></div></div>';
+                $tablex += '<div class="row"><div class="col-md-12"><label for="observacion">Observaciones</label><div class="input-group col-md-12">';
+                $tablex += '<textarea class="form-control rounded-0" id="observaciones" rows="2">' + json.observaciones + '</textarea></div></div></div>';
                                 
                 $tableUpdated = '<table id="table_new_products" class="table table-striped table-bordered"><thead><tr><th>producto</th><th>codigo</th><th>descripcion</th><th>cantidad</th><th>precio</th><th>total</th></tr></thead></table>'
                 $tablex += $tableUpdated;
@@ -78,6 +88,7 @@ function editPedido(idPedido) {
                             format: 'YYYY-MM-DD HH:mm:ss'
                         });
                          $('#tipo_pedido').bootstrapToggle();
+                         $('#all_clientes').bootstrapToggle();                         
                         /* get current */
                         var currentdt = $('#detalle_table_update input').serializeArray();
                         currentdt = $("#detalle_table_update").DataTable({
@@ -92,6 +103,12 @@ function editPedido(idPedido) {
                         var urlVendedor = "<?=site_url('vendedor/ajaxGetVendedores'); ?>";
                         fillVendedor(urlVendedor, "vendedores", vendedor);
                         // $('#vendedores').selectpicker('refresh');
+                        fillClientes(json.idVendedor, json.idCliente);
+                        $('#all_clientes').change(function() {
+                            console.log("change clients")
+
+                            fillClientes(json.idVendedor, json.idCliente);
+                        });
                         detailTableUpdated = $("#table_new_products").DataTable({
                             destroy: true,
                             info: false,
@@ -125,7 +142,9 @@ function editPedido(idPedido) {
                                 newProductos: $("#productos").val(),
                                 tipoPedido: tipoPedido,
                                 oldQuantities: oldQuantities,    
-                                idVendedor: $("#vendedores").val()
+                                idVendedor: $("#vendedores").val(),
+                                idCliente: $("#clientes").val(),
+                                observaciones: $("#observaciones").val(),
                             }
                             
                             $.ajax({
@@ -261,9 +280,7 @@ function editPedido(idPedido) {
                 { "data": "options", sDefaultContent: ""},                
             ],
             paging: true,
-        });
-
-        
+        });                    
 
     });
     function fillProductos() {
@@ -326,6 +343,43 @@ function editPedido(idPedido) {
     }
     function getPedidoByYear() {        
         tablePedido.ajax.reload();
+    }
+    function fillClientes(idVendedor, clienteSelected = "") {
+        
+        var url = "<?=site_url('cliente/ajaxGetClientes'); ?>";        
+        // var idVendedor = $("#vendedores").val();
+        var allClientes = $('#all_clientes').prop('checked');
+        console.log(allClientes);
+        var vendedorData = {};
+        if(allClientes) {
+            vendedorData = {
+                idVendedor : idVendedor,
+            }
+        }
+        $.ajax({
+            url: url,
+            dataType: "json",
+            data: vendedorData,
+            type: 'GET',
+            success: function(json) {                
+            var options = '';
+            for (var x = 0; x < json.length; x++) {
+               options += '<option value="' + json[x].idCliente + '" data-subtext="';
+               options += json[x].codigoCliente + '">';
+               options += json[x].nombres + " " + json[x].apellidos + ", ";
+               options += json[x].razonSocial + '</option>';
+            }
+            console.log("Cliente Selected: " + clienteSelected)            
+            $('#clientes').html(options);
+            if(clienteSelected != "") {
+                $('#clientes').val(clienteSelected);
+            }      
+            $('#clientes').selectpicker('refresh');
+            },
+            error: function() {
+                alert(options);
+            }
+        });
     }
 </script>
 <ul class="breadcrumb">

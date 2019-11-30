@@ -40,6 +40,11 @@
             searching: false,
 			ordering: false
         });
+
+        $('#all_clientes').change(function() {
+            console.log("change clients")
+            fillClientes();
+        });
     });
 
     function addNewOrderData() {
@@ -56,6 +61,7 @@
             tipo_pedido: tipoPedido,
             descuento: $("#descuento").val(),
             idVendedor: $("#vendedores").val(),
+            observaciones: $("#observaciones").val(),
         };
 
         var url = "<?=site_url('pedido/jsonGuardarNuevo'); ?>";
@@ -150,11 +156,14 @@
         var vendedor = $("#vendedores").val();
 
         var allClientes = $('#all_clientes').prop('checked');
-        console.log(vendedor);
-        
-        var vendedorData = {
-            idVendedor : vendedor,            
+        console.log(allClientes);
+        var vendedorData = {};
+        if(allClientes) {
+            vendedorData = {
+                idVendedor : vendedor,            
+            }
         }
+
         $.ajax({
             url: url,
             dataType: "json",
@@ -163,14 +172,14 @@
             success: function(json) {                
                 var options = '';
                 for (var x = 0; x < json.length; x++) {
-                    options += '<option value="' + json[x].idCliente + '" data-subtext="' + json[x].codigoCliente + '">' + json[x].nombres + " " + json[x].apellidos + '</option>';
+                    options += '<option value="' + json[x].idCliente + '" data-subtext="' + json[x].codigoCliente + '">' + json[x].nombres + " " + json[x].apellidos + ", " + json[x].razonSocial + '</option>';
                 }
 
                 $('#clientes').html(options);
                 $('#clientes').selectpicker('refresh');
             },
             error: function() {
-                alert(options);
+                console.log("error on get clients");
             }
         });
     }
@@ -270,13 +279,13 @@
                 </div>
                 <div class="box-content">
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                         <label for="vendedor">Vendedor</label>
-                            <div class="input-group col-md-6">
+                            <div class="input-group col-md-4">
                                 <select id="vendedores" class="selectpicker" data-live-search="true" data-style="btn-warning" name="vendedores" onchange="selectVendedor()"></select>
                             </div>                                                        
                         </div>                        
-                        <div class="col-md-3">
+                        <div class="col-md-1">
                             <label for="tipo_pedido">Tipo de Pedido</label>                                
                             <div class="input-group">
                                 
@@ -284,21 +293,8 @@
                                 <input type="checkbox" id="tipo_pedido" ' + checked + ' data-toggle="toggle" data-on="CONTADO" data-off="CREDITO" data-onstyle="success" data-offstyle="danger">
                             </label>
                             </div>
-                        </div>                        
-                        <div class="col-md-3">
-                        <label for="cliente">Cliente - codigo</label>
-                            <div class="input-group col-md-4">
-                                <span class="input-group-addon">
-                            <i class="glyphicon glyphicon-user blue"></i>
-                            </span>
-                                <select id="clientes" name="clientes" class="selectpicker" data-live-search="true" data-style="btn-primary" data-show-subtext="true">
-                                </select>
-                                <label class="checkbox-inline">
-                                <input type="checkbox" id="all_clientes" ' + checked + ' data-toggle="toggle" data-on="VENDEDOR" data-off="TODOS" data-onstyle="success" data-offstyle="danger">
-                            </label>
-                            </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label for="fecha">Fecha</label>
                             <div class="form-group">
                                 <div class="input-group date" id="datetimepicker1">
@@ -309,6 +305,24 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-1">
+                            <label for="tipo">Todos - Vendedor</label>
+                            <div class="input-group col-md-3">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="all_clientes" ' + checked + ' data-toggle="toggle" data-on="VENDEDOR" data-off="TODOS" data-onstyle="success" data-offstyle="danger">
+                                </label>                       
+                            </div>
+                        </div>                        
+                        <div class="col-md-6">
+                        <label for="cliente">Cliente - RS - Codigo</label>
+                            <div class="input-group col-md-3">
+                                <span class="input-group-addon">
+                            <i class="glyphicon glyphicon-user blue"></i>
+                            </span>
+                                <select id="clientes" name="clientes" class="selectpicker" data-live-search="true" data-style="btn-primary" data-show-subtext="true">
+                                </select>
+                            </div>                                 
+                        </div>                        
                     </div>
                     <!-- row 2-->
                     <div class="row">
@@ -378,13 +392,21 @@
                                 <input type="number" class="form-control" placeholder="Valor Total" id="valorTotal" readonly>
                             </div>
                         </div>
-                    </div>
+                    </div>                    
             <!-- row 2-->
             <br>
             <div class="row">
+                <div class="col-md-6">
+                    <label for="apellidos">Observaciones</label>
+                    <div class="input-group col-md-6">                        
+                        <textarea class="form-control rounded-0" id="observaciones" rows="3"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-md-12">
                     <div class="group">
-                        <a onclick="addNewOrderData()" title="Agregar Nuevo Ordere" data-toggle="tooltip" class="btn btn-primary">
+                        <a onclick="addNewOrderData()" title="Agregar Nueva Orden" data-toggle="tooltip" class="btn btn-primary">
                             <i class="glyphicon glyphicon-ok-sign"></i> Guardar</a>
                         <a href="<?= site_url('pedido'); ?>" title="Agregar Nuevo Pedido" data-toggle="tooltip" class="btn btn-warning">
                             <i class="glyphicon glyphicon-remove-sign"></i> Cancelar</a>

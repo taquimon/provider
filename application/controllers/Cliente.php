@@ -84,9 +84,12 @@ class Cliente extends MY_Controller
 
     public function ajaxGetClientes()
     {
-        $idVendedor = $this->request['idVendedor'];
-        if (isset($idVendedor)) {
-            $clients = $this->clientModel->getClientsByVendedor($idVendedor);
+        if (isset($this->request['idVendedor'])) {
+        
+            $idVendedor = $this->request['idVendedor'];
+            if (isset($idVendedor)) {
+                $clients = $this->clientModel->getClientsByVendedor($idVendedor);
+            }
         } else {
             $clients = $this->clientModel->getClientes();
         }

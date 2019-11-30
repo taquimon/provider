@@ -89,6 +89,7 @@ class Pedido extends MY_Controller
             $data['tipo_pedido'] = $this->request['tipo_pedido'];
             $data['descuento'] = $this->request['descuento'];
             $data['idVendedor'] = $this->request['idVendedor'];
+            $data['observaciones'] = $this->request['observaciones'];
             $dataDetalle = $this->request['detalle'];
             $pedidoData = $this->orderModel->insert($data);
 
@@ -128,6 +129,8 @@ class Pedido extends MY_Controller
             $data['fecha'] = $this->request['fecha'];
             $data['tipo_pedido'] = $this->request['tipoPedido'];
             $data['idVendedor'] = $this->request['idVendedor'];
+            $data['idCliente'] = $this->request['idCliente'];
+            $data['observaciones'] = $this->request['observaciones'];
             $dataDetalle = $this->request['detalle'];
             $dataNewDetalle = $this->request['detalleNuevo'];
 

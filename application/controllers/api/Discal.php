@@ -287,7 +287,7 @@ class Discal extends REST_Controller
     }
 
     public function transformDetalle($dataDetalle, $productos, $pedidoData)
-    {
+    {        
         $arrayDetails = json_decode($dataDetalle);
         $dataDetails = array();
         foreach ($productos as $p) {
@@ -308,13 +308,14 @@ class Discal extends REST_Controller
     public function getArrayValue($array, $value)
     {
         $item = null;
+        
         foreach ($array as $struct) {
             if ($value == $struct->name) {
                 $item = $struct->value;
                 break;
             }
         }
-
+        
         return $item;
     }
 }
