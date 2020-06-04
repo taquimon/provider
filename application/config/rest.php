@@ -110,7 +110,7 @@ $config['rest_realm'] = 'REST API';
 |           authorization key
 |
 */
-$config['rest_auth'] = FALSE;
+$config['rest_auth'] = '';
 
 /*
 |--------------------------------------------------------------------------
@@ -126,7 +126,7 @@ $config['rest_auth'] = FALSE;
 | Note: If 'rest_auth' is set to 'session' then change 'auth_source' to the name of the session variable
 |
 */
-$config['auth_source'] = 'ldap';
+$config['auth_source'] = '';
 
 /*
 |--------------------------------------------------------------------------
@@ -137,7 +137,7 @@ $config['auth_source'] = 'ldap';
 | requests etc), set to TRUE;
 |
 */
-$config['allow_auth_and_keys'] = TRUE;
+$config['allow_auth_and_keys'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------
@@ -323,7 +323,7 @@ $config['rest_keys_table'] = 'keys';
 |   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 |
 */
-$config['rest_enable_keys'] = FALSE;
+$config['rest_enable_keys'] = false;
 
 /*
 |--------------------------------------------------------------------------

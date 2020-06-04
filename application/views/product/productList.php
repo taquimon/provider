@@ -118,6 +118,7 @@
         var table = $("#product_table").DataTable({
             destroy: true,
             paging: true,
+            order: [[ 2, "asc" ]],
             info: false,            
             language: {
             "lengthMenu": "Mostrar _MENU_ filas por pagina",
@@ -196,9 +197,9 @@
                             <th style="width:10%">Codigo Externo</th>
                             <th style="width:30%">Descripcion</th>
                             <th style="width:5%">Cantidad</th>
-                            <th style="width:10%">Unidad de Venta</th>
+                            <th style="width:10%">Precio de Compra</th>
                             <th style="width:10%">Numero de Unidades</th>
-                            <th style="width:10%">Precio Unitario</th>                            
+                            <th style="width:10%">Precio de Venta</th>                            
                             <th style="width:10%">Estado</th>
                             <th style="width:20%">Opciones</th>                            
                         </tr>

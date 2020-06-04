@@ -1,11 +1,10 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+namespace Restserver\Libraries;
 
-require APPPATH . '/libraries/jwt/JWT.php';
-require APPPATH . '/libraries/jwt/BeforeValidException.php';
-require APPPATH . '/libraries/jwt/ExpiredException.php';
-require APPPATH . '/libraries/jwt/SignatureInvalidException.php';
-use \Firebase\JWT\JWT;
+use Exception;
+use stdClass;
+
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
  * CodeIgniter Rest Controller
@@ -19,7 +18,7 @@ use \Firebase\JWT\JWT;
  * @link            https://github.com/chriskacerguis/codeigniter-restserver
  * @version         3.0.0
  */
-abstract class REST_Controller extends CI_Controller {
+abstract class REST_Controller extends \CI_Controller {
 
     // Note: Only the widely used HTTP status codes are documented
 
@@ -365,13 +364,6 @@ abstract class REST_Controller extends CI_Controller {
     ];
 
     /**
-     * The Secret Key of the JWT authentication
-     *
-     * @var string
-     */
-    protected $jwt_secret_key = '';
-
-    /**
      * Extend this function to apply additional checking early on in the process
      *
      * @access protected
@@ -410,9 +402,6 @@ abstract class REST_Controller extends CI_Controller {
         // At present the library is bundled with REST_Controller 2.5+, but will eventually be part of CodeIgniter (no citation)
         $this->load->library('format');
 
-        //Get JWT secret key
-        $this->jwt_secret_key = $this->config->item('jwt_secret_key');
-
         // Determine supported output formats from configuration
         $supported_formats = $this->config->item('rest_supported_formats');
 
@@ -445,7 +434,7 @@ abstract class REST_Controller extends CI_Controller {
         }
 
         // Load the language file
-        $this->lang->load('rest_controller', $language);
+        $this->lang->load('rest_controller', $language, FALSE, TRUE, __DIR__."/../");
 
         // Initialise the response, request and rest objects
         $this->request = new stdClass();
@@ -578,9 +567,6 @@ abstract class REST_Controller extends CI_Controller {
                     break;
                 case 'session':
                     $this->_check_php_session();
-                    break;
-                case 'jwt':
-                    $this->_check_jwt();
                     break;
             }
             if ($this->config->item('rest_ip_whitelist_enabled') === TRUE)
@@ -716,7 +702,7 @@ abstract class REST_Controller extends CI_Controller {
             if ($this->config->item('rest_enable_limits') && $this->_check_limit($controller_method) === FALSE)
             {
                 $response = [$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_api_key_time_limit')];
-                $this->response($response, self::HTTP_UNAUTHORIZED);
+                return $this->response($response, self::HTTP_UNAUTHORIZED);
             }
 
             // If no level is set use 0, they probably aren't using permissions
@@ -733,7 +719,7 @@ abstract class REST_Controller extends CI_Controller {
             {
                 // They don't have good enough perms
                 $response = [$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_api_key_permissions')];
-                $this->response($response, self::HTTP_UNAUTHORIZED);
+                return $this->response($response, self::HTTP_UNAUTHORIZED);
             }
         }
 
@@ -741,7 +727,7 @@ abstract class REST_Controller extends CI_Controller {
         elseif ($this->config->item('rest_limits_method') == "IP_ADDRESS" && $this->config->item('rest_enable_limits') && $this->_check_limit($controller_method) === FALSE)
         {
             $response = [$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_ip_address_time_limit')];
-            $this->response($response, self::HTTP_UNAUTHORIZED);
+            return $this->response($response, self::HTTP_UNAUTHORIZED);
         }
 
         // No key stuff, but record that stuff is happening
@@ -773,10 +759,9 @@ abstract class REST_Controller extends CI_Controller {
      * @access public
      * @param array|NULL $data Data to output to the user
      * @param int|NULL $http_code HTTP status code
-     * @param bool $continue TRUE to flush the response to the client and continue
      * running the script; otherwise, exit
      */
-    public function response($data = NULL, $http_code = NULL, $continue = FALSE)
+    public function response($data = NULL, $http_code = NULL)
     {
 		ob_start();
         // If the HTTP status is not NULL, then cast as an integer
@@ -841,16 +826,7 @@ abstract class REST_Controller extends CI_Controller {
         // Output the data
         $this->output->set_output($output);
 
-        if ($continue === FALSE)
-        {
-            // Display the data and exit execution
-            $this->output->_display();
-            exit;
-        }
-		else
-		{
-			ob_end_flush();
-		}
+        ob_end_flush();
 
         // Otherwise dump the output automatically
     }
@@ -1310,14 +1286,6 @@ abstract class REST_Controller extends CI_Controller {
                     return TRUE;
                 }
 
-                // JWT auth override found, check jwt
-                if ($auth_override_class_method[$this->router->class]['*'] === 'jwt')
-                {
-                    $this->_check_jwt();
-
-                    return TRUE;
-                }
-
                 // Whitelist auth override found, check client's ip against config whitelist
                 if ($auth_override_class_method[$this->router->class]['*'] === 'whitelist')
                 {
@@ -1356,14 +1324,6 @@ abstract class REST_Controller extends CI_Controller {
                 if ($auth_override_class_method[$this->router->class][$this->router->method] === 'session')
                 {
                     $this->_check_php_session();
-
-                    return TRUE;
-                }
-
-                // JWT auth override found, check jwt
-                if ($auth_override_class_method[$this->router->class][$this->router->method] === 'jwt')
-                {
-                    $this->_check_jwt();
 
                     return TRUE;
                 }
@@ -1417,14 +1377,6 @@ abstract class REST_Controller extends CI_Controller {
                     return TRUE;
                 }
 
-                // JWT auth override found, check jwt
-                if ($auth_override_class_method_http[$this->router->class]['*'][$this->request->method] === 'jwt')
-                {
-                    $this->_check_jwt();
-
-                    return TRUE;
-                }
-
                 // Whitelist auth override found, check client's ip against config whitelist
                 if ($auth_override_class_method_http[$this->router->class]['*'][$this->request->method] === 'whitelist')
                 {
@@ -1463,14 +1415,6 @@ abstract class REST_Controller extends CI_Controller {
                 if ($auth_override_class_method_http[$this->router->class][$this->router->method][$this->request->method] === 'session')
                 {
                     $this->_check_php_session();
-
-                    return TRUE;
-                }
-
-                // JWT auth override found, check jwt
-                if ($auth_override_class_method_http[$this->router->class][$this->router->method][$this->request->method] === 'jwt')
-                {
-                    $this->_check_jwt();
 
                     return TRUE;
                 }
@@ -1988,97 +1932,6 @@ abstract class REST_Controller extends CI_Controller {
         }
 
         return TRUE;
-    }
-
-    /**
-     * Check to see if the JWT is valid
-     *
-     * @access protected
-     * @return void
-     */
-    protected function _check_jwt()
-    {
-        $authorization = $this->head('Authorization');
-
-        if (!empty($authorization))
-        {
-            if (preg_match('/Bearer\s(\S+)/', $authorization, $matches))
-            {
-                $bearer = $matches[1];
-                try
-                {
-                    $decoded = JWT::decode($bearer, $this->jwt_secret_key, array('HS256'));
-                }
-                catch (Exception $e)
-                {
-                    $this->response([
-                        $this->config->item('rest_status_field_name') => 'invalid_token',
-                        $this->config->item('rest_message_field_name') => $e->getMessage()
-                    ], self::HTTP_UNAUTHORIZED);
-                }
-            }
-            else
-            {
-                $this->response([
-                    $this->config->item('rest_status_field_name') => 'empty_bearer',
-                    $this->config->item('rest_message_field_name') => 'Bearer is missing'
-                ], self::HTTP_UNPROCESSABLE_ENTITY);
-            }
-        }
-        else
-        {
-            $this->response([
-                $this->config->item('rest_status_field_name') => 'empty_authorization',
-                $this->config->item('rest_message_field_name') => 'Authorization Header is missing'
-            ], self::HTTP_UNPROCESSABLE_ENTITY);
-        }
-    }
-
-    /**
-     * JWT encoding
-     *
-     * @access protected
-     * @param array $token The JWT Token data
-     * @return string
-     */
-    protected function jwt_encode($token)
-    {
-        return JWT::encode($token, $this->jwt_secret_key);
-    }
-
-    /**
-     * JWT decoding
-     *
-     * @access protected
-     * @param string $token The JWT Token
-     * @return array
-     */
-    protected function jwt_decode($token)
-    {
-        $decoded = JWT::decode($token, $this->jwt_secret_key, array('HS256'));
-        $decoded_array = (array) $decoded;
-        return $decoded_array;
-    }
-
-    /**
-     * Get JWT Token Bearer
-     *
-     * @access protected
-     * @return string
-     */
-    protected function jwt_token()
-    {
-        $authorization = $this->head('Authorization');
-
-        if (!empty($authorization))
-        {
-            if (preg_match('/Bearer\s(\S+)/', $authorization, $matches))
-            {
-                return $matches[1];
-            }
-            return FALSE;
-        }
-        return FALSE;
     }
 
     /**

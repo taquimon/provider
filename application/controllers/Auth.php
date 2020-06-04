@@ -460,8 +460,8 @@ class Auth extends MY_Controller {
                 'phone'      => $this->input->post('phone'),
             );
         }
-        // if ($this->form_validation->run() == true && $this->ion_auth->register($identity, $password, $email, $additional_data))
-		if ($this->ion_auth->register($identity, $password, $email, $additional_data))
+        if ($this->form_validation->run() == true && $this->ion_auth->register($identity, $password, $email, $additional_data))
+		//if ($this->ion_auth->register($identity, $password, $email, $additional_data))
         {
 
             // check to see if we are creating the user

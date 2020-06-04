@@ -1,8 +1,13 @@
+<style>
+    .login-dialog .modal-dialog {
+        width: 1200px;
+    }
+</style>
 <script type="text/javascript" charset="utf-8">
 
 	function fillTipoCliente(idTipoCliente) {
         $.ajax({
-            url: "<?=site_url('cliente/ajaxGetTipoClientes')?>",
+            url: "<?=site_url('cliente/ajaxGetTipoClientes'); ?>",
             dataType: "json",
             type: 'GET',
             success: function(json) {
@@ -23,7 +28,7 @@
     }
     function fillZonas(idZona) {
         $.ajax({
-            url: "<?=site_url('zona/ajaxGetZonas')?>",
+            url: "<?=site_url('zona/ajaxGetZonas'); ?>",
             dataType: "json",
             type: 'GET',
             success: function(json) {
@@ -47,25 +52,50 @@
             idCliente: idClient
         };
         $.ajax({
-            url: "<?=site_url('cliente/ajaxGetClienteById')?>",
+            url: "<?=site_url('cliente/ajaxGetClienteById'); ?>",
             dataType: "json",
             data: dataProduct,
             type: 'GET',
             success: function(json) {
-                var $content = $('<table></table>');
-                $content.append('<tr><td>Codigo Cliente:</td><td><input type="text" class="form-control" placeholder="codigocliente" id="codigoCliente" value="'+json.codigoCliente+'"></td></tr>');
-                $content.append('<tr><td>Nombre(s):</td><td style="width:70%";><input type="text" class="form-control" placeholder="nombres" id="nombres" value="'+json.nombres+'"></td></tr>');
-                $content.append('<tr><td>Apellidos:</td><td><input type="text" class="form-control" placeholder="apellidos" id="apellidos" value="'+json.apellidos+'"></td></tr>');
-                $content.append('<tr><td>Direccion:</td><td><input type="text" class="form-control" placeholder="direccion" id="direccion" value="'+json.direccion+'"></td></tr>');
-                $content.append('<tr><td>Email:</td><td><input type="text" class="form-control" placeholder="Emal" id="email" value="'+json.email+'"></td></tr>');
-                $content.append('<tr><td>Telefono:</td><td><input type="text" class="form-control" placeholder="Telefono" id="telefono" value="'+json.telefono+'"></td></tr>');
-				$content.append('<tr><td>Celular:</td><td><input type="text" class="form-control" placeholder="Celular" id="celular" value="'+json.celular+'"></td></tr>');
-                $content.append('<tr><td>NIT/CI:</td><td><input type="text" class="form-control" placeholder="nit" id="nit" value="'+json.nit+'"></td></tr>');
-				$content.append('<tr><td>Zona:</td><td><select id="zona" data-style="btn-primary"></select></td></tr>');
-                $content.append('<tr><td>Razon Social:</td><td><input type="text" class="form-control" placeholder="Razon Social" id="razonSocial" value="'+json.razonSocial+'"></td></tr>');
- 				$content.append('<tr><td>Observaciones:</td><td><input type="text" class="form-control" placeholder="Observaciones" id="observaciones" value="'+json.observaciones+'"></td></tr>');
-				$content.append('<tr><td>Tipo Cliente:</td><td><select id="tipoCliente" data-style="btn-primary"></select></td></tr>');
-				var idTipoCliente = json.tipoCliente;
+                var checked = "";
+                if(json.activo == "1") {
+                    checked = "checked";
+                }
+                // var $content = $('<table></table>');
+                // $content.append('<tr><td>Codigo Cliente:</td><td><input type="text" class="form-control" placeholder="codigocliente" id="codigoCliente" value="'+json.codigoCliente+'"></td></tr>');
+                // $content.append('<tr><td>Nombre(s):</td><td style="width:70%";><input type="text" class="form-control" placeholder="nombres" id="nombres" value="'+json.nombres+'"></td></tr>');
+                // $content.append('<tr><td>Apellidos:</td><td><input type="text" class="form-control" placeholder="apellidos" id="apellidos" value="'+json.apellidos+'"></td></tr>');
+                // $content.append('<tr><td>Direccion:</td><td><input type="text" class="form-control" placeholder="direccion" id="direccion" value="'+json.direccion+'"></td></tr>');
+                // $content.append('<tr><td>Email:</td><td><input type="text" class="form-control" placeholder="Emal" id="email" value="'+json.email+'"></td></tr>');
+                // $content.append('<tr><td>Telefono:</td><td><input type="text" class="form-control" placeholder="Telefono" id="telefono" value="'+json.telefono+'"></td></tr>');
+				// $content.append('<tr><td>Celular:</td><td><input type="text" class="form-control" placeholder="Celular" id="celular" value="'+json.celular+'"></td></tr>');
+                // $content.append('<tr><td>NIT/CI:</td><td><input type="text" class="form-control" placeholder="nit" id="nit" value="'+json.nit+'"></td></tr>');
+				// $content.append('<tr><td>Zona:</td><td><select id="zona" data-style="btn-primary"></select></td></tr>');
+                // $content.append('<tr><td>Razon Social:</td><td><input type="text" class="form-control" placeholder="Razon Social" id="razonSocial" value="'+json.razonSocial+'"></td></tr>');
+ 				// $content.append('<tr><td>Observaciones:</td><td><input type="text" class="form-control" placeholder="Observaciones" id="observaciones" value="'+json.observaciones+'"></td></tr>');
+                // $content.append('<tr><td>Tipo Cliente:</td><td><select id="tipoCliente" data-style="btn-primary"></select></td></tr>');
+                var $content = $('<div class="row"></div>');
+                $content.append('<div class="col-sm-6"><label for="codigoCliente">Codigo Cliente</label><div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-lock blue"></i></span><input type="text" class="form-control" placeholder="codigocliente" id="codigoCliente" value="'+json.codigoCliente+'"></div></div>');
+                $content.append('<div class="col-sm-6"><label for="email">Email</label><div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-envelope blue"></i></span><input type="text" class="form-control" placeholder="Emal" id="email" value="'+json.email+'"></div></div>');
+                $content.append('<div class="row">');
+                $content.append('<div class="col-sm-6"><label for="nombres">Nombre(s)</label><div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-user blue"></i></span><input type="text" class="form-control" placeholder="nombres" id="nombres" value="'+json.nombres+'"></div></div>');
+                $content.append('<div class="col-sm-6"><label for="apellidos">Apellidos</label><div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-user blue"></i></span><input type="text" class="form-control" placeholder="apellidos" id="apellidos" value="'+json.apellidos+'"></div></div>');
+                $content.append('<div class="row">');
+                $content.append('<div class="col-sm-6"><label for="telefono">Telefono</label><div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-earphone blue"></i></span><input type="text" class="form-control" placeholder="Telefono" id="telefono" value="'+json.telefono+'"></div></div>');
+                $content.append('<div class="col-sm-6"><label for="celular">Celular</label><div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-phone blue"></i></span><input type="text" class="form-control" placeholder="Celular" id="celular" value="'+json.celular+'"></div></div>');
+                $content.append('<div class="row">');
+                $content.append('<div class="col-sm-6"><label for="direccion">Direccion</label><div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-hand-right blue"></i></span><input type="text" class="form-control" placeholder="direccion" id="direccion" value="'+json.direccion+'"></div></div>');
+                $content.append('<div class="col-sm-6"><label for="nit">NIT/CI</label><div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-list-alt blue"></i></span><input type="text" class="form-control" placeholder="nit" id="nit" value="'+json.nit+'"></div></div>');                
+                $content.append('<div class="row">');
+                $content.append('<div class="col-sm-6"><label for="zona">Zona</label><div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-globe blue"></i></span><select id="zona" data-style="btn-primary"></select></div></div>');
+                $content.append('<div class="col-sm-6"><label for="tipoCliente">Tipo Cliente</label><div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-shopping-cart blue"></i></span><select id="tipoCliente" data-style="btn-primary"></select></div></div>');                
+                $content.append('<div class="row">');                
+                $content.append('<div class="col-sm-6"><label for="razonSocial">Razon Social</label><div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-user blue"></i></span><input type="text" class="form-control" placeholder="Razon Social" id="razonSocial" value="'+json.razonSocial+'"></div></div>');
+                $content.append('<div class="col-sm-6"><label for="observaciones">Observaciones</label><div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-eye-open blue"></i></span><input type="text" class="form-control" placeholder="Observaciones" id="observaciones" value="'+json.observaciones+'"></div></div>');                
+                $content.append('<div class="row">');
+                $content.append('<div class="col-sm-6"><label for="activo">Estado</label><div class="checkbox"><label class="checkbox-inline"><input type="checkbox" id="activo" ' + checked + ' data-toggle="toggle" data-on="ACTIVO" data-off="INACTIVO" data-onstyle="success" data-offstyle="danger"></label></div></div></div>');                                
+                $content.append('</div>');
+                var idTipoCliente = json.tipoCliente;                
                 var idZona = json.zona;
 
                 BootstrapDialog.show({
@@ -74,6 +104,7 @@
 					onshown: function(dialogRef){
 						fillTipoCliente(idTipoCliente);
                         fillZonas(idZona);
+                        $('#activo').bootstrapToggle();
 					},
                     buttons: [{
                         icon: 'glyphicon glyphicon-check',
@@ -82,6 +113,7 @@
                         autospin: true,
                         cssClass: 'btn-primary',
                         action: function(dialogRef){
+                            var activo = $('#activo').prop('checked') == true ? '1' : '0';
                             var dataProduct = {
                                 idCliente: idClient,
                                 codigoCliente: $('#codigoCliente').val(),
@@ -95,10 +127,11 @@
  								zona: $('#zona').val(),
                                 razonSocial: $('#razonSocial').val(),
  								observaciones: $('#observaciones').val(),
- 								tipoCliente: $('#tipoCliente').val(),
+                                tipoCliente: $('#tipoCliente').val(),
+                                activo: activo, 
                             }
                             $.ajax({
-                                url: "<?=site_url('cliente/jsonGuardarCliente')?>",
+                                url: "<?=site_url('cliente/jsonGuardarCliente'); ?>",
                                 dataType: "json",
                                 data: dataProduct,
                                 type: 'POST',   
@@ -118,7 +151,7 @@
                                             speed: 500 // opening & closing animation speed
                                         }
                                     });
-                                    var urln = "<?= site_url('cliente/ajaxListClient')?>";
+                                    var urln = "<?= site_url('cliente/ajaxListClient'); ?>";
                                     $("#client_table").DataTable().ajax.url(urln);
                                     $("#client_table").DataTable().ajax.reload();
                                     setTimeout(function(){
@@ -161,7 +194,7 @@
                         idCliente: idCliente
                     }
                     $.ajax({
-                        url: "<?=site_url('cliente/jsonEliminarCliente')?>",
+                        url: "<?=site_url('cliente/jsonEliminarCliente'); ?>",
                         dataType: "json",
                         data: dataCliente,
                         type: 'POST',
@@ -181,7 +214,7 @@
                                     speed: 500 // opening & closing animation speed
                                 }
                             });
-                            var urln = "<?= site_url('cliente/ajaxListOrder')?>";
+                            var urln = "<?= site_url('cliente/ajaxListClient'); ?>";
                             $("#client_table").DataTable().ajax.url(urln);
                             $("#client_table").DataTable().ajax.reload();
                             setTimeout(function(){
@@ -207,7 +240,7 @@
             info: false,
             responsive: true,
             ajax: {
-                url: "<?= site_url('cliente/ajaxListClient')?>",
+                url: "<?= site_url('cliente/ajaxListClient'); ?>",
                 dataSrc: 'data',
             },
             "columns": [
@@ -248,7 +281,7 @@
                     <a href="#" class="btn btn-minimize btn-round btn-default"><i class="glyphicon glyphicon-chevron-up"></i></a>
                 </div>
                 <div style="text-align:right;">
-                <a href="<?= site_url('cliente/newClient')?>" title="Agregar Nuevo Cliente" data-toggle="tooltip" class="btn btn-round">
+                <a href="<?= site_url('cliente/newClient'); ?>" title="Agregar Nuevo Cliente" data-toggle="tooltip" class="btn btn-round">
                 <i class="glyphicon glyphicon-plus"></i> Nuevo Cliente</a>
                 </div>
             </div>
