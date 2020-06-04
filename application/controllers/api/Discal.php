@@ -271,6 +271,7 @@ class Discal extends REST_Controller
         unset($data['detalle']);
         // print_r($detalle);
         $products = $data['productos'];
+        // print_r($detalle);
         unset($data['productos']);
         $dataResult = $this->orderModel->insert($data);
         if ($dataResult) {
@@ -289,6 +290,7 @@ class Discal extends REST_Controller
     public function transformDetalle($dataDetalle, $productos, $pedidoData)
     {        
         $arrayDetails = json_decode($dataDetalle);
+        // print_r($arrayDetails);
         $dataDetails = array();
         foreach ($productos as $p) {
             $dataArray = array();
@@ -308,7 +310,7 @@ class Discal extends REST_Controller
     public function getArrayValue($array, $value)
     {
         $item = null;
-        
+        // print_r($array);
         foreach ($array as $struct) {
             if ($value == $struct->name) {
                 $item = $struct->value;
