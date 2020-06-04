@@ -1,15 +1,15 @@
 <?php
+
 if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 /**
- * Description of Account_Model
+ * Description of Account_Model.
  *
  * @author Edwin Taquichiri
  */
 class Order_model extends CI_Model
 {
-
     public function __construct()
     {
         parent::__construct();
@@ -17,17 +17,20 @@ class Order_model extends CI_Model
             'numPedido',
             'idCliente',
             'idUser',
-            'fecha'
+            'fecha',
         );
     }
 
     /**
-     * Get the list of Orders
+     * Get the list of Orders.
      *
      * @return array
      */
-    public function getOrderList()
+    public function getOrderList($year = null)
     {
+        if ($year == null) {
+            $year = date('Y');
+        }
         $queryOrder = "SELECT
                             p.numPedido,
                             p.fecha,
@@ -39,7 +42,8 @@ class Order_model extends CI_Model
                         FROM
                             pedido p
                         LEFT JOIN vendedor v on v.idVendedor = p.idVendedor
-                        LEFT JOIN clientes c on c.idCliente = p.idCliente";
+                        LEFT JOIN clientes c on c.idCliente = p.idCliente
+                        WHERE YEAR(fecha) = $year";
 
         $query = $this->db->query($queryOrder);
         $result = $query->result();
@@ -49,13 +53,12 @@ class Order_model extends CI_Model
 
     public function getPedidoList()
     {
-
         $query = $this->db->query('SELECT p.numPedido, p.fecha, c.razonSocial, u.username, p.tipo_pedido from pedido p, clientes c, user u WHERE c.idCliente = p.idCliente and p.idUser=u.idUser');
         $result = $query->result();
 
         //print_r($result);
         foreach ($result as $r) {
-            $query = $this->db->query('SELECT d.cantidad, d.precio, d.IdProducto, d.descuento, d.idPedido, p.idProducto, p.codigoExterno, p.descripcion, p.unidadVenta FROM detalle d, producto p WHERE d.idProducto = p.idProducto and d.idPedido=' . $r->numPedido);
+            $query = $this->db->query('SELECT d.cantidad, d.precio, d.IdProducto, d.descuento, d.idPedido, p.idProducto, p.codigoExterno, p.descripcion, p.unidadVenta FROM detalle d, producto p WHERE d.idProducto = p.idProducto and d.idPedido='.$r->numPedido);
             $result2 = $query->result();
             $r->detalle = $result2;
         }
@@ -63,45 +66,49 @@ class Order_model extends CI_Model
         return $result;
     }
 
-    public function getPedidosByDate($fecha, $fecha2= null, $zona = null, $tipo_pedido = 'TODOS', $idVendedor = NULL) {
+    public function getPedidosByDate($fecha, $fecha2 = null, $zona = null, $tipo_pedido = 'TODOS', $idVendedor = null)
+    {
         if ($fecha2 == null) {
             $fecha2 = $fecha;
         }
-        $sqlZona = "";
+        $sqlZona = '';
         if ($zona != null) {
-            $zonaGroup = implode ("','" , $zona);
+            $zonaGroup = implode("','", $zona);
             $zonaGroup = "'".$zonaGroup."'";
-            $sqlZona = "and c.zona in (".$zonaGroup.")";
+            $sqlZona = 'and c.zona in ('.$zonaGroup.')';
         }
         $sqlTipoPedido = '';
         if ($tipo_pedido != 'TODOS') {
             $sqlTipoPedido = 'AND p.tipo_pedido = "'.$tipo_pedido.'"';
         }
-        $sqlCreditoVariables = "";
-        $sqlCreditoJoinTable = "";
-        $sqlCreditoCancelado = "";
-        $sqlNumPedido = "";
-        $groupCancelado = "";
+        $sqlCreditoVariables = '';
+        $sqlCreditoJoinTable = '';
+        $sqlCreditoCancelado = '';
+        $sqlNumPedido = '';
+        $groupCancelado = '';
 
         if ($tipo_pedido == 'CREDITO') {
-            $sqlCreditoVariables = ",
+            $sqlCreditoVariables = ',
             p.numPedido AS numPedido,
             pc.cancelado,
             SUM(pc.acuenta) AS acuenta,
             MIN(pc.saldo) AS saldo
-            ";
-            $sqlCreditoJoinTable = "LEFT OUTER JOIN pedido_credito pc ON p.numPedido = pc.idPedido";
+            ';
+            $sqlCreditoJoinTable = 'LEFT OUTER JOIN pedido_credito pc ON p.numPedido = pc.idPedido';
             // $sqlCreditoCancelado = "AND (pc.cancelado = 'NO' OR pc.cancelado is null )";
             $sqlCreditoCancelado = "AND 1 = (SELECT IF( EXISTS(
                 SELECT cancelado FROM pedido_credito WHERE idPedido = pc.idPedido and cancelado <> 'SI'), 1, 0))";
-            
-            $groupCancelado = ", pc.cancelado ";
+
+            $groupCancelado = ', pc.cancelado ';
         } else {
-            $sqlNumPedido = ", p.numPedido";
+            $sqlNumPedido = ', p.numPedido';
         }
-        $sqlVendedor = "";
-        if ($idVendedor != NULL) {
-            $sqlVendedor = "AND p.idVendedor = ". $idVendedor;
+        $sqlVendedor = '';
+        if ($idVendedor != null) {
+            $sqlVendedor = 'AND p.idVendedor = '.$idVendedor;
+        }
+        if ($idVendedor == -1) {
+            $sqlVendedor = '';
         }
 
         $queryString = "
@@ -144,18 +151,20 @@ class Order_model extends CI_Model
 
         return $result;
     }
-    public function getTotalProductsByDate($fecha, $fecha2 = null, $zona = null) {
+
+    public function getTotalProductsByDate($fecha, $fecha2 = null, $zona = null)
+    {
         if ($fecha2 == null) {
             $fecha2 = $fecha;
         }
-        $sqlZona = "";
-        if($zona != null) {
-            $zonaGroup = implode ("','" , $zona);
+        $sqlZona = '';
+        if ($zona != null) {
+            $zonaGroup = implode("','", $zona);
             $zonaGroup = "'".$zonaGroup."'";
-            $sqlZona = "AND c.zona in (".$zonaGroup.")";
+            $sqlZona = 'AND c.zona in ('.$zonaGroup.')';
         }
-            // $query = $this->db->query("select d.cantidad, pr.idProducto, pr.codigoExterno, pr.descripcion from detalle d, producto pr WHERE d.idProducto = pr.idProducto and d.idPedido in (
-            // SELECT p.numPedido FROM pedido p where  (p.fecha between'".$fecha." 00:00:00' and '".$fecha2." 23:59:59')) order by pr.descripcion, pr.idProducto ;");
+        // $query = $this->db->query("select d.cantidad, pr.idProducto, pr.codigoExterno, pr.descripcion from detalle d, producto pr WHERE d.idProducto = pr.idProducto and d.idPedido in (
+        // SELECT p.numPedido FROM pedido p where  (p.fecha between'".$fecha." 00:00:00' and '".$fecha2." 23:59:59')) order by pr.descripcion, pr.idProducto ;");
         // } else {
 
         //     $query = $this->db->query("select d.cantidad, pr.idProducto, pr.codigoExterno, pr.descripcion from detalle d, producto pr WHERE d.idProducto = pr.idProducto and d.idPedido in (
@@ -189,7 +198,6 @@ class Order_model extends CI_Model
         $query = $this->db->query($queryString);
         $result = $query->result();
 
-
         return $result;
     }
 
@@ -201,12 +209,10 @@ class Order_model extends CI_Model
 
         $order = $query->first_row();
 
-
         if (!$order) {
             //throw new Exception("No se encontro el pedido [$idOrder].");
             return null;
-        }
-        else {
+        } else {
             $query = $this->db->query('SELECT d.cantidad, d.precio, d.IdProducto, d.descuento, d.idPedido, p.idProducto, p.codigoExterno, p.descripcion, p.unidadVenta FROM detalle d, producto p WHERE d.idProducto = p.idProducto and d.idPedido='.$idOrder.' order by p.descripcion');
 
             $result2 = $query->result();
@@ -215,6 +221,7 @@ class Order_model extends CI_Model
 
         return $order;
     }
+
     public function getDetailById($idOrder)
     {
         $query = $this->db->query('SELECT d.cantidad, d.precio, d.IdProducto, d.descuento, d.idPedido, p.idProducto, p.codigoExterno, p.descripcion, p.unidadVenta FROM detalle d, producto p WHERE d.idProducto = p.idProducto and d.idPedido='.$idOrder.' order by p.descripcion');
@@ -222,6 +229,7 @@ class Order_model extends CI_Model
 
         return $result;
     }
+
     public function getCreditoById($idOrder)
     {
         $query = $this->db->query('SELECT c.* FROM pedido_credito c WHERE c.idPedido='.$idOrder.' order by c.fechaUpdate');
@@ -232,91 +240,100 @@ class Order_model extends CI_Model
 
     public function insert($data)
     {
-
         $result = $this->db->insert('pedido', $data);
 
         $insert_id = $this->db->insert_id();
-        return $insert_id;
 
+        return $insert_id;
     }
+
     public function insertDetalle($data)
     {
-
         $result = $this->db->insert_batch('detalle', $data);
 
         $insert_id = $this->db->insert_id();
 
         return $insert_id;
     }
+
+    /**
+     * Insert credito.
+     *
+     * @param mixed $data the json that contains credito
+     */
     public function insertCredito($data)
     {
-
         $result = $this->db->insert('pedido_credito', $data);
 
         $insert_id = $this->db->insert_id();
+
         return $insert_id;
     }
 
     /**
-     * This method insert new data into club
+     * This method update the order.
+     *
+     * @param int   $idOrder order to be updated
+     * @param mixed $data    json that contains data
+     *
+     * @return return the order updated
      */
     public function updateOrder($idOrder, $data)
     {
-
         $this->db->where('numPedido', $idOrder);
-        $data ['fechaModificacion'] = date('Y-m-d H:i:s');
+        $data['fechaModificacion'] = date('Y-m-d H:i:s');
         $result = $this->db->update('pedido', $data);
 
-
         return $result;
-
     }
+
     public function updateDetalle($idOrder, $data)
     {
-
         $this->db->where('idPedido', $idOrder);
-        $data ['fechaActualizacion'] = date('Y-m-d H:i:s');
+        $data['fechaActualizacion'] = date('Y-m-d H:i:s');
         $result = $this->db->update('detalle', $data);
 
-
         return $result;
-
     }
-    public function deleteOrder($idPedido) {
 
+    public function deleteOrder($idPedido)
+    {
         $this->db->delete('detalle', array('idPedido' => $idPedido));
         $this->db->delete('pedido', array('numPedido' => $idPedido));
     }
 
-    public function getLastDate() {
+    public function getLastDate()
+    {
         $query = $this->db->query('SELECT MAX(fecha) as fecha from pedido');
         $result = $query->result();
 
         return $result;
     }
-    public function deleteAllDetalle($idPedido) {
 
+    public function deleteAllDetalle($idPedido)
+    {
         $this->db->delete('detalle', array('idPedido' => $idPedido));
     }
 
-    public function updateQuantity($idProducto, $cantidad) {
+    public function updateQuantity($idProducto, $cantidad)
+    {
         $query = $this->db->query('UPDATE cantidad  producto where idProducto = '.$idProducto);
     }
+
     /**
-     * This method returns compra venta report
+     * This method returns compra venta report.
      */
-    public function getPedidoByDateandProduct($fecha, $fecha2 = null, $products=null)
+    public function getPedidoByDateandProduct($fecha, $fecha2 = null, $products = null)
     {
         if ($fecha2 == null) {
             $fecha2 = $fecha;
         }
         if ($products == null) {
-            $addProducts = "";
+            $addProducts = '';
         } else {
             $idProducts = implode("','", $products);
             $idProducts = "'".$idProducts."'";
             $addProducts = "AND d.idProducto IN ($idProducts)";
-
         }
         $query = "
         SELECT
@@ -332,6 +349,7 @@ class Order_model extends CI_Model
 
         return $result;
     }
+
     public function getCreditosList()
     {
         $queryString = "
@@ -355,7 +373,9 @@ class Order_model extends CI_Model
 
         return $result;
     }
-    public function getVendedorByClient($idCliente) {
+
+    public function getVendedorByClient($idCliente)
+    {
         $queryString = "
         SELECT
             idVendedor
@@ -374,7 +394,8 @@ class Order_model extends CI_Model
 
         return $result;
     }
-    public function isPedidoCancelado($idPedido) 
+
+    public function isPedidoCancelado($idPedido)
     {
         $queryString = "
         SELECT
@@ -389,6 +410,6 @@ class Order_model extends CI_Model
         $query = $this->db->query($queryString);
         $result = $query->result();
 
-        return count($result);        
+        return count($result);
     }
 }

@@ -9,14 +9,13 @@ if (!defined('BASEPATH')) {
  */
 class Zona_model extends CI_Model
 {
-
     public function __construct()
     {
         parent::__construct();
         $this->__exposedFields = array(
             'idZona',
             'nombre',
-            'descripcion',                      
+            'descripcion',
         );
     }
 
@@ -27,9 +26,8 @@ class Zona_model extends CI_Model
      */
     public function getZonaList()
     {
-
         $this->db->select('*')
-        ->from('zonas v');                
+        ->from('zonas v');
 
         $query = $this->db->get();
 
@@ -61,7 +59,6 @@ class Zona_model extends CI_Model
         $result = $this->db->insert('zonas', $data);
 
         return $result;
-
     }
 
     /**
@@ -69,31 +66,27 @@ class Zona_model extends CI_Model
      */
     public function updateZona($idZona, $data)
     {
-
         $this->db->where('idZona', $idZona);
         //$data ['fechaModificacion'] = date('Y-m-d H:i:s');
         $result = $this->db->update('zonas', $data);
 
         return $result;
-
-    }  
+    }
     public function getZonasXrefVendedor()
     {
-
         $this->db->select('*')
-        ->from('zonas_xref_vendedor zxv'); 
+        ->from('zonas_xref_vendedor zxv');
         $query = $this->db->get();
 
         $result = $query->result();
 
         return $result;
     }
-     public function getZonas()
+    public function getZonas()
     {
-
         $this->db->select('idZona, nombre, descripcion')
         ->from('zonas v')
-        ->order_by('nombre','asc'); 
+        ->order_by('nombre', 'asc');
         $query = $this->db->get();
 
         $result = $query->result();
@@ -101,8 +94,8 @@ class Zona_model extends CI_Model
         return $result;
     }
 
-    public function deleteZona($idZona) {
-
+    public function deleteZona($idZona)
+    {
         $this->db->delete('zonas', array('idZona' => $idZona));
     }
 
@@ -117,10 +110,17 @@ class Zona_model extends CI_Model
 
         return $result;
     }
-    public function getZonasByVendedor($idVendedor) {
-
-      $query = "SELECT zv.idVendedor, zv.idZona, z.nombre FROM zona_xref_vendedor zv LEFT JOIN zonas as z on z.idZona =  zv.idZona WHERE zv.idVendedor = ". $idVendedor;
-      $query = $this->db->query($query);
+    public function getZonasByVendedor($idVendedor)
+    {
+        $vendedorQuery = '';
+        if ($idVendedor != null) {
+            if ($idVendedor != -1) {
+                $vendedorQuery = ' WHERE zv.idVendedor = '. $idVendedor;
+            }
+        }
+        $query = "SELECT zv.idVendedor, zv.idZona, z.nombre FROM zona_xref_vendedor zv LEFT JOIN zonas as z on z.idZona = zv.idZona ". $vendedorQuery;
+        // print_r($query);
+        $query = $this->db->query($query);
             
 
         $z_x_v = $query->result();
@@ -128,7 +128,8 @@ class Zona_model extends CI_Model
         if (!$z_x_v) {
             return null;
         }
+        //print_r($z_x_v);
 
-        return $z_x_v;   
+        return $z_x_v;
     }
 }

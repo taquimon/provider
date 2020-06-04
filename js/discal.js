@@ -36,7 +36,6 @@ function loadCategoria(url, dropdown, optionSelected) {
         }
     });
 }
-
 function fillVendedor(url, dropdown, optionSelected) {
     $.ajax({
         url: url,
