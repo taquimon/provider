@@ -21,6 +21,8 @@ class Pedido extends MY_Controller
         $this->load->model('client_model', 'clientModel');
         $this->load->model('product_model', 'productModel');
         $this->load->model('zona_model', 'zonaModel');
+        $this->load->library('codigocontrol');
+        $this->load->library('codigoqr');
     }
 
     public function index()
@@ -232,6 +234,15 @@ class Pedido extends MY_Controller
         $pedidoArray->cliente = $clienteInfo;
         $pedidoArray->descuento = $pedidoInfo->descuento;
         $pedidoArray->tipo_pedido = $pedidoInfo->tipo_pedido;
+
+        $codigoControl = $this->codigocontrol->getCodigoControl();
+        // get codigo QR
+        $codigoqr = $this->codigoqr->getCodigoQR();
+        // get codigo de control
+        if ($codigoControl) {
+            $pedidoArray->codigoControl = $codigoControl;
+            $pedidoArray->codigoQR = $codigoqr;
+        }        
 
         $this->data = $pedidoArray;
         $this->middle = 'pedidos/factura';

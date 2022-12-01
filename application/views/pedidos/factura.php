@@ -156,9 +156,17 @@ ul.action-links {
                 </div>
             </div>    
             <div class="row">
-                <div class="col-xs-10">                                    
+                <div class="col-xs-5">
                     Direccion: <?=$this->data->cliente->direccion?>
                 </div>
+                <?php 
+                    if ($this->data->codigoControl) {
+                        echo('<div class="col-xs-5">'.'Codigo Control: '.$this->data->codigoControl.'</div>');                        
+                        QRcode::png($this->data->codigoQR, FCPATH."img/factura/resultado.png",QR_ECLEVEL_M);
+                        echo "<div><img src='".site_url()."img/factura/resultado.png"."'/></div>";
+
+                    }
+                ?>
             </div>        
             <div class="row">
                 <div class="col-xs-12">                                    
